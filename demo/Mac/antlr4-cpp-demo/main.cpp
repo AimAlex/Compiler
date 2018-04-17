@@ -15,25 +15,29 @@
 #include "antlr4-runtime.h"
 #include "MLexer.h"
 #include "MParser.h"
+#include "ASTListener.h"
 
 using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char **) {
-//    ANTLRFileStream(<#const std::string &fileName#>)
+    //    ANTLRFileStream(<#const std::string &fileName#>)
     ANTLRInputStream input(u8"int main () {a = b + c;}");
-  MLexer lexer(&input);
-  CommonTokenStream tokens(&lexer);
-
-  tokens.fill();
-  for (auto token : tokens.getTokens()) {
-    std::cout << token->toString() << std::endl;
-  }
-
-  MParser parser(&tokens);
-  tree::ParseTree *tree = parser.program();
-
-  std::cout << tree->toStringTree(&parser) << std::endl;
-
-  return 0;
+    MLexer lexer(&input);
+    CommonTokenStream tokens(&lexer);
+    
+    tokens.fill();
+    for (auto token : tokens.getTokens()) {
+        std::cout << token->toString() << std::endl;
+    }
+    
+    MParser parser(&tokens);
+    tree::ParseTree *tree = parser.program();
+    
+    std::cout << tree->toStringTree(&parser) << std::endl;
+    
+    tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
+    walker.walk(new ASTListener(), tree);
+    
+    return 0;
 }

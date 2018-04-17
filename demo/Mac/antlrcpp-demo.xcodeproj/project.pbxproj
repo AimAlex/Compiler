@@ -99,6 +99,27 @@
 		4CB2DA9420837FB700819419 /* MListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MListener.h; path = ../generated/MListener.h; sourceTree = "<group>"; };
 		4CB2DA9520837FB700819419 /* MParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MParser.h; path = ../generated/MParser.h; sourceTree = "<group>"; };
 		4CB2DA9620837FB700819419 /* MBaseVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBaseVisitor.h; path = ../generated/MBaseVisitor.h; sourceTree = "<group>"; };
+		4CB2DAB52085DB7900819419 /* IfState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IfState.h; sourceTree = "<group>"; };
+		4CB2DAB62085DB7900819419 /* FunctionTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionTypeNode.h; sourceTree = "<group>"; };
+		4CB2DAB72085DB7900819419 /* ReturnState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReturnState.h; sourceTree = "<group>"; };
+		4CB2DAB82085DB7900819419 /* TypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TypeNode.h; sourceTree = "<group>"; };
+		4CB2DAB92085DB7900819419 /* Decl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decl.h; sourceTree = "<group>"; };
+		4CB2DABA2085DB7900819419 /* ASTListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTListener.h; sourceTree = "<group>"; };
+		4CB2DABB2085DB7900819419 /* ASTNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTNode.h; sourceTree = "<group>"; };
+		4CB2DABC2085DB7900819419 /* ForLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForLoop.h; sourceTree = "<group>"; };
+		4CB2DABD2085DB7900819419 /* VaribleDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VaribleDecl.h; sourceTree = "<group>"; };
+		4CB2DABE2085DB7900819419 /* expr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expr.h; sourceTree = "<group>"; };
+		4CB2DABF2085DB7900819419 /* ClassTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
+		4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayTypeNode.h; sourceTree = "<group>"; };
+		4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrimitiveTypeNode.h; sourceTree = "<group>"; };
+		4CB2DAC22085DB7900819419 /* CompoundState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompoundState.h; sourceTree = "<group>"; };
+		4CB2DAC32085DB7900819419 /* ClassDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassDecl.h; sourceTree = "<group>"; };
+		4CB2DAC42085DB7900819419 /* ContinueState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContinueState.h; sourceTree = "<group>"; };
+		4CB2DAC52085DB7900819419 /* WhileLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhileLoop.h; sourceTree = "<group>"; };
+		4CB2DAC62085DB7900819419 /* BreakState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakState.h; sourceTree = "<group>"; };
+		4CB2DAC72085DB7900819419 /* VariableDeclState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariableDeclState.h; sourceTree = "<group>"; };
+		4CB2DAC82085DB7900819419 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
+		4CB2DAC92085DB7900819419 /* FunctionDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionDecl.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				270925A11CDB409400522D32 /* antlrcpp.xcodeproj */,
+				4CB2DAB42085DB7900819419 /* AST */,
 				27C66A681C9591280021E494 /* antlr4-cpp-demo */,
 				37F135691B4AC02800E0CACF /* antlrcpp Tests */,
 				27C66A5C1C958EB50021E494 /* generated */,
@@ -204,6 +226,34 @@
 				37F1356B1B4AC02800E0CACF /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4CB2DAB42085DB7900819419 /* AST */ = {
+			isa = PBXGroup;
+			children = (
+				4CB2DAB52085DB7900819419 /* IfState.h */,
+				4CB2DAB62085DB7900819419 /* FunctionTypeNode.h */,
+				4CB2DAB72085DB7900819419 /* ReturnState.h */,
+				4CB2DAB82085DB7900819419 /* TypeNode.h */,
+				4CB2DAB92085DB7900819419 /* Decl.h */,
+				4CB2DABA2085DB7900819419 /* ASTListener.h */,
+				4CB2DABB2085DB7900819419 /* ASTNode.h */,
+				4CB2DABC2085DB7900819419 /* ForLoop.h */,
+				4CB2DABD2085DB7900819419 /* VaribleDecl.h */,
+				4CB2DABE2085DB7900819419 /* expr.h */,
+				4CB2DABF2085DB7900819419 /* ClassTypeNode.h */,
+				4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */,
+				4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */,
+				4CB2DAC22085DB7900819419 /* CompoundState.h */,
+				4CB2DAC32085DB7900819419 /* ClassDecl.h */,
+				4CB2DAC42085DB7900819419 /* ContinueState.h */,
+				4CB2DAC52085DB7900819419 /* WhileLoop.h */,
+				4CB2DAC62085DB7900819419 /* BreakState.h */,
+				4CB2DAC72085DB7900819419 /* VariableDeclState.h */,
+				4CB2DAC82085DB7900819419 /* State.h */,
+				4CB2DAC92085DB7900819419 /* FunctionDecl.h */,
+			);
+			path = AST;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
