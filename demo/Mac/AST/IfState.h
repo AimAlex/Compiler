@@ -2,5 +2,5 @@
 
 class IfState : public State{
 public:
-
+    
 };

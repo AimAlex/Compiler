@@ -22,7 +22,7 @@ using namespace antlr4;
 
 int main(int , const char **) {
     //    ANTLRFileStream(<#const std::string &fileName#>)
-    ANTLRInputStream input(u8"int main () {a = b + c;}");
+    ANTLRInputStream input(u8"int main () {a = b + c; \n a = a ++;}");
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     
