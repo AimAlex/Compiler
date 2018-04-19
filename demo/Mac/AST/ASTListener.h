@@ -1,8 +1,9 @@
 
 #include "antlr4-runtime.h"
 #include "MBaseListener.h"
-
-
+#include "IfState.h"
+#include <map>
+#include "FunctionDecl.h"
 /**
  * This class provides an empty implementation of MListener,
  * which can be extended to create a listener which only needs to handle a subset
@@ -10,24 +11,26 @@
  */
 class  ASTListener : public antlrcpptest::MBaseListener {
 public:
-    
+    std::map<antlr4::ParserRuleContext*, std::shared_ptr<ASTNode>> ASTTree;
     void enterProgram(antlrcpptest::MParser::ProgramContext * /*ctx*/) override {
         
     }
-    void exitProgram(antlrcpptest::MParser::ProgramContext * /*ctx*/) override {
-        
+    void exitProgram(antlrcpptest::MParser::ProgramContext * ctx) override {
+        std::cout<<ctx->getRuleIndex()<<std::endl;
     }
     
-    void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * ctx) override {
+    void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override {
         
     }
-    void exitProgramSection(antlrcpptest::MParser::ProgramSectionContext * ctx) override { }
+    void exitProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override { }
     
-    void enterStatement(antlrcpptest::MParser::StatementContext * ctx) override {
-        std::cout<<ctx->getText()<<std::endl;
-        std::cout<<ctx->getStart()->getLine();
+    void enterStatement(antlrcpptest::MParser::StatementContext * /*ctx*/) override {
+//        std::cout<<ctx->getText()<<std::endl;
+//        std::cout<<ctx->getStart()->getLine();
     }
-    void exitStatement(antlrcpptest::MParser::StatementContext * ctx) override { }
+    void exitStatement(antlrcpptest::MParser::StatementContext * ctx) override {
+        std::cout<<ctx<<std::endl;
+    }
     
     void enterBlockStatement(antlrcpptest::MParser::BlockStatementContext * /*ctx*/) override { }
     void exitBlockStatement(antlrcpptest::MParser::BlockStatementContext * /*ctx*/) override { }
@@ -38,7 +41,9 @@ public:
     void enterExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * /*ctx*/) override { }
     void exitExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * /*ctx*/) override { }
     
-    void enterSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * /*ctx*/) override { }
+    void enterSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * ctx) override {
+        IfState();
+    }
     void exitSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * /*ctx*/) override { }
     
     void enterIterationStatement(antlrcpptest::MParser::IterationStatementContext * /*ctx*/) override { }
@@ -51,8 +56,8 @@ public:
     void exitNonArrayTypeSpecifier(antlrcpptest::MParser::NonArrayTypeSpecifierContext * /*ctx*/) override { }
     
     void enterTypeSpecifier(antlrcpptest::MParser::TypeSpecifierContext * ctx) override {
-        std::cout<<ctx->getText()<<std::endl;
-        std::cout<<ctx->getStart()->getLine()<<std::endl;
+//        std::cout<<ctx->getText()<<std::endl;
+//        std::cout<<ctx->getStart()->getLine()<<std::endl;
     }
     void exitTypeSpecifier(antlrcpptest::MParser::TypeSpecifierContext * /*ctx*/) override { }
     
@@ -71,9 +76,13 @@ public:
     void enterClassFunctionDeclaration(antlrcpptest::MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
     void exitClassFunctionDeclaration(antlrcpptest::MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
     
-    void enterFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * ctx) override {
+    void enterFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * /*ctx*/) override {
     }
-    void exitFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * /*ctx*/) override { }
+    void exitFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * ctx) override {
+        
+        std::shared_ptr <ASTNode> ptr;
+        ASTTree[ctx] = ptr;
+    }
     
     void enterParameterDeclarationList(antlrcpptest::MParser::ParameterDeclarationListContext * /*ctx*/) override { }
     void exitParameterDeclarationList(antlrcpptest::MParser::ParameterDeclarationListContext * /*ctx*/) override { }

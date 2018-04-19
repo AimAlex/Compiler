@@ -21,8 +21,8 @@ using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char **) {
-    //    ANTLRFileStream(<#const std::string &fileName#>)
-    ANTLRInputStream input(u8"int main () {a = b + c; \n a = a ++;}");
+    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+    ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     

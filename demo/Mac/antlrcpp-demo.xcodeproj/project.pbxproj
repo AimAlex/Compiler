@@ -25,6 +25,7 @@
 		4CB2DAA020837FB700819419 /* MBaseListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2DA9220837FB700819419 /* MBaseListener.cpp */; };
 		4CB2DAA120837FB700819419 /* MParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2DA9320837FB700819419 /* MParser.cpp */; };
 		4CB2DAA220837FB700819419 /* MParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4CB2DA9320837FB700819419 /* MParser.cpp */; };
+		4CB2DACB2086422B00819419 /* M.g4 in Resources */ = {isa = PBXBuildFile; fileRef = 4CB2DACA2086422B00819419 /* M.g4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,8 +108,8 @@
 		4CB2DABA2085DB7900819419 /* ASTListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTListener.h; sourceTree = "<group>"; };
 		4CB2DABB2085DB7900819419 /* ASTNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTNode.h; sourceTree = "<group>"; };
 		4CB2DABC2085DB7900819419 /* ForLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForLoop.h; sourceTree = "<group>"; };
-		4CB2DABD2085DB7900819419 /* VaribleDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VaribleDecl.h; sourceTree = "<group>"; };
-		4CB2DABE2085DB7900819419 /* expr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = expr.h; sourceTree = "<group>"; };
+		4CB2DABD2085DB7900819419 /* VariableDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariableDecl.h; sourceTree = "<group>"; };
+		4CB2DABE2085DB7900819419 /* Expr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Expr.h; sourceTree = "<group>"; };
 		4CB2DABF2085DB7900819419 /* ClassTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrimitiveTypeNode.h; sourceTree = "<group>"; };
@@ -120,6 +121,14 @@
 		4CB2DAC72085DB7900819419 /* VariableDeclState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariableDeclState.h; sourceTree = "<group>"; };
 		4CB2DAC82085DB7900819419 /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
 		4CB2DAC92085DB7900819419 /* FunctionDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionDecl.h; sourceTree = "<group>"; };
+		4CB2DACA2086422B00819419 /* M.g4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = M.g4; path = ../../M.g4; sourceTree = "<group>"; };
+		4CB2DACD2088D2E100819419 /* ClassConstructor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassConstructor.h; sourceTree = "<group>"; };
+		4CB2DACE2088DE3300819419 /* ArrayAccess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayAccess.h; sourceTree = "<group>"; };
+		4CB2DACF2088DEFC00819419 /* BinaryExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BinaryExpr.h; sourceTree = "<group>"; };
+		4CB2DAD02088DFF100819419 /* BoolConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoolConst.h; sourceTree = "<group>"; };
+		4CB2DAD12088E03B00819419 /* EmptyExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmptyExpr.h; sourceTree = "<group>"; };
+		4CB2DAD22088E05E00819419 /* FunctionCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunctionCall.h; sourceTree = "<group>"; };
+		4CB2DAD32088E17500819419 /* Identifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Identifier.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +191,7 @@
 		27C66A681C9591280021E494 /* antlr4-cpp-demo */ = {
 			isa = PBXGroup;
 			children = (
+				4CB2DACA2086422B00819419 /* M.g4 */,
 				27C66A691C9591280021E494 /* main.cpp */,
 			);
 			path = "antlr4-cpp-demo";
@@ -239,8 +249,8 @@
 				4CB2DABA2085DB7900819419 /* ASTListener.h */,
 				4CB2DABB2085DB7900819419 /* ASTNode.h */,
 				4CB2DABC2085DB7900819419 /* ForLoop.h */,
-				4CB2DABD2085DB7900819419 /* VaribleDecl.h */,
-				4CB2DABE2085DB7900819419 /* expr.h */,
+				4CB2DABD2085DB7900819419 /* VariableDecl.h */,
+				4CB2DABE2085DB7900819419 /* Expr.h */,
 				4CB2DABF2085DB7900819419 /* ClassTypeNode.h */,
 				4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */,
 				4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */,
@@ -252,6 +262,13 @@
 				4CB2DAC72085DB7900819419 /* VariableDeclState.h */,
 				4CB2DAC82085DB7900819419 /* State.h */,
 				4CB2DAC92085DB7900819419 /* FunctionDecl.h */,
+				4CB2DACD2088D2E100819419 /* ClassConstructor.h */,
+				4CB2DACE2088DE3300819419 /* ArrayAccess.h */,
+				4CB2DACF2088DEFC00819419 /* BinaryExpr.h */,
+				4CB2DAD02088DFF100819419 /* BoolConst.h */,
+				4CB2DAD12088E03B00819419 /* EmptyExpr.h */,
+				4CB2DAD22088E05E00819419 /* FunctionCall.h */,
+				4CB2DAD32088E17500819419 /* Identifier.h */,
 			);
 			path = AST;
 			sourceTree = "<group>";
@@ -366,6 +383,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CB2DACB2086422B00819419 /* M.g4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
