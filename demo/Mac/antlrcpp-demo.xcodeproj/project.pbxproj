@@ -129,6 +129,14 @@
 		4CB2DAD12088E03B00819419 /* EmptyExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmptyExpr.h; sourceTree = "<group>"; };
 		4CB2DAD22088E05E00819419 /* FunctionCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunctionCall.h; sourceTree = "<group>"; };
 		4CB2DAD32088E17500819419 /* Identifier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Identifier.h; sourceTree = "<group>"; };
+		4CB2DAD4208973F800819419 /* IntConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntConst.h; sourceTree = "<group>"; };
+		4CB2DAD52089748000819419 /* MemberAccess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MemberAccess.h; sourceTree = "<group>"; };
+		4CB2DAD7208974FF00819419 /* NewExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NewExpr.h; sourceTree = "<group>"; };
+		4CB2DAD8208975C800819419 /* NullLiteral.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NullLiteral.h; sourceTree = "<group>"; };
+		4CB2DAD92089763100819419 /* SelfDecrement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfDecrement.h; sourceTree = "<group>"; };
+		4CB2DADA208976D500819419 /* SelfIncrement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfIncrement.h; sourceTree = "<group>"; };
+		4CB2DADB2089778300819419 /* StringConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringConst.h; sourceTree = "<group>"; };
+		4CB2DADC208977F200819419 /* UnaryExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnaryExpr.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +277,14 @@
 				4CB2DAD12088E03B00819419 /* EmptyExpr.h */,
 				4CB2DAD22088E05E00819419 /* FunctionCall.h */,
 				4CB2DAD32088E17500819419 /* Identifier.h */,
+				4CB2DAD4208973F800819419 /* IntConst.h */,
+				4CB2DAD52089748000819419 /* MemberAccess.h */,
+				4CB2DAD7208974FF00819419 /* NewExpr.h */,
+				4CB2DAD8208975C800819419 /* NullLiteral.h */,
+				4CB2DAD92089763100819419 /* SelfDecrement.h */,
+				4CB2DADA208976D500819419 /* SelfIncrement.h */,
+				4CB2DADB2089778300819419 /* StringConst.h */,
+				4CB2DADC208977F200819419 /* UnaryExpr.h */,
 			);
 			path = AST;
 			sourceTree = "<group>";

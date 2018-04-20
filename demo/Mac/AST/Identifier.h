@@ -11,7 +11,7 @@
 #include "Expr"
 
 class Identifier : public Expr{
-    std::tring name;
+    std::string name;
     size_t pos;
 //    SymbolInfo symbolInfo;
     
