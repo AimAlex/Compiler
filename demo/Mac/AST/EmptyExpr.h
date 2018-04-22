@@ -8,6 +8,8 @@
 
 #ifndef EmptyExpr_h
 #define EmptyExpr_h
-
+class EmptyExpr{
+    
+};
 
 #endif /* EmptyExpr_h */

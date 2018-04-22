@@ -4,7 +4,13 @@
 #include "State.h"
 class CompoundState : public State {
 public:
-    std::vector<std::shared_ptr<State>> stmts;
+    std::vector<std::shared_ptr<ASTNode>> stmts;
+    
+    void accept(std::vector<std::shared_ptr<ASTNode>> ptr) {
+        for(int i = 0; i < ptr.size(); ++i) {
+            stmts.push_back(ptr[i]);
+        }
+    }
 };
 
 #endif

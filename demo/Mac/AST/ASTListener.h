@@ -4,6 +4,8 @@
 #include "IfState.h"
 #include <map>
 #include "FunctionDecl.h"
+#include "EmptyExpr.h"
+#include "CompoundState.h"
 /**
  * This class provides an empty implementation of MListener,
  * which can be extended to create a listener which only needs to handle a subset
@@ -16,7 +18,7 @@ public:
         
     }
     void exitProgram(antlrcpptest::MParser::ProgramContext * ctx) override {
-        std::cout<<ctx->getRuleIndex()<<std::endl;
+        
     }
     
     void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override {
@@ -29,25 +31,54 @@ public:
 //        std::cout<<ctx->getStart()->getLine();
     }
     void exitStatement(antlrcpptest::MParser::StatementContext * ctx) override {
-        std::cout<<ctx<<std::endl;
+//        std::cout<<ctx<<std::endl;
     }
     
     void enterBlockStatement(antlrcpptest::MParser::BlockStatementContext * /*ctx*/) override { }
-    void exitBlockStatement(antlrcpptest::MParser::BlockStatementContext * /*ctx*/) override { }
+    void exitBlockStatement(antlrcpptest::MParser::BlockStatementContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new CompoundState());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        for(int i = 0; i < ctx->blockItem().size(); ++i) {
+            vec.push_back(ASTTree[ctx->blockItem()[i]]);
+        }
+        ptr -> accept(vec);
+    }
     
     void enterBlockItem(antlrcpptest::MParser::BlockItemContext * /*ctx*/) override { }
     void exitBlockItem(antlrcpptest::MParser::BlockItemContext * /*ctx*/) override { }
     
     void enterExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * /*ctx*/) override { }
-    void exitExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * /*ctx*/) override { }
-    
-    void enterSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * ctx) override {
-        IfState();
+    void exitExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * ctx) override {
+        if(ctx->expression() == NULL) {
+            std::cout<<"NULL"<<std::endl;
+            ASTTree[ctx] = NULL;
+        }
+        else{
+            ASTTree[ctx] = ASTTree[ctx->expression()];
+//            std::cout<<ctx->toString()<<std::endl;
+            std::cout<<ctx<<std::endl;
+        }
     }
-    void exitSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * /*ctx*/) override { }
+    
+    void enterSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * /*ctx*/) override {
+    }
+    void exitSelectionStatement(antlrcpptest::MParser::SelectionStatementContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new IfState());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx -> expression()]);
+        vec.push_back(ASTTree[ctx -> statement()[0]]);
+        if(ctx -> statement()[1] ==  NULL) {
+            vec.push_back(NULL);
+        }
+        else {
+            vec.push_back(ASTTree[ctx -> statement()[1]]);
+        }
+        ptr -> accept(vec);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterIterationStatement(antlrcpptest::MParser::IterationStatementContext * /*ctx*/) override { }
-    void exitIterationStatement(antlrcpptest::MParser::IterationStatementContext * /*ctx*/) override { }
+    void exitIterationStatement(antlrcpptest::MParser::IterationStatementContext * ctx) override { }
     
     void enterJumpStatement(antlrcpptest::MParser::JumpStatementContext * /*ctx*/) override { }
     void exitJumpStatement(antlrcpptest::MParser::JumpStatementContext * /*ctx*/) override { }
