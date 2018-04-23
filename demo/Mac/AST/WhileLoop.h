@@ -1,12 +1,16 @@
 #ifndef WhileLoop_h
 #define WhileLoop_h
 #include "State.h"
-#include "Expr"
+#include "Expr.h"
 class WhileLoop : public State{
 public:
     size_t Position;
-    shared_ptr<Expr> cond;
-    shared_ptr<Expr> body;
+    std::shared_ptr<ASTNode> cond;
+    std::shared_ptr<ASTNode> body;
+    void accept(std::vector<std::shared_ptr<ASTNode>> ptr) {
+        cond = ptr[0];
+        body = ptr[1];
+    }
 };
 
 #endif

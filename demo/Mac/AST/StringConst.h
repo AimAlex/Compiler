@@ -10,7 +10,12 @@
 #define StringConst_h
 #include "Expr.h"
 class StringConst : public Expr {
+public:
     std::string value;
+    StringConst(std::string str) {
+        value = str;
+    }
+    virtual void accept(std::vector<std::shared_ptr<ASTNode>>){};
 };
 
 #endif /* StringConst_h */

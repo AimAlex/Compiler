@@ -4,8 +4,11 @@
 
 class ReturnState : public State {
 public:
-    std::shared_ptr<Expr> value;
+    std::shared_ptr<ASTNode> value;
     size_t position;
+    void accept(std::vector<std::shared_ptr<ASTNode>> ptr){
+        value = ptr[0];
+    }
 };
 
 
