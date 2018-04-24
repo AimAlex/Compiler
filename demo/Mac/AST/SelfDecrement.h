@@ -10,8 +10,11 @@
 #define SelfDecrement_h
 #include "ASTNode.h"
 class SelfDecrement : public ASTNode {
-    std::shared_ptr<Expr> oneself;
-    size_t posSelf;
-}
+    std::shared_ptr<ASTNode> oneself;
+    size_t position;
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        oneself = vec[0];
+    }
+};
 
 #endif /* SelfDecrement_h */

@@ -19,6 +19,18 @@
 #include "ArrayTypeNode.h"
 #include "SelfDecrement.h"
 #include "SelfIncrement.h"
+#include "FunctionCall.h"
+#include "ArrayAccess.h"
+#include "MemberAccess.h"
+#include "UnaryExpr.h"
+#include "BinaryExpr.h"
+#include "Identifier.h"
+#include "StringConst.h"
+#include "IntConst.h"
+#include "NullLiteral.h"
+#include "BoolConst.h"
+#include <cstdio>
+
 /**
  * This class provides an empty implementation of MListener,
  * which can be extended to create a listener which only needs to handle a subset
@@ -326,36 +338,189 @@ public:
     }
     
     void enterNew(antlrcpptest::MParser::NewContext * /*ctx*/) override { }
-    void exitNew(antlrcpptest::MParser::NewContext * /*ctx*/) override { }
+    void exitNew(antlrcpptest::MParser::NewContext * ctx) override {
+//        std::cout<<ctx->creator()->getText()<<std::endl;
+        ASTTree[ctx] = ASTTree[ctx->creator()];
+    }
     
     void enterIdentifier(antlrcpptest::MParser::IdentifierContext * /*ctx*/) override { }
-    void exitIdentifier(antlrcpptest::MParser::IdentifierContext * /*ctx*/) override { }
+    void exitIdentifier(antlrcpptest::MParser::IdentifierContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new Identifier());
+        ptr->acceptStr(ctx->Identifier()->getText());
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->Identifier()->getText()<<std::endl;
+    }
     
     void enterMemberAccess(antlrcpptest::MParser::MemberAccessContext * /*ctx*/) override { }
-    void exitMemberAccess(antlrcpptest::MParser::MemberAccessContext * /*ctx*/) override { }
+    void exitMemberAccess(antlrcpptest::MParser::MemberAccessContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new MemberAccess());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx -> expression()]);
+        ptr->accept(vec);
+        ptr->acceptStr(ctx->Identifier()->getText());
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->Identifier()->getText()<<std::endl;
+    }
     
     void enterLiteral(antlrcpptest::MParser::LiteralContext * /*ctx*/) override { }
-    void exitLiteral(antlrcpptest::MParser::LiteralContext * /*ctx*/) override { }
+    void exitLiteral(antlrcpptest::MParser::LiteralContext * ctx) override {
+        ASTTree[ctx] = ASTTree[ctx->constant()];
+    }
     
     void enterBinaryExpr(antlrcpptest::MParser::BinaryExprContext * /*ctx*/) override { }
-    void exitBinaryExpr(antlrcpptest::MParser::BinaryExprContext * /*ctx*/) override { }
+    void exitBinaryExpr(antlrcpptest::MParser::BinaryExprContext * ctx) override {
+        BinaryExpr::BinaryOp op;
+        switch (ctx->op->getType()) {
+            case antlrcpptest::MParser::Star:
+                op = BinaryExpr::MUL;
+                break;
+            case antlrcpptest::MParser::Div:
+                op = BinaryExpr::DIV;
+                break;
+            case antlrcpptest::MParser::Mod:
+                op = BinaryExpr::MOD;
+                break;
+            case antlrcpptest::MParser::Plus:
+                op = BinaryExpr::ADD;
+                break;
+            case antlrcpptest::MParser::Minus:
+                op = BinaryExpr::SUB;
+                break;
+            case antlrcpptest::MParser::LeftShift:
+                op = BinaryExpr::SHL;
+                break;
+            case antlrcpptest::MParser::RightShift:
+                op = BinaryExpr::SHR;
+                break;
+            case antlrcpptest::MParser::Less:
+                op = BinaryExpr::LT;
+                break;
+            case antlrcpptest::MParser::Greater:
+                op = BinaryExpr::GT;
+                break;
+            case antlrcpptest::MParser::LessEqual:
+                op = BinaryExpr::LE;
+                break;
+            case antlrcpptest::MParser::GreaterEqual:
+                op = BinaryExpr::GE;
+                break;
+            case antlrcpptest::MParser::Equal:
+                op = BinaryExpr::EQ;
+                break;
+            case antlrcpptest::MParser::NotEqual:
+                op = BinaryExpr::NE;
+                break;
+            case antlrcpptest::MParser::And:
+                op = BinaryExpr::BITWISE_AND;
+                break;
+            case antlrcpptest::MParser::Caret:
+                op = BinaryExpr::XOR;
+                break;
+            case antlrcpptest::MParser::Or:
+                op = BinaryExpr::BITWISE_OR;
+                break;
+            case antlrcpptest::MParser::AndAnd:
+                op = BinaryExpr::LOGICAL_AND;
+                break;
+            case antlrcpptest::MParser::OrOr:
+                op = BinaryExpr::LOGICAL_OR;
+                break;
+            case antlrcpptest::MParser::Assign:
+                op = BinaryExpr::ASSIGN;
+                break;
+            default:
+                throw(0);
+                break;
+        }
+        std::shared_ptr<ASTNode> ptr(new BinaryExpr(op));
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->expression()[0]]);
+        vec.push_back(ASTTree[ctx->expression()[1]]);
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->expression()[0]->getText()<<std::endl;
+//        std::cout<<ctx->expression()[1]->getText()<<std::endl;
+    }
     
     void enterSubscript(antlrcpptest::MParser::SubscriptContext * /*ctx*/) override { }
-    void exitSubscript(antlrcpptest::MParser::SubscriptContext * /*ctx*/) override { }
+    void exitSubscript(antlrcpptest::MParser::SubscriptContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new ArrayAccess());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->expression()[0]]);
+        vec.push_back(ASTTree[ctx->expression()[1]]);
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->expression()[0]->getText()<<std::endl<<ctx->expression()[1]->getText()<<std::endl;
+    }
     
     void enterFunctionCall(antlrcpptest::MParser::FunctionCallContext * /*ctx*/) override { }
-    void exitFunctionCall(antlrcpptest::MParser::FunctionCallContext * /*ctx*/) override { }
+    void exitFunctionCall(antlrcpptest::MParser::FunctionCallContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new FunctionCall());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->expression()]);
+        if(ctx->parameterList() != NULL) {
+            for(int i = 0; i < ctx->parameterList()->expression().size(); ++i) {
+                vec.push_back(ASTTree[ctx->parameterList()->expression()[i]]);
+            }
+        }
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->expression()->getText()<<std::endl;
+    }
     
     void enterPostfixIncDec(antlrcpptest::MParser::PostfixIncDecContext * /*ctx*/) override { }
     void exitPostfixIncDec(antlrcpptest::MParser::PostfixIncDecContext * ctx) override {
-        if (ctx -> op -> )
-            (ctx, new SelfIncrement(expr, new SourcePosition(ctx.expression())));
-        else
-            map.put(ctx, new SelfDecrement(expr, new SourcePosition(ctx.expression())));
+//        std::cout<<ctx->expression()->getText()<<std::endl;
+        if (ctx->op->getType() == antlrcpptest::MParser::PlusPlus){
+            std::shared_ptr<ASTNode> ptr(new SelfIncrement());
+            std::vector<std::shared_ptr<ASTNode>> vec;
+            vec.push_back(ASTTree[ctx->expression()]);
+            ptr -> accept(vec);
+            ASTTree[ctx] = ptr;
+        }
+        else {
+            std::shared_ptr<ASTNode> ptr(new SelfDecrement());
+            std::vector<std::shared_ptr<ASTNode>> vec;
+            vec.push_back(ASTTree[ctx->expression()]);
+            ptr -> accept(vec);
+            ASTTree[ctx] = ptr;
+        }
     }
     
     void enterUnaryExpr(antlrcpptest::MParser::UnaryExprContext * /*ctx*/) override { }
-    void exitUnaryExpr(antlrcpptest::MParser::UnaryExprContext * /*ctx*/) override { }
+    void exitUnaryExpr(antlrcpptest::MParser::UnaryExprContext * ctx) override {
+        UnaryExpr::UnaryOp op;
+        switch (ctx->op->getType()) {
+            case antlrcpptest::MParser::PlusPlus:
+                op = UnaryExpr::INC;
+                break;
+            case antlrcpptest::MParser::MinusMinus:
+                op = UnaryExpr::DEC;
+                break;
+            case antlrcpptest::MParser::Plus:
+                op = UnaryExpr::POS;
+                break;
+            case antlrcpptest::MParser::Minus:
+                op = UnaryExpr::NEG;
+                break;
+            case antlrcpptest::MParser::Not:
+                op = UnaryExpr::LOGICAL_NOT;
+                break;
+            case antlrcpptest::MParser::Tilde:
+                op = UnaryExpr::BITWISE_NOT;
+                break;
+            default:
+                throw(0);
+                break;
+        }
+        std::shared_ptr<ASTNode> ptr(new UnaryExpr(op));
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->expression()]);
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+//        std::cout<<ctx->expression()->getText()<<std::endl;
+//        std::cout<<ctx->op->getType()<<std::endl;
+    }
     
     void enterSubExpression(antlrcpptest::MParser::SubExpressionContext * /*ctx*/) override { }
     void exitSubExpression(antlrcpptest::MParser::SubExpressionContext * /*ctx*/) override { }
@@ -373,7 +538,26 @@ public:
     void exitParameterList(antlrcpptest::MParser::ParameterListContext * /*ctx*/) override { }
     
     void enterConstant(antlrcpptest::MParser::ConstantContext * /*ctx*/) override { }
-    void exitConstant(antlrcpptest::MParser::ConstantContext * /*ctx*/) override { }
+    void exitConstant(antlrcpptest::MParser::ConstantContext * ctx) override {
+        std::string s = ctx -> type -> getText();
+        size_t type = ctx -> type -> getType();
+        if(type == antlrcpptest::MParser::IntegerConstant){
+            std::shared_ptr<ASTNode> ptr(new IntConst(std::atoi(s.c_str())));
+            ASTTree[ctx] = ptr;
+        }
+        else if(type == antlrcpptest::MParser::NullLiteral){
+            std::shared_ptr<ASTNode> ptr(new NullLiteral());
+            ASTTree[ctx] = ptr;
+        }
+        else if(type == antlrcpptest::MParser::BoolConstant){
+            std::shared_ptr<ASTNode> ptr(new BoolConst(s == "true"));
+            ASTTree[ctx] = ptr;
+        }
+        else if(type == antlrcpptest::MParser::CharacterConstant || type == antlrcpptest::MParser::StringLiteral){
+            s = 
+            std::cout<<s<<std::endl;
+        }
+    }
     
     
     void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

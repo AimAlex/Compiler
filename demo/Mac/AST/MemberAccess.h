@@ -10,10 +10,15 @@
 #define MemberAccess_h
 #include "ASTNode.h"
 class MemberAccess : public ASTNode{
-    std::shared_ptr <Expr> record;
+    std::shared_ptr <ASTNode> record;
     std::string member;
     size_t position;
-    
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        record = vec[0];
+    }
+    void acceptStr(std::string str){
+        member = str;
+    }
 };
 
 #endif /* MemberAccess_h */

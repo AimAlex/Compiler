@@ -11,6 +11,7 @@
 
 #include "ASTNode.h"
 class BinaryExpr : public ASTNode {
+public:
     enum BinaryOp {
         ASSIGN,
         LOGICAL_OR, LOGICAL_AND,
@@ -19,11 +20,18 @@ class BinaryExpr : public ASTNode {
         SHL, SHR,
         ADD, SUB,
         MUL, DIV, MOD
-    }
+    };
     BinaryOp op;
-    std::shared_ptr<Expr> lhs;
-    std::shared_ptr<Expr> rhs;
+    std::shared_ptr<ASTNode> lhs;
+    std::shared_ptr<ASTNode> rhs;
     size_t position;
+   BinaryExpr(BinaryOp opp) {
+        op = opp;
+    }
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        lhs = vec[0];
+        rhs = vec[1];
+    }
 };
 
 

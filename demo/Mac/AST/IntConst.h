@@ -11,7 +11,11 @@
 #include "ASTNode.h"
 
 class IntConst : public ASTNode {
+public:
     int value;
+    IntConst(int i) {
+        value = i;
+    }
 };
 
 #endif /* IntConst_h */

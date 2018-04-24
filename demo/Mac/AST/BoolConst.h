@@ -10,7 +10,11 @@
 #define BoolConst_h
 #include "ASTNode.h"
 class BoolConst : public ASTNode{
+public:
     bool value;
+    BoolConst(bool i){
+        value = i;
+    }
 };
 
 #endif /* BoolConst_h */

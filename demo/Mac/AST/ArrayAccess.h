@@ -11,9 +11,13 @@
 #include "ASTNode.h"
 
 class ArrayAccess : public ASTNode{
-    std::shared_ptr<Expr> array;
-    std::shared_ptr<Expr> subscript;
+    std::shared_ptr<ASTNode> array;
+    std::shared_ptr<ASTNode> subscript;
     size_t position;
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        array = vec[0];
+        subscript = vec[0];
+    }
 };
 
 #endif /* ArrayAccess_h */

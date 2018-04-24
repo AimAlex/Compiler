@@ -11,8 +11,14 @@
 #include "ASTNode.h"
 #include <vector>
 class FunctionCall : public ASTNode {
-    std::shared_ptr<Expr> name;
-    std::vector<std::shared_ptr<Expr>> parameters;
+    std::shared_ptr<ASTNode> name;
+    std::vector<std::shared_ptr<ASTNode>> parameters;
     size_t position;
-//    Expr argThis = null;
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec) {
+        name = vec[0];
+        for(int i = 1; i < vec.size(); ++i) {
+            parameters.push_back(vec[i]);
+        }
+    }
+};
 #endif /* FunctionCall_h */

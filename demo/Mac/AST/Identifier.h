@@ -11,10 +11,13 @@
 #include "ASTNode.h"
 
 class Identifier : public ASTNode{
+public:
     std::string name;
     size_t pos;
 //    SymbolInfo symbolInfo;
-    
+    void acceptStr(std::string str){
+        name = str;
+    }
 };
 
 #endif /* Identifier_h */
