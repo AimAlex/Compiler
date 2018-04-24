@@ -8,8 +8,9 @@
 
 #ifndef UnaryExpr_h
 #define UnaryExpr_h
-#include "Expr.h"
-class UnaryExpr : public Expr {
+#include "ASTNode.h"
+
+class UnaryExpr : public ASTNode {
     enum UnaryOp {
         INC, DEC, POS, NEG, LOGICAL_NOT, BITWISE_NOT
     }

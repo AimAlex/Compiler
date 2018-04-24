@@ -1,8 +1,8 @@
 #ifndef WhileLoop_h
 #define WhileLoop_h
-#include "State.h"
-#include "Expr.h"
-class WhileLoop : public State{
+#include "ASTNode.h"
+
+class WhileLoop : public ASTNode{
 public:
     size_t Position;
     std::shared_ptr<ASTNode> cond;

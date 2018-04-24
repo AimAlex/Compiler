@@ -8,10 +8,10 @@
 
 #ifndef NewExpr_h
 #define NewExpr_h
-#include "TypeNode.h"
+#include "ASTNode.h"
 #include <vector>
-#include "Expr.h"
-class NewExpr : public Expr {
+
+class NewExpr : public ASTNode{
     std::shared_ptr<TypeNode> type;
     std::vector<std::shared_ptr<Expr>> dim;
     std::vector<size_t> posDim;

@@ -8,8 +8,8 @@
 
 #ifndef BoolConst_h
 #define BoolConst_h
-#include "Expr"
-class BoolConst : public Expr{
+#include "ASTNode.h"
+class BoolConst : public ASTNode{
     bool value;
 };
 

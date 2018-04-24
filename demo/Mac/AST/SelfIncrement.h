@@ -8,8 +8,8 @@
 
 #ifndef SelfIncrement_h
 #define SelfIncrement_h
-#include "expr.h"
-class SelfIncrement : public Expr{
+#include "ASTNode.h"
+class SelfIncrement : public ASTNode{
     shared_ptr<Expr> oneself;
     size_t posSelf;
 };

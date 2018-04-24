@@ -1,8 +1,8 @@
 #ifndef ReturnState_h
 #define ReturnState_h
-#include "Expr.h"
+#include "ASTNode.h"
 
-class ReturnState : public State {
+class ReturnState : public ASTNode {
 public:
     std::shared_ptr<ASTNode> value;
     size_t position;

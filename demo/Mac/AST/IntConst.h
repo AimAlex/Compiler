@@ -8,9 +8,9 @@
 
 #ifndef IntConst_h
 #define IntConst_h
-#include "Expr.h"
+#include "ASTNode.h"
 
-class IntConst : public Expr {
+class IntConst : public ASTNode {
     int value;
 };
 

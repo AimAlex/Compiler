@@ -8,7 +8,8 @@
 
 #ifndef MemberAccess_h
 #define MemberAccess_h
-class MemberAccess{
+#include "ASTNode.h"
+class MemberAccess : public ASTNode{
     std::shared_ptr <Expr> record;
     std::string member;
     size_t position;

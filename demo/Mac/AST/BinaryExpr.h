@@ -9,8 +9,8 @@
 #ifndef BinaryExpr_h
 #define BinaryExpr_h
 
-#include "Expr.h"
-class BinaryExpr : public Expr {
+#include "ASTNode.h"
+class BinaryExpr : public ASTNode {
     enum BinaryOp {
         ASSIGN,
         LOGICAL_OR, LOGICAL_AND,

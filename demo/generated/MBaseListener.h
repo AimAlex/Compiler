@@ -51,6 +51,9 @@ public:
   virtual void enterTypeSpecifier(MParser::TypeSpecifierContext * /*ctx*/) override { }
   virtual void exitTypeSpecifier(MParser::TypeSpecifierContext * /*ctx*/) override { }
 
+  virtual void enterLbr(MParser::LbrContext * /*ctx*/) override { }
+  virtual void exitLbr(MParser::LbrContext * /*ctx*/) override { }
+
   virtual void enterVariableDeclaration(MParser::VariableDeclarationContext * /*ctx*/) override { }
   virtual void exitVariableDeclaration(MParser::VariableDeclarationContext * /*ctx*/) override { }
 
@@ -63,8 +66,8 @@ public:
   virtual void enterMemberDeclaration(MParser::MemberDeclarationContext * /*ctx*/) override { }
   virtual void exitMemberDeclaration(MParser::MemberDeclarationContext * /*ctx*/) override { }
 
-  virtual void enterClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
-  virtual void exitClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
+  virtual void enterClassConstructor(MParser::ClassConstructorContext * /*ctx*/) override { }
+  virtual void exitClassConstructor(MParser::ClassConstructorContext * /*ctx*/) override { }
 
   virtual void enterFunctionDeclaration(MParser::FunctionDeclarationContext * /*ctx*/) override { }
   virtual void exitFunctionDeclaration(MParser::FunctionDeclarationContext * /*ctx*/) override { }

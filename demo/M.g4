@@ -64,8 +64,11 @@ nonArrayTypeSpecifier
     ;
 
 typeSpecifier
-    :   typeSpecifier '[' ']'
-    |   nonArrayTypeSpecifier
+    :   nonArrayTypeSpecifier (lbr)*
+    ;
+
+lbr
+    :   '[' ']'
     ;
 
 variableDeclaration
@@ -81,13 +84,12 @@ classDeclaration
     ;
 
 memberDeclaration
-    :   typeSpecifier Identifier ';'
-    |   classFunctionDeclaration
+    :   variableDeclaration
+    |   functionDeclaration
+    |   classConstructor
     ;
-
-classFunctionDeclaration
-    :   typeSpecifier Identifier '(' parameterDeclarationList? ')' blockStatement
-    |   Identifier '(' ')' blockStatement
+classConstructor
+    :   Identifier '(' ')' blockStatement
     ;
 
 functionDeclaration

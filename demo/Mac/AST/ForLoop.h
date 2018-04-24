@@ -1,10 +1,9 @@
 #ifndef ForLoop_h
 #define ForLoop_h
-#include "State.h"
-#include "Expr.h"
+#include "ASTNode.h"
 #include "VariableDecl.h"
 #include <vector>
-class ForLoop : public State{
+class ForLoop : public ASTNode{
 public:
     size_t position;
     std::vector<std::shared_ptr<ASTNode>> initWithDecl;

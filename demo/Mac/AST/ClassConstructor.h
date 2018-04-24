@@ -8,12 +8,20 @@
 
 #ifndef ClassConstructor_h
 #define ClassConstructor_h
-
+#include "ASTNode.h"
 #include "CompoundState.h"
-class ClassConstructor{
+#include <vector>
+class ClassConstructor : public ASTNode{
 public:
     size_t position;
-    std::shared_ptr<CompoundState> body;
+    std::string name;
+    std::shared_ptr<ASTNode> body;
+    void acceptStr(std::string str) {
+        name = str;
+    }
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        body = vec[0];
+    }
 };
 
 #endif /* ClassConstructor_h */

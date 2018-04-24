@@ -1,8 +1,9 @@
 #ifndef PrimitiveTypeNode_h
 #define PrimitiveTypeNode_h
-#include "TypeNode.h"
 
-class PrimitiveTypeNode : public TypeNode {
+#include "ASTNode.h"
+
+class PrimitiveTypeNode : public ASTNode {
 public:
     enum Types {
         INT, BOOL, STRING, VOID

@@ -8,7 +8,8 @@
 
 #ifndef SelfDecrement_h
 #define SelfDecrement_h
-class SelfDecrement : public Expr {
+#include "ASTNode.h"
+class SelfDecrement : public ASTNode {
     std::shared_ptr<Expr> oneself;
     size_t posSelf;
 }

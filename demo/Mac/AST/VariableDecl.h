@@ -1,12 +1,9 @@
 #ifndef VariableDecl_h
 #define VariableDecl_h
 
-#include "Decl.h"
-#include "Expr.h"
-#include "TypeNode.h"
-#include "StringConst.h"
+#include "ASTNode.h"
 
-class VariableDecl : public Decl{
+class VariableDecl : public ASTNode{
 public:
     size_t position;
     std::shared_ptr <ASTNode> type;
@@ -14,7 +11,7 @@ public:
     std::shared_ptr<ASTNode> init;
     void accept(std::vector<std::shared_ptr<ASTNode>> ptr){
         type = ptr[0];
-        type = ptr[1];
+        init = ptr[1];
     }
     void acceptStr(std::string str){
         name = str;

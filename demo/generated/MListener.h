@@ -49,6 +49,9 @@ public:
   virtual void enterTypeSpecifier(MParser::TypeSpecifierContext *ctx) = 0;
   virtual void exitTypeSpecifier(MParser::TypeSpecifierContext *ctx) = 0;
 
+  virtual void enterLbr(MParser::LbrContext *ctx) = 0;
+  virtual void exitLbr(MParser::LbrContext *ctx) = 0;
+
   virtual void enterVariableDeclaration(MParser::VariableDeclarationContext *ctx) = 0;
   virtual void exitVariableDeclaration(MParser::VariableDeclarationContext *ctx) = 0;
 
@@ -61,8 +64,8 @@ public:
   virtual void enterMemberDeclaration(MParser::MemberDeclarationContext *ctx) = 0;
   virtual void exitMemberDeclaration(MParser::MemberDeclarationContext *ctx) = 0;
 
-  virtual void enterClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext *ctx) = 0;
-  virtual void exitClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext *ctx) = 0;
+  virtual void enterClassConstructor(MParser::ClassConstructorContext *ctx) = 0;
+  virtual void exitClassConstructor(MParser::ClassConstructorContext *ctx) = 0;
 
   virtual void enterFunctionDeclaration(MParser::FunctionDeclarationContext *ctx) = 0;
   virtual void exitFunctionDeclaration(MParser::FunctionDeclarationContext *ctx) = 0;

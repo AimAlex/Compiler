@@ -1,17 +1,33 @@
 #ifndef ClassDecl_h
 #define ClassDecl_h
-#include "Decl.h"
+#include "ASTNode.h"
 #include <vector>
 #include "VariableDecl.h"
 #include "FunctionDecl.h"
-#include "ClassConstructor"
-class ClassDecl : public Decl{
+#include "ClassConstructor.h"
+class ClassDecl : public ASTNode{
 public:
     size_t position;
-    vector<std::shared_ptr<VariableDecl>> variableMembers;
-    vector<std::shared_ptr<FunctionDecl>> functionMembers;
-    shared_ptr<ClassConstructor> classconstructor;
+    std::vector<std::shared_ptr<ASTNode>> variableMembers;
+    std::vector<std::shared_ptr<ASTNode>> functionMembers;
+    std::shared_ptr<ASTNode> classconstructor;
     std::string name;
+    void acceptStr(std::string str) {
+        name = str;
+    }
+    void acceptConstructor(std::shared_ptr<ASTNode> constructor){
+        classconstructor = constructor;
+    }
+    void acceptFunction(std::vector<std::shared_ptr<ASTNode>> funcList){
+        for(int i = 0; i < funcList.size(); ++i){
+            functionMembers.push_back(funcList[i]);
+        }
+    }
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        for(int i = 0; i < vec.size(); ++i){
+            variableMembers.push_back(vec[i]);
+        }
+    }
 };
 
 #endif

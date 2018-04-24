@@ -29,10 +29,11 @@ public:
     RuleProgram = 0, RuleProgramSection = 1, RuleStatement = 2, RuleBlockStatement = 3, 
     RuleBlockItem = 4, RuleExpressionStatement = 5, RuleSelectionStatement = 6, 
     RuleIterationStatement = 7, RuleJumpStatement = 8, RuleNonArrayTypeSpecifier = 9, 
-    RuleTypeSpecifier = 10, RuleVariableDeclaration = 11, RuleVariableInitDeclarator = 12, 
-    RuleClassDeclaration = 13, RuleMemberDeclaration = 14, RuleClassFunctionDeclaration = 15, 
-    RuleFunctionDeclaration = 16, RuleParameterDeclarationList = 17, RuleParameterDeclaration = 18, 
-    RuleExpression = 19, RuleCreator = 20, RuleParameterList = 21, RuleConstant = 22
+    RuleTypeSpecifier = 10, RuleLbr = 11, RuleVariableDeclaration = 12, 
+    RuleVariableInitDeclarator = 13, RuleClassDeclaration = 14, RuleMemberDeclaration = 15, 
+    RuleClassConstructor = 16, RuleFunctionDeclaration = 17, RuleParameterDeclarationList = 18, 
+    RuleParameterDeclaration = 19, RuleExpression = 20, RuleCreator = 21, 
+    RuleParameterList = 22, RuleConstant = 23
   };
 
   MParser(antlr4::TokenStream *input);
@@ -56,11 +57,12 @@ public:
   class JumpStatementContext;
   class NonArrayTypeSpecifierContext;
   class TypeSpecifierContext;
+  class LbrContext;
   class VariableDeclarationContext;
   class VariableInitDeclaratorContext;
   class ClassDeclarationContext;
   class MemberDeclarationContext;
-  class ClassFunctionDeclarationContext;
+  class ClassConstructorContext;
   class FunctionDeclarationContext;
   class ParameterDeclarationListContext;
   class ParameterDeclarationContext;
@@ -244,7 +246,8 @@ public:
     TypeSpecifierContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     NonArrayTypeSpecifierContext *nonArrayTypeSpecifier();
-    TypeSpecifierContext *typeSpecifier();
+    std::vector<LbrContext *> lbr();
+    LbrContext* lbr(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -254,7 +257,21 @@ public:
   };
 
   TypeSpecifierContext* typeSpecifier();
-  TypeSpecifierContext* typeSpecifier(int precedence);
+
+  class  LbrContext : public antlr4::ParserRuleContext {
+  public:
+    LbrContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  LbrContext* lbr();
+
   class  VariableDeclarationContext : public antlr4::ParserRuleContext {
   public:
     VariableDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -309,9 +326,9 @@ public:
   public:
     MemberDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TypeSpecifierContext *typeSpecifier();
-    antlr4::tree::TerminalNode *Identifier();
-    ClassFunctionDeclarationContext *classFunctionDeclaration();
+    VariableDeclarationContext *variableDeclaration();
+    FunctionDeclarationContext *functionDeclaration();
+    ClassConstructorContext *classConstructor();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -322,14 +339,12 @@ public:
 
   MemberDeclarationContext* memberDeclaration();
 
-  class  ClassFunctionDeclarationContext : public antlr4::ParserRuleContext {
+  class  ClassConstructorContext : public antlr4::ParserRuleContext {
   public:
-    ClassFunctionDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    ClassConstructorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TypeSpecifierContext *typeSpecifier();
     antlr4::tree::TerminalNode *Identifier();
     BlockStatementContext *blockStatement();
-    ParameterDeclarationListContext *parameterDeclarationList();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -338,7 +353,7 @@ public:
    
   };
 
-  ClassFunctionDeclarationContext* classFunctionDeclaration();
+  ClassConstructorContext* classConstructor();
 
   class  FunctionDeclarationContext : public antlr4::ParserRuleContext {
   public:
@@ -612,7 +627,6 @@ public:
 
 
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
-  bool typeSpecifierSempred(TypeSpecifierContext *_localctx, size_t predicateIndex);
   bool expressionSempred(ExpressionContext *_localctx, size_t predicateIndex);
 
 private:

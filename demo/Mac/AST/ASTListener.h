@@ -15,6 +15,10 @@
 #include "ClassTypeNode.h"
 #include "StringConst.h"
 #include "VariableDecl.h"
+#include "ClassDecl.h"
+#include "ArrayTypeNode.h"
+#include "SelfDecrement.h"
+#include "SelfIncrement.h"
 /**
  * This class provides an empty implementation of MListener,
  * which can be extended to create a listener which only needs to handle a subset
@@ -51,6 +55,7 @@ public:
             vec.push_back(ASTTree[ctx->blockItem()[i]]);
         }
         ptr -> accept(vec);
+        ASTTree[ctx] = ptr;
     }
     
     void enterBlockItem(antlrcpptest::MParser::BlockItemContext * /*ctx*/) override { }
@@ -208,21 +213,37 @@ public:
     
     void enterTypeSpecifier(antlrcpptest::MParser::TypeSpecifierContext * /*ctx*/) override {
     }
-    void exitTypeSpecifier(antlrcpptest::MParser::TypeSpecifierContext * /*ctx*/) override { }
+    void exitTypeSpecifier(antlrcpptest::MParser::TypeSpecifierContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new ArrayTypeNode());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->nonArrayTypeSpecifier()]);
+        ptr->accept(vec);
+        ptr->acceptNum(ctx->lbr().size());
+        ASTTree[ctx] = ptr;
+    }
     
     void enterVariableDeclaration(antlrcpptest::MParser::VariableDeclarationContext * /*ctx*/) override { }
     void exitVariableDeclaration(antlrcpptest::MParser::VariableDeclarationContext * ctx) override {
-        std::cout<<ctx->typeSpecifier()->getText()<<std::endl;
+//        std::cout<<ctx->typeSpecifier()->getText()<<std::endl;
         std::shared_ptr<ASTNode> iden = ASTTree[ctx->typeSpecifier()];
         for(int i = 0; i < ctx->variableInitDeclarator().size(); ++i) {
             std::shared_ptr<ASTNode> ptr(new VariableDecl());
-            std::cout<<ctx->variableInitDeclarator()[i]->Identifier()->getText()<<std::endl;
+            ptr->acceptStr(ctx->variableInitDeclarator()[i]->Identifier()->getText());
+//            std::cout<<ctx->variableInitDeclarator()[i]->Identifier()->getText()<<std::endl;
             std::vector<std::shared_ptr<ASTNode>> vec;
+            
             vec.push_back(iden);
-            vec.push_back(ASTTree[ctx->variableInitDeclarator()[i]]);
+            if(ctx->variableInitDeclarator()[i]->expression() == NULL){
+                vec.push_back(NULL);
+            }
+            else{
+                vec.push_back(ASTTree[ctx->variableInitDeclarator()[i]->expression()]);
+            }
             ptr -> accept(vec);
+            ASTTree[ctx] = ptr;
         }
-        std::cout<<ctx->variableInitDeclarator()[0]->Identifier()->getText()<<std::endl;
+        
+//        std::cout<<ctx->variableInitDeclarator()[0]->Identifier()->getText()<<std::endl;
     }
     
     void enterVariableInitDeclarator(antlrcpptest::MParser::VariableInitDeclaratorContext * /*ctx*/) override { }
@@ -230,27 +251,79 @@ public:
     }
     
     void enterClassDeclaration(antlrcpptest::MParser::ClassDeclarationContext * /*ctx*/) override { }
-    void exitClassDeclaration(antlrcpptest::MParser::ClassDeclarationContext * /*ctx*/) override { }
+    void exitClassDeclaration(antlrcpptest::MParser::ClassDeclarationContext * ctx) override {
+//        std::cout<<ctx->Identifier()->getText()<<std::endl;
+        std::shared_ptr<ClassDecl> ptr(new ClassDecl());
+        ptr -> acceptStr(ctx->Identifier()->getText());
+        std::vector<std::shared_ptr<ASTNode>> varList;
+        std::vector<std::shared_ptr<ASTNode>> funcList;
+        std::shared_ptr<ASTNode> constructor(NULL);
+        for(int i = 0; i < ctx -> memberDeclaration().size(); ++i){
+            if(ctx -> memberDeclaration()[i]->classConstructor() != NULL){
+                constructor = ASTTree[ctx->memberDeclaration()[i]->classConstructor()];
+            }
+            else if(ctx -> memberDeclaration()[i]->functionDeclaration() != NULL){
+                funcList.push_back(ASTTree[ctx->memberDeclaration()[i]->functionDeclaration()]);
+            }
+            else{
+                varList.push_back(ASTTree[ctx->memberDeclaration()[i]->variableDeclaration()]);
+            }
+        }
+        
+        ptr -> accept(varList);
+        ptr -> acceptFunction(funcList);
+        ptr -> acceptConstructor(constructor);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterMemberDeclaration(antlrcpptest::MParser::MemberDeclarationContext * /*ctx*/) override { }
     void exitMemberDeclaration(antlrcpptest::MParser::MemberDeclarationContext * /*ctx*/) override { }
     
-    void enterClassFunctionDeclaration(antlrcpptest::MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
-    void exitClassFunctionDeclaration(antlrcpptest::MParser::ClassFunctionDeclarationContext * /*ctx*/) override { }
+    void enterClassConstructor(antlrcpptest::MParser::ClassConstructorContext * /*ctx*/) override { }
+    void exitClassConstructor(antlrcpptest::MParser::ClassConstructorContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new ClassConstructor());
+        ptr->acceptStr(ctx->Identifier()->getText());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->blockStatement()]);
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * /*ctx*/) override {
     }
     void exitFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * ctx) override {
-        
-        std::shared_ptr <ASTNode> ptr;
+        std::shared_ptr<ASTNode> ptr(new FunctionDecl());
+        std::shared_ptr<ASTNode> iden = ASTTree[ctx->typeSpecifier()];
+        ptr -> acceptStr(ctx->Identifier()->getText());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(iden);
+        vec.push_back(ASTTree[ctx->blockStatement()]);
+        ptr -> accept(vec);
+        std::vector<std::shared_ptr<ASTNode>> paraVec;
+        if(ctx->parameterDeclarationList() != NULL) {
+            for(int i = 0; i < ctx->parameterDeclarationList()->parameterDeclaration().size(); ++i){
+                paraVec.push_back(ASTTree[ctx->parameterDeclarationList()->parameterDeclaration()[i]]);
+            }
+        }
+        ptr -> acceptFunction(paraVec);
         ASTTree[ctx] = ptr;
     }
     
     void enterParameterDeclarationList(antlrcpptest::MParser::ParameterDeclarationListContext * /*ctx*/) override { }
-    void exitParameterDeclarationList(antlrcpptest::MParser::ParameterDeclarationListContext * /*ctx*/) override { }
+    void exitParameterDeclarationList(antlrcpptest::MParser::ParameterDeclarationListContext * /*ctx*/) override {}
     
     void enterParameterDeclaration(antlrcpptest::MParser::ParameterDeclarationContext * /*ctx*/) override { }
-    void exitParameterDeclaration(antlrcpptest::MParser::ParameterDeclarationContext * /*ctx*/) override { }
+    void exitParameterDeclaration(antlrcpptest::MParser::ParameterDeclarationContext * ctx) override {
+        std::shared_ptr<ASTNode> iden = ASTTree[ctx->typeSpecifier()];
+        std::shared_ptr<ASTNode> ptr(new VariableDecl());
+        ptr->acceptStr(ctx->Identifier()->getText());
+            //            std::cout<<ctx->variableInitDeclarator()[i]->Identifier()->getText()<<std::endl;
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(iden);
+        vec.push_back(NULL);
+        ptr -> accept(vec);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterNew(antlrcpptest::MParser::NewContext * /*ctx*/) override { }
     void exitNew(antlrcpptest::MParser::NewContext * /*ctx*/) override { }
@@ -274,7 +347,12 @@ public:
     void exitFunctionCall(antlrcpptest::MParser::FunctionCallContext * /*ctx*/) override { }
     
     void enterPostfixIncDec(antlrcpptest::MParser::PostfixIncDecContext * /*ctx*/) override { }
-    void exitPostfixIncDec(antlrcpptest::MParser::PostfixIncDecContext * /*ctx*/) override { }
+    void exitPostfixIncDec(antlrcpptest::MParser::PostfixIncDecContext * ctx) override {
+        if (ctx -> op -> )
+            (ctx, new SelfIncrement(expr, new SourcePosition(ctx.expression())));
+        else
+            map.put(ctx, new SelfDecrement(expr, new SourcePosition(ctx.expression())));
+    }
     
     void enterUnaryExpr(antlrcpptest::MParser::UnaryExprContext * /*ctx*/) override { }
     void exitUnaryExpr(antlrcpptest::MParser::UnaryExprContext * /*ctx*/) override { }

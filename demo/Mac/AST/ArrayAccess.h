@@ -8,9 +8,9 @@
 
 #ifndef ArrayAccess_h
 #define ArrayAccess_h
-#include "Expr.h"
+#include "ASTNode.h"
 
-class ArrayAccess : public Expr{
+class ArrayAccess : public ASTNode{
     std::shared_ptr<Expr> array;
     std::shared_ptr<Expr> subscript;
     size_t position;

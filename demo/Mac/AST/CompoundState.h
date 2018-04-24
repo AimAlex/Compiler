@@ -1,8 +1,8 @@
 #ifndef CompoundState_h
 #define CompoundState_h
 #include <vector>
-#include "State.h"
-class CompoundState : public State {
+#include "ASTNode.h"
+class CompoundState : public ASTNode {
 public:
     std::vector<std::shared_ptr<ASTNode>> stmts;
     

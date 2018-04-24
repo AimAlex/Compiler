@@ -8,7 +8,9 @@
 
 #ifndef EmptyExpr_h
 #define EmptyExpr_h
-class EmptyExpr{
+
+#include "ASTNode.h"
+class EmptyExpr : public ASTNode{
     
 };
 

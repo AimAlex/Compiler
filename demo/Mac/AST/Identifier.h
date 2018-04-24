@@ -8,9 +8,9 @@
 
 #ifndef Identifier_h
 #define Identifier_h
-#include "Expr"
+#include "ASTNode.h"
 
-class Identifier : public Expr{
+class Identifier : public ASTNode{
     std::string name;
     size_t pos;
 //    SymbolInfo symbolInfo;

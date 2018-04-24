@@ -1,6 +1,10 @@
-#include "TypeNode.h"
+#ifndef FunctionTypeNode_h
+#define FunctionTypeNode_h
 
-class FunctionTypeNode : public TypeNode{
+#include "ASTNode.h"
+class FunctionTypeNode : public ASTNode{
 public:
 	
 };
+
+#endif

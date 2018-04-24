@@ -8,8 +8,9 @@
 
 #ifndef StringConst_h
 #define StringConst_h
-#include "Expr.h"
-class StringConst : public Expr {
+#include "ASTNode.h"
+
+class StringConst : public ASTNode {
 public:
     std::string value;
     StringConst(std::string str) {

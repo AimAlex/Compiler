@@ -8,8 +8,9 @@
 
 #ifndef NullLiteral_h
 #define NullLiteral_h
-#include "Expr.h"
-class NullLiteral : public Expr{
+#include "ASTNode.h"
+
+class NullLiteral : public ASTNode{
     
 };
 

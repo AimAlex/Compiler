@@ -42,6 +42,8 @@ public:
 
     virtual antlrcpp::Any visitTypeSpecifier(MParser::TypeSpecifierContext *context) = 0;
 
+    virtual antlrcpp::Any visitLbr(MParser::LbrContext *context) = 0;
+
     virtual antlrcpp::Any visitVariableDeclaration(MParser::VariableDeclarationContext *context) = 0;
 
     virtual antlrcpp::Any visitVariableInitDeclarator(MParser::VariableInitDeclaratorContext *context) = 0;
@@ -50,7 +52,7 @@ public:
 
     virtual antlrcpp::Any visitMemberDeclaration(MParser::MemberDeclarationContext *context) = 0;
 
-    virtual antlrcpp::Any visitClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext *context) = 0;
+    virtual antlrcpp::Any visitClassConstructor(MParser::ClassConstructorContext *context) = 0;
 
     virtual antlrcpp::Any visitFunctionDeclaration(MParser::FunctionDeclarationContext *context) = 0;
 

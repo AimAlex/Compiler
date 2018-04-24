@@ -8,9 +8,9 @@
 
 #ifndef FunctionCall_h
 #define FunctionCall_h
-#include "Expr.h"
+#include "ASTNode.h"
 #include <vector>
-class FunctionCall : public Expr {
+class FunctionCall : public ASTNode {
     std::shared_ptr<Expr> name;
     std::vector<std::shared_ptr<Expr>> parameters;
     size_t position;

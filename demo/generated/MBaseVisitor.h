@@ -61,6 +61,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitLbr(MParser::LbrContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitVariableDeclaration(MParser::VariableDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -77,7 +81,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitClassFunctionDeclaration(MParser::ClassFunctionDeclarationContext *ctx) override {
+  virtual antlrcpp::Any visitClassConstructor(MParser::ClassConstructorContext *ctx) override {
     return visitChildren(ctx);
   }
 

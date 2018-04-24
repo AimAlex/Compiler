@@ -1,8 +1,8 @@
 #ifndef ClassTypeNode_h
 #define ClassTypeNode_h
-#include "TypeNode.h"
+#include "ASTNode.h"
 
-class ClassTypeNode : public TypeNode {
+class ClassTypeNode : public ASTNode {
 public:
     std::string name;
     ClassTypeNode(std::string str) {
