@@ -10,6 +10,7 @@
 #define MemberAccess_h
 #include "ASTNode.h"
 class MemberAccess : public ASTNode{
+public:
     std::shared_ptr <ASTNode> record;
     std::string member;
     size_t position;

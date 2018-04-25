@@ -72,7 +72,7 @@ lbr
     ;
 
 variableDeclaration
-    :   typeSpecifier variableInitDeclarator (',' variableInitDeclarator)* ';'
+    :   typeSpecifier variableInitDeclarator ';'
     ;
 
 variableInitDeclarator

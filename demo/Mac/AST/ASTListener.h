@@ -31,6 +31,7 @@
 #include "BoolConst.h"
 #include <cstdio>
 #include "NewExpr.h"
+#include "Program.h"
 
 /**
  * This class provides an empty implementation of MListener,
@@ -44,20 +45,53 @@ public:
         
     }
     void exitProgram(antlrcpptest::MParser::ProgramContext * ctx) override {
-        
+        std::shared_ptr<ASTNode> ptr(new Program());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        for(int i = 0; i < ctx->programSection().size(); ++i) {
+            vec.push_back(ASTTree[ctx->programSection()[i]]);
+        }
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
     }
     
     void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override {
         
     }
-    void exitProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override { }
-    
-    void enterStatement(antlrcpptest::MParser::StatementContext * /*ctx*/) override {
-//        std::cout<<ctx->getText()<<std::endl;
-//        std::cout<<ctx->getStart()->getLine();
+    void exitProgramSection(antlrcpptest::MParser::ProgramSectionContext * ctx) override {
+        if(ctx->classDeclaration() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->classDeclaration()];
+        }
+        else if(ctx->functionDeclaration() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->functionDeclaration()];
+        }
+        else if(ctx->variableDeclaration() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->variableDeclaration()];
+        }
+        else{
+            throw(0);
+        }
     }
-    void exitStatement(antlrcpptest::MParser::StatementContext * /*ctx*/) override {
-//        std::cout<<ctx<<std::endl;
+    
+    void enterStatement(antlrcpptest::MParser::StatementContext * /*ctx*/) override { }
+    void exitStatement(antlrcpptest::MParser::StatementContext * ctx) override {
+        if(ctx->blockStatement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->blockStatement()];
+        }
+        else if(ctx->expressionStatement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->expressionStatement()];
+        }
+        else if(ctx->iterationStatement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->iterationStatement()];
+        }
+        else if(ctx->jumpStatement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->jumpStatement()];
+        }
+        else if(ctx->selectionStatement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->selectionStatement()];
+        }
+        else{
+            throw(0);
+        }
     }
     
     void enterBlockStatement(antlrcpptest::MParser::BlockStatementContext * /*ctx*/) override { }
@@ -72,7 +106,17 @@ public:
     }
     
     void enterBlockItem(antlrcpptest::MParser::BlockItemContext * /*ctx*/) override { }
-    void exitBlockItem(antlrcpptest::MParser::BlockItemContext * /*ctx*/) override { }
+    void exitBlockItem(antlrcpptest::MParser::BlockItemContext * ctx) override {
+        if(ctx->statement() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->statement()];
+        }
+        else if(ctx->variableDeclaration() != NULL) {
+            ASTTree[ctx] = ASTTree[ctx->variableDeclaration()];
+        }
+        else{
+            throw(0);
+        }
+    }
     
     void enterExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * /*ctx*/) override { }
     void exitExpressionStatement(antlrcpptest::MParser::ExpressionStatementContext * ctx) override {
@@ -142,6 +186,7 @@ public:
                 else{
                     vec.push_back(ASTTree[ctx->statement()]);
                 }
+                vec.push_back(NULL);
             }
             else{
                 vec.push_back(NULL);
@@ -163,9 +208,7 @@ public:
                 else{
                     vec.push_back(ASTTree[ctx->statement()]);
                 }
-                for(int i = 0; i < ctx->declinit->variableInitDeclarator().size(); ++i) {
-                    vec.push_back(ASTTree[ctx->declinit->variableInitDeclarator()[i]]);
-                }
+                vec.push_back(ASTTree[ctx->declinit->variableInitDeclarator()]);
             }
             ptr -> accept(vec);
             ASTTree[ctx] = ptr;
@@ -239,24 +282,20 @@ public:
     void exitVariableDeclaration(antlrcpptest::MParser::VariableDeclarationContext * ctx) override {
 //        std::cout<<ctx->typeSpecifier()->getText()<<std::endl;
         std::shared_ptr<ASTNode> iden = ASTTree[ctx->typeSpecifier()];
-        for(int i = 0; i < ctx->variableInitDeclarator().size(); ++i) {
-            std::shared_ptr<ASTNode> ptr(new VariableDecl());
-            ptr->acceptStr(ctx->variableInitDeclarator()[i]->Identifier()->getText());
+        std::shared_ptr<ASTNode> ptr(new VariableDecl());
+        ptr->acceptStr(ctx->variableInitDeclarator()->Identifier()->getText());
 //            std::cout<<ctx->variableInitDeclarator()[i]->Identifier()->getText()<<std::endl;
-            std::vector<std::shared_ptr<ASTNode>> vec;
+        std::vector<std::shared_ptr<ASTNode>> vec;
             
-            vec.push_back(iden);
-            if(ctx->variableInitDeclarator()[i]->expression() == NULL){
+        vec.push_back(iden);
+        if(ctx->variableInitDeclarator()->expression() == NULL){
                 vec.push_back(NULL);
             }
-            else{
-                vec.push_back(ASTTree[ctx->variableInitDeclarator()[i]->expression()]);
+        else{
+            vec.push_back(ASTTree[ctx->variableInitDeclarator()->expression()]);
             }
-            ptr -> accept(vec);
-            ASTTree[ctx] = ptr;
-        }
-        
-//        std::cout<<ctx->variableInitDeclarator()[0]->Identifier()->getText()<<std::endl;
+        ptr -> accept(vec);
+        ASTTree[ctx] = ptr;
     }
     
     void enterVariableInitDeclarator(antlrcpptest::MParser::VariableInitDeclaratorContext * /*ctx*/) override { }
@@ -551,7 +590,13 @@ public:
     }
     
     void enterCreatorNonArray(antlrcpptest::MParser::CreatorNonArrayContext * /*ctx*/) override { }
-    void exitCreatorNonArray(antlrcpptest::MParser::CreatorNonArrayContext * /*ctx*/) override { }
+    void exitCreatorNonArray(antlrcpptest::MParser::CreatorNonArrayContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new NewExpr());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->nonArrayTypeSpecifier()]);
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterParameterList(antlrcpptest::MParser::ParameterListContext * /*ctx*/) override { }
     void exitParameterList(antlrcpptest::MParser::ParameterListContext * /*ctx*/) override { }

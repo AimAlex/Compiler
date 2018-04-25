@@ -88,6 +88,8 @@
 		37F135681B4AC02800E0CACF /* antlrcpp Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "antlrcpp Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F1356B1B4AC02800E0CACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37F1356C1B4AC02800E0CACF /* antlrcpp_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = antlrcpp_Tests.mm; sourceTree = "<group>"; };
+		4C0A6168209021BC007E523D /* Program.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
+		4C0A616A209033CC007E523D /* ClassTypeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -101,13 +103,11 @@
 		4CB2DA9520837FB700819419 /* MParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MParser.h; path = ../generated/MParser.h; sourceTree = "<group>"; };
 		4CB2DA9620837FB700819419 /* MBaseVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBaseVisitor.h; path = ../generated/MBaseVisitor.h; sourceTree = "<group>"; };
 		4CB2DAB52085DB7900819419 /* IfState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IfState.h; sourceTree = "<group>"; };
-		4CB2DAB62085DB7900819419 /* FunctionTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAB72085DB7900819419 /* ReturnState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReturnState.h; sourceTree = "<group>"; };
 		4CB2DABA2085DB7900819419 /* ASTListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTListener.h; sourceTree = "<group>"; };
 		4CB2DABB2085DB7900819419 /* ASTNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASTNode.h; sourceTree = "<group>"; };
 		4CB2DABC2085DB7900819419 /* ForLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForLoop.h; sourceTree = "<group>"; };
 		4CB2DABD2085DB7900819419 /* VariableDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariableDecl.h; sourceTree = "<group>"; };
-		4CB2DABF2085DB7900819419 /* ClassTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArrayTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrimitiveTypeNode.h; sourceTree = "<group>"; };
 		4CB2DAC22085DB7900819419 /* CompoundState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompoundState.h; sourceTree = "<group>"; };
@@ -115,7 +115,6 @@
 		4CB2DAC42085DB7900819419 /* ContinueState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContinueState.h; sourceTree = "<group>"; };
 		4CB2DAC52085DB7900819419 /* WhileLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhileLoop.h; sourceTree = "<group>"; };
 		4CB2DAC62085DB7900819419 /* BreakState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BreakState.h; sourceTree = "<group>"; };
-		4CB2DAC72085DB7900819419 /* VariableDeclState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VariableDeclState.h; sourceTree = "<group>"; };
 		4CB2DAC92085DB7900819419 /* FunctionDecl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FunctionDecl.h; sourceTree = "<group>"; };
 		4CB2DACA2086422B00819419 /* M.g4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = M.g4; path = ../../M.g4; sourceTree = "<group>"; };
 		4CB2DACD2088D2E100819419 /* ClassConstructor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassConstructor.h; sourceTree = "<group>"; };
@@ -246,13 +245,11 @@
 			isa = PBXGroup;
 			children = (
 				4CB2DAB52085DB7900819419 /* IfState.h */,
-				4CB2DAB62085DB7900819419 /* FunctionTypeNode.h */,
 				4CB2DAB72085DB7900819419 /* ReturnState.h */,
 				4CB2DABA2085DB7900819419 /* ASTListener.h */,
 				4CB2DABB2085DB7900819419 /* ASTNode.h */,
 				4CB2DABC2085DB7900819419 /* ForLoop.h */,
 				4CB2DABD2085DB7900819419 /* VariableDecl.h */,
-				4CB2DABF2085DB7900819419 /* ClassTypeNode.h */,
 				4CB2DAC02085DB7900819419 /* ArrayTypeNode.h */,
 				4CB2DAC12085DB7900819419 /* PrimitiveTypeNode.h */,
 				4CB2DAC22085DB7900819419 /* CompoundState.h */,
@@ -260,7 +257,6 @@
 				4CB2DAC42085DB7900819419 /* ContinueState.h */,
 				4CB2DAC52085DB7900819419 /* WhileLoop.h */,
 				4CB2DAC62085DB7900819419 /* BreakState.h */,
-				4CB2DAC72085DB7900819419 /* VariableDeclState.h */,
 				4CB2DAC92085DB7900819419 /* FunctionDecl.h */,
 				4CB2DACD2088D2E100819419 /* ClassConstructor.h */,
 				4CB2DACE2088DE3300819419 /* ArrayAccess.h */,
@@ -277,6 +273,8 @@
 				4CB2DADA208976D500819419 /* SelfIncrement.h */,
 				4CB2DADB2089778300819419 /* StringConst.h */,
 				4CB2DADC208977F200819419 /* UnaryExpr.h */,
+				4C0A6168209021BC007E523D /* Program.h */,
+				4C0A616A209033CC007E523D /* ClassTypeNode.h */,
 			);
 			path = AST;
 			sourceTree = "<group>";

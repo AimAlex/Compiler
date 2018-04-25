@@ -1,3 +1,11 @@
+//
+//  ClassTypeNode.h
+//  antlrcpp-demo
+//
+//  Created by 李江贝 on 2018/4/25.
+//  Copyright © 2018 ANTLR4 Project. All rights reserved.
+//
+
 #ifndef ClassTypeNode_h
 #define ClassTypeNode_h
 #include "ASTNode.h"
@@ -8,6 +16,6 @@ public:
     ClassTypeNode(std::string str) {
         name = str;
     }
-    void accept(std::vector<std::shared_ptr<ASTNode>>){};
 };
-#endif
+
+#endif /* ClassTypeNode_h */

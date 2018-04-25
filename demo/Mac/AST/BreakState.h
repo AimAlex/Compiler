@@ -5,8 +5,6 @@
 class BreakState : public ASTNode{
 public:
     size_t position;
-    void accept(std::vector<std::shared_ptr<ASTNode>> /*ptr*/){
-    }
 };
 
 #endif

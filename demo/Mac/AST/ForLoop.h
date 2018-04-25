@@ -6,7 +6,7 @@
 class ForLoop : public ASTNode{
 public:
     size_t position;
-    std::vector<std::shared_ptr<ASTNode>> initWithDecl;
+    std::shared_ptr<ASTNode> initWithDecl;
     std::shared_ptr<ASTNode> init;
     std::shared_ptr<ASTNode> cond;
     std::shared_ptr<ASTNode> step;
@@ -16,9 +16,7 @@ public:
         cond = ptr[1];
         step = ptr[2];
         body = ptr[3];
-        for(int i = 4; i < ptr.size(); ++i) {
-            initWithDecl.push_back(ptr[i]);
-        }
+        initWithDecl = ptr[4];
     }
 };
 #endif

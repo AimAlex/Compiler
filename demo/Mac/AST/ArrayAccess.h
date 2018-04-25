@@ -16,7 +16,7 @@ class ArrayAccess : public ASTNode{
     size_t position;
     void accept(std::vector<std::shared_ptr<ASTNode>> vec){
         array = vec[0];
-        subscript = vec[0];
+        subscript = vec[1];
     }
 };
 

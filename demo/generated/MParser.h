@@ -277,8 +277,7 @@ public:
     VariableDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeSpecifierContext *typeSpecifier();
-    std::vector<VariableInitDeclaratorContext *> variableInitDeclarator();
-    VariableInitDeclaratorContext* variableInitDeclarator(size_t i);
+    VariableInitDeclaratorContext *variableInitDeclarator();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
