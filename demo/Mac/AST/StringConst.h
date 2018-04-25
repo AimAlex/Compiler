@@ -13,10 +13,9 @@
 class StringConst : public ASTNode {
 public:
     std::string value;
-    StringConst(std::string str) {
+    void acceptStr(std::string str){
         value = str;
-    }
-    virtual void accept(std::vector<std::shared_ptr<ASTNode>>){};
+    };
 };
 
 #endif /* StringConst_h */

@@ -30,6 +30,7 @@
 #include "NullLiteral.h"
 #include "BoolConst.h"
 #include <cstdio>
+#include "NewExpr.h"
 
 /**
  * This class provides an empty implementation of MListener,
@@ -523,13 +524,31 @@ public:
     }
     
     void enterSubExpression(antlrcpptest::MParser::SubExpressionContext * /*ctx*/) override { }
-    void exitSubExpression(antlrcpptest::MParser::SubExpressionContext * /*ctx*/) override { }
+    void exitSubExpression(antlrcpptest::MParser::SubExpressionContext * ctx) override {
+        ASTTree[ctx] = ASTTree[ctx->expression()];
+    }
     
     void enterCreatorError(antlrcpptest::MParser::CreatorErrorContext * /*ctx*/) override { }
-    void exitCreatorError(antlrcpptest::MParser::CreatorErrorContext * /*ctx*/) override { }
+    void exitCreatorError(antlrcpptest::MParser::CreatorErrorContext * /*ctx*/) override {
+        throw(0);
+    }
     
     void enterCreatorArray(antlrcpptest::MParser::CreatorArrayContext * /*ctx*/) override { }
-    void exitCreatorArray(antlrcpptest::MParser::CreatorArrayContext * /*ctx*/) override { }
+    void exitCreatorArray(antlrcpptest::MParser::CreatorArrayContext * ctx) override {
+        std::shared_ptr<ASTNode> ptr(new NewExpr());
+        std::vector<std::shared_ptr<ASTNode>> vec;
+        vec.push_back(ASTTree[ctx->nonArrayTypeSpecifier()]);
+//        std::cout<<ctx->lbr().size()<<std::endl;
+        for(int i = 0; i < ctx->expression().size(); ++i) {
+//            std::cout<<ctx->expression()[i]->getText()<<std::endl;
+            vec.push_back(ASTTree[ctx->expression()[i]]);
+        }
+        for(int i = 0; i < ctx->lbr().size(); ++i){
+            vec.push_back(NULL);
+        }
+        ptr->accept(vec);
+        ASTTree[ctx] = ptr;
+    }
     
     void enterCreatorNonArray(antlrcpptest::MParser::CreatorNonArrayContext * /*ctx*/) override { }
     void exitCreatorNonArray(antlrcpptest::MParser::CreatorNonArrayContext * /*ctx*/) override { }
@@ -553,10 +572,17 @@ public:
             std::shared_ptr<ASTNode> ptr(new BoolConst(s == "true"));
             ASTTree[ctx] = ptr;
         }
-        else if(type == antlrcpptest::MParser::CharacterConstant || type == antlrcpptest::MParser::StringLiteral){
-            s = 
-            std::cout<<s<<std::endl;
+        else if(type == antlrcpptest::MParser::StringLiteral){
+            s = s.substr(1, s.size() - 2);
+            std::shared_ptr<ASTNode> ptr(new StringConst());
+            ptr->acceptStr(s);
+//            std::cout<<s<<std::endl;
+            ASTTree[ctx] = ptr;
         }
+        else{
+            throw(0);
+        }
+        
     }
     
     

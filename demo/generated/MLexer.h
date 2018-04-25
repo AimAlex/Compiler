@@ -21,8 +21,8 @@ public:
     Or = 32, Caret = 33, And = 34, Assign = 35, PlusPlus = 36, MinusMinus = 37, 
     Dot = 38, LBracket = 39, RBracket = 40, LParen = 41, RParen = 42, LBrace = 43, 
     RBrace = 44, Question = 45, Colon = 46, Semi = 47, Comma = 48, NullLiteral = 49, 
-    BoolConstant = 50, IntegerConstant = 51, CharacterConstant = 52, StringLiteral = 53, 
-    Identifier = 54, Whitespace = 55, Newline = 56, LineComment = 57
+    BoolConstant = 50, IntegerConstant = 51, StringLiteral = 52, Identifier = 53, 
+    Whitespace = 54, Newline = 55, LineComment = 56
   };
 
   MLexer(antlr4::CharStream *input);

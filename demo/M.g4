@@ -137,7 +137,7 @@ expression
 
 creator
     :   nonArrayTypeSpecifier ('[' expression ']')+ ('[' ']')+ ('[' expression ']')+   # creatorError
-    |   nonArrayTypeSpecifier ('[' expression ']')+ ('[' ']')*                         # creatorArray
+    |   nonArrayTypeSpecifier ('[' expression ']')+ (lbr)*                         # creatorArray
     |   nonArrayTypeSpecifier                                                          # creatorNonArray
     ;
 
@@ -147,7 +147,6 @@ parameterList
 
 constant
     :   type=IntegerConstant
-    |   type=CharacterConstant
     |   type=StringLiteral
     |   type=NullLiteral
     |   type=BoolConstant
@@ -244,20 +243,6 @@ NonzeroDigit
     :   [1-9]
     ;
 
-CharacterConstant
-    :   '\'' CCharSequence '\''
-    ;
-
-fragment
-CCharSequence
-    :   CChar+
-    ;
-
-fragment
-CChar
-    :   ~['\\\r\n]
-        |   EscapeSequence
-    ;
 fragment
 EscapeSequence
     :   SimpleEscapeSequence

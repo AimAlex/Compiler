@@ -12,9 +12,16 @@
 #include <vector>
 
 class NewExpr : public ASTNode{
-    std::shared_ptr<TypeNode> type;
-    std::vector<std::shared_ptr<Expr>> dim;
+public:
+    std::shared_ptr<ASTNode> type;
+    std::vector<std::shared_ptr<ASTNode>> dim;
     std::vector<size_t> posDim;
+    void accept(std::vector<std::shared_ptr<ASTNode>> vec){
+        type = vec[0];
+        for(int i = 1; i < vec.size(); ++i) {
+            dim.push_back(vec[i]);
+        }
+    }
 };
 
 #endif /* NewExpr_h */

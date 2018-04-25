@@ -21,8 +21,8 @@ public:
     Or = 32, Caret = 33, And = 34, Assign = 35, PlusPlus = 36, MinusMinus = 37, 
     Dot = 38, LBracket = 39, RBracket = 40, LParen = 41, RParen = 42, LBrace = 43, 
     RBrace = 44, Question = 45, Colon = 46, Semi = 47, Comma = 48, NullLiteral = 49, 
-    BoolConstant = 50, IntegerConstant = 51, CharacterConstant = 52, StringLiteral = 53, 
-    Identifier = 54, Whitespace = 55, Newline = 56, LineComment = 57
+    BoolConstant = 50, IntegerConstant = 51, StringLiteral = 52, Identifier = 53, 
+    Whitespace = 54, Newline = 55, LineComment = 56
   };
 
   enum {
@@ -581,6 +581,8 @@ public:
     NonArrayTypeSpecifierContext *nonArrayTypeSpecifier();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
+    std::vector<LbrContext *> lbr();
+    LbrContext* lbr(size_t i);
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
 
@@ -611,7 +613,6 @@ public:
     ConstantContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IntegerConstant();
-    antlr4::tree::TerminalNode *CharacterConstant();
     antlr4::tree::TerminalNode *StringLiteral();
     antlr4::tree::TerminalNode *NullLiteral();
     antlr4::tree::TerminalNode *BoolConstant();
