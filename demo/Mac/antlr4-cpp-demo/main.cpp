@@ -27,9 +27,9 @@ int main(int , const char **) {
     CommonTokenStream tokens(&lexer);
     
     tokens.fill();
-    for (auto token : tokens.getTokens()) {
-        std::cout << token->toString() << std::endl;
-    }
+//    for (auto token : tokens.getTokens()) {
+//        std::cout << token->toString() << std::endl;
+//    }
     
     MParser parser(&tokens);
     tree::ParseTree *tree = parser.program();

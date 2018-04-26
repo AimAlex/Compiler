@@ -41,6 +41,10 @@
 class  ASTListener : public antlrcpptest::MBaseListener {
 public:
     std::map<antlr4::ParserRuleContext*, std::shared_ptr<ASTNode>> ASTTree;
+    std::shared_ptr<ASTNode> program;
+    std::shared_ptr<ASTNode> getProgram() {
+        return program;
+    }
     void enterProgram(antlrcpptest::MParser::ProgramContext * /*ctx*/) override {
         
     }
@@ -52,11 +56,10 @@ public:
         }
         ptr->accept(vec);
         ASTTree[ctx] = ptr;
+        program = ptr;
     }
     
-    void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override {
-        
-    }
+    void enterProgramSection(antlrcpptest::MParser::ProgramSectionContext * /*ctx*/) override { }
     void exitProgramSection(antlrcpptest::MParser::ProgramSectionContext * ctx) override {
         if(ctx->classDeclaration() != NULL) {
             ASTTree[ctx] = ASTTree[ctx->classDeclaration()];
