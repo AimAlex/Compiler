@@ -9,6 +9,9 @@ public:
     void accept(std::vector<std::shared_ptr<ASTNode>> ptr){
         value = ptr[0];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 

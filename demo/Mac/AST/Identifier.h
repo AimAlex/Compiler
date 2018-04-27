@@ -18,6 +18,9 @@ public:
     void acceptStr(std::string str){
         name = str;
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* Identifier_h */

@@ -16,6 +16,9 @@ public:
     void acceptStr(std::string str){
         value = str;
     };
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* StringConst_h */

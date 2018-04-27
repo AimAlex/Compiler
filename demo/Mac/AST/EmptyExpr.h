@@ -11,7 +11,9 @@
 
 #include "ASTNode.h"
 class EmptyExpr : public ASTNode{
-    
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* EmptyExpr_h */

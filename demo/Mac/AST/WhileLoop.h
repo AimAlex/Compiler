@@ -11,6 +11,9 @@ public:
         cond = ptr[0];
         body = ptr[1];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif

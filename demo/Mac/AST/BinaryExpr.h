@@ -32,6 +32,9 @@ public:
         lhs = vec[0];
         rhs = vec[1];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 

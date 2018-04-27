@@ -12,7 +12,9 @@ public:
     PrimitiveTypeNode(Types ty){
         type = ty;
     }
-    void accept(std::vector<std::shared_ptr<ASTNode>>){};
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif

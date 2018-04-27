@@ -17,6 +17,9 @@ public:
             decls.push_back(vec[i]);
         }
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* Program_h */

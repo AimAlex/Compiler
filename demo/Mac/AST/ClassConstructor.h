@@ -22,6 +22,9 @@ public:
     void accept(std::vector<std::shared_ptr<ASTNode>> vec){
         body = vec[0];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* ClassConstructor_h */

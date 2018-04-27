@@ -18,5 +18,8 @@ public:
         body = ptr[3];
         initWithDecl = ptr[4];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 #endif

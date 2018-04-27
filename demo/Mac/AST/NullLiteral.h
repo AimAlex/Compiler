@@ -11,7 +11,9 @@
 #include "ASTNode.h"
 
 class NullLiteral : public ASTNode{
-    
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* NullLiteral_h */

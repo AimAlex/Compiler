@@ -18,6 +18,9 @@ class ArrayAccess : public ASTNode{
         array = vec[0];
         subscript = vec[1];
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* ArrayAccess_h */

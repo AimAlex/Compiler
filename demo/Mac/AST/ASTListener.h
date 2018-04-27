@@ -32,6 +32,7 @@
 #include <cstdio>
 #include "NewExpr.h"
 #include "Program.h"
+#include "ASTVisitor.h"
 
 /**
  * This class provides an empty implementation of MListener,
@@ -222,7 +223,7 @@ public:
     void exitJumpStatement(antlrcpptest::MParser::JumpStatementContext * ctx) override {
 //        std::cout<<ctx->getStart()->getText()<<std::endl;
         if(ctx->getStart()->getText() == "continue") {
-            std::shared_ptr<ASTNode> ptr(new CoutinueState());
+            std::shared_ptr<ASTNode> ptr(new ContinueState());
             ASTTree[ctx] = ptr;
         }
         else if(ctx->getStart()->getText() == "break") {

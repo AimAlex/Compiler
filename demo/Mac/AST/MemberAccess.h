@@ -20,6 +20,9 @@ public:
     void acceptStr(std::string str){
         member = str;
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* MemberAccess_h */

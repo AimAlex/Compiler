@@ -15,6 +15,9 @@ public:
     BoolConst(bool i){
         value = i;
     }
+    void visited(std::shared_ptr<ASTVisitor> visitor){
+        visitor -> visit(this);
+    }
 };
 
 #endif /* BoolConst_h */
