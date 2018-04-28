@@ -10,7 +10,7 @@
 #define ArrayAccess_h
 #include "ASTNode.h"
 
-class ArrayAccess : public ASTNode{
+class ArrayAccess : public ASTNode, public std::enable_shared_from_this<ArrayAccess>{
 public:
     std::shared_ptr<ASTNode> array;
     std::shared_ptr<ASTNode> subscript;
@@ -20,7 +20,7 @@ public:
         subscript = vec[1];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ArrayAccess>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

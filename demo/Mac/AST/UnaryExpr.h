@@ -10,7 +10,7 @@
 #define UnaryExpr_h
 #include "ASTNode.h"
 
-class UnaryExpr : public ASTNode {
+class UnaryExpr : public ASTNode, public std::enable_shared_from_this<UnaryExpr> {
 public:
     enum UnaryOp {
         INC, DEC, POS, NEG, LOGICAL_NOT, BITWISE_NOT
@@ -26,7 +26,7 @@ public:
         body = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<UnaryExpr>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

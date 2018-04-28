@@ -10,7 +10,7 @@
 #define BinaryExpr_h
 
 #include "ASTNode.h"
-class BinaryExpr : public ASTNode {
+class BinaryExpr : public ASTNode, public std::enable_shared_from_this<BinaryExpr> {
 public:
     enum BinaryOp {
         ASSIGN,
@@ -33,7 +33,7 @@ public:
         rhs = vec[1];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<BinaryExpr>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

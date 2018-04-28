@@ -9,7 +9,7 @@
 #ifndef SelfDecrement_h
 #define SelfDecrement_h
 #include "ASTNode.h"
-class SelfDecrement : public ASTNode {
+class SelfDecrement : public ASTNode, public std::enable_shared_from_this<SelfDecrement> {
 public:
     std::shared_ptr<ASTNode> oneself;
     size_t position;
@@ -17,7 +17,7 @@ public:
         oneself = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<SelfDecrement>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

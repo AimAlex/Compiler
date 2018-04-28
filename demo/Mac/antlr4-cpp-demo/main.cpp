@@ -37,9 +37,9 @@ int main(int , const char **) {
     std::cout << tree->toStringTree(&parser) << std::endl;
     
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
-    auto listener = new ASTListener();
-    walker.walk(listener, tree);
-    std::shared_ptr<ASTPrinter> printer(new ASTPrinter());
+    auto listener = std::make_shared<ASTListener>();
+    walker.walk(listener.get(), tree);
+    auto printer = std::make_shared<ASTPrinter>();
     (listener->getProgram()) -> visited(printer);
     
     return 0;

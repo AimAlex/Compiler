@@ -11,7 +11,7 @@
 #include "ASTNode.h"
 #include <vector>
 
-class NewExpr : public ASTNode{
+class NewExpr : public ASTNode, public std::enable_shared_from_this<NewExpr>{
 public:
     std::shared_ptr<ASTNode> type;
     std::vector<std::shared_ptr<ASTNode>> dim;
@@ -23,7 +23,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<NewExpr>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

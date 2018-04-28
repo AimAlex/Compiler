@@ -10,7 +10,7 @@
 #define FunctionCall_h
 #include "ASTNode.h"
 #include <vector>
-class FunctionCall : public ASTNode {
+class FunctionCall : public ASTNode, public std::enable_shared_from_this<FunctionCall> {
 public:
     std::shared_ptr<ASTNode> name;
     std::vector<std::shared_ptr<ASTNode>> parameters;
@@ -22,7 +22,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<FunctionCall>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 #endif /* FunctionCall_h */

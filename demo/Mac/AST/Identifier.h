@@ -10,7 +10,7 @@
 #define Identifier_h
 #include "ASTNode.h"
 
-class Identifier : public ASTNode{
+class Identifier : public ASTNode, public std::enable_shared_from_this<Identifier>{
 public:
     std::string name;
     size_t pos;
@@ -19,7 +19,7 @@ public:
         name = str;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<Identifier>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

@@ -10,14 +10,14 @@
 #define IntConst_h
 #include "ASTNode.h"
 
-class IntConst : public ASTNode {
+class IntConst : public ASTNode, public std::enable_shared_from_this<IntConst>{
 public:
     int value;
     IntConst(int i) {
         value = i;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<IntConst>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

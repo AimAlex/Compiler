@@ -2,7 +2,7 @@
 #define IfState_h
 
 #include "ASTNode.h"
-class IfState : public ASTNode{
+class IfState : public ASTNode, public std::enable_shared_from_this<IfState>{
 public:
     size_t position;
     std::shared_ptr <ASTNode> cond;
@@ -14,7 +14,7 @@ public:
         otherwise = ptr[2];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<IfState>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

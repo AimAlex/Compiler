@@ -9,14 +9,14 @@
 #ifndef BoolConst_h
 #define BoolConst_h
 #include "ASTNode.h"
-class BoolConst : public ASTNode{
+class BoolConst : public ASTNode, public std::enable_shared_from_this<BoolConst>{
 public:
     bool value;
     BoolConst(bool i){
         value = i;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<BoolConst>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

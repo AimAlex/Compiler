@@ -9,7 +9,7 @@
 #ifndef MemberAccess_h
 #define MemberAccess_h
 #include "ASTNode.h"
-class MemberAccess : public ASTNode{
+class MemberAccess : public ASTNode, public std::enable_shared_from_this<MemberAccess>{
 public:
     std::shared_ptr <ASTNode> record;
     std::string member;
@@ -21,7 +21,7 @@ public:
         member = str;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<MemberAccess>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

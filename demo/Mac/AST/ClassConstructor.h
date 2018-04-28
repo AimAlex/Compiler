@@ -10,7 +10,7 @@
 #define ClassConstructor_h
 #include "ASTNode.h"
 #include <vector>
-class ClassConstructor : public ASTNode{
+class ClassConstructor : public ASTNode, public std::enable_shared_from_this<ClassConstructor> {
 public:
     size_t position;
     std::string name;
@@ -22,7 +22,7 @@ public:
         body = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ClassConstructor>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

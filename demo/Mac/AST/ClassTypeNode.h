@@ -10,14 +10,14 @@
 #define ClassTypeNode_h
 #include "ASTNode.h"
 
-class ClassTypeNode : public ASTNode {
+class ClassTypeNode : public ASTNode, public std::enable_shared_from_this<ClassTypeNode> {
 public:
     std::string name;
     ClassTypeNode(std::string str) {
         name = str;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ClassTypeNode>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

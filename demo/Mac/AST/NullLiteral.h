@@ -10,9 +10,9 @@
 #define NullLiteral_h
 #include "ASTNode.h"
 
-class NullLiteral : public ASTNode{
+class NullLiteral : public ASTNode, public std::enable_shared_from_this<NullLiteral>{
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<NullLiteral>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

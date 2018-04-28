@@ -3,7 +3,7 @@
 
 #include "ASTNode.h"
 
-class VariableDecl : public ASTNode{
+class VariableDecl : public ASTNode, public std::enable_shared_from_this<VariableDecl>{
 public:
     size_t position;
     std::shared_ptr <ASTNode> type;
@@ -17,7 +17,7 @@ public:
         name = str;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<VariableDecl>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

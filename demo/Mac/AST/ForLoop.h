@@ -3,7 +3,7 @@
 #include "ASTNode.h"
 #include "VariableDecl.h"
 #include <vector>
-class ForLoop : public ASTNode{
+class ForLoop : public ASTNode, public std::enable_shared_from_this<ForLoop>{
 public:
     size_t position;
     std::shared_ptr<ASTNode> initWithDecl;
@@ -19,7 +19,7 @@ public:
         initWithDecl = ptr[4];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ForLoop>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 #endif

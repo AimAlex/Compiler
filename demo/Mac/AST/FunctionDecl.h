@@ -4,7 +4,7 @@
 #include <vector>
 #include "VariableDecl.h"
 #include "CompoundState.h"
-class FunctionDecl : public ASTNode{
+class FunctionDecl : public ASTNode, public std::enable_shared_from_this<FunctionDecl>{
 public:
     size_t position;
     std::string name;
@@ -25,7 +25,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<FunctionDecl>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

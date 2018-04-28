@@ -5,7 +5,7 @@
 #include "VariableDecl.h"
 #include "FunctionDecl.h"
 #include "ClassConstructor.h"
-class ClassDecl : public ASTNode{
+class ClassDecl : public ASTNode, public std::enable_shared_from_this<ClassDecl>{
 public:
     size_t position;
     std::vector<std::shared_ptr<ASTNode>> variableMembers;
@@ -29,7 +29,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ClassDecl>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

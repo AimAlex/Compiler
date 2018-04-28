@@ -2,7 +2,7 @@
 #define CompoundState_h
 #include <vector>
 #include "ASTNode.h"
-class CompoundState : public ASTNode {
+class CompoundState : public ASTNode, public std::enable_shared_from_this<CompoundState>{
 public:
     std::vector<std::shared_ptr<ASTNode>> stmts;
     
@@ -12,7 +12,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<CompoundState>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

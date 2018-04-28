@@ -10,14 +10,14 @@
 #define StringConst_h
 #include "ASTNode.h"
 
-class StringConst : public ASTNode {
+class StringConst : public ASTNode, public std::enable_shared_from_this<StringConst> {
 public:
     std::string value;
     void acceptStr(std::string str){
         value = str;
     };
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<StringConst>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

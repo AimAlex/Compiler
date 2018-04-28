@@ -39,7 +39,7 @@
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-class  ASTListener : public antlrcpptest::MBaseListener {
+class  ASTListener : public antlrcpptest::MBaseListener, public std::enable_shared_from_this<ASTListener> {
 public:
     std::map<antlr4::ParserRuleContext*, std::shared_ptr<ASTNode>> ASTTree;
     std::shared_ptr<ASTNode> program;

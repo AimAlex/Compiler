@@ -9,7 +9,7 @@
 #ifndef SelfIncrement_h
 #define SelfIncrement_h
 #include "ASTNode.h"
-class SelfIncrement : public ASTNode{
+class SelfIncrement : public ASTNode, public std::enable_shared_from_this<SelfIncrement>{
 public:
     std::shared_ptr<ASTNode> oneself;
     size_t position;
@@ -17,7 +17,7 @@ public:
         oneself = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<SelfIncrement>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

@@ -3,7 +3,7 @@
 
 #include "ASTNode.h"
 #include <vector>
-class ArrayTypeNode : public ASTNode{
+class ArrayTypeNode : public ASTNode, public std::enable_shared_from_this<ArrayTypeNode>{
 public:
     std::shared_ptr<ASTNode> type;
     int demension;
@@ -14,7 +14,7 @@ public:
         demension = i;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<ArrayTypeNode>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

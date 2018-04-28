@@ -10,9 +10,9 @@
 #define EmptyExpr_h
 
 #include "ASTNode.h"
-class EmptyExpr : public ASTNode{
+class EmptyExpr : public ASTNode, public std::enable_shared_from_this<EmptyExpr>{
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<EmptyExpr>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

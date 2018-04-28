@@ -9,7 +9,7 @@
 #ifndef Program_h
 #define Program_h
 #include "ASTNode.h"
-class Program : public ASTNode {
+class Program : public ASTNode, public std::enable_shared_from_this<Program>{
 public:
     std::vector<std::shared_ptr<ASTNode>> decls;
     void accept(std::vector<std::shared_ptr<ASTNode>> vec) {
@@ -18,7 +18,7 @@ public:
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<Program>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 

@@ -9,35 +9,38 @@
 #ifndef ASTPrinter_h
 #define ASTPrinter_h
 #include "ASTVisitor.h"
-class ASTPrinter : public ASTVisitor{
+class ASTPrinter : public ASTVisitor, public std::enable_shared_from_this<ASTPrinter>{
 public:
     std::string str;
     void indent() {
         str.append("    ");
-        std::cout<<str.size()<<std::endl;
+//        std::cout<<str.size()<<std::endl;
     }
     
     void dedent() {
         for(int i = 0; i < 4; ++i) {
-            std::cout<<str.size()<<std::endl;
+//            std::cout<<str.size()<<std::endl;
             str.pop_back();
         }
     }
-    
     void visit(std::shared_ptr<IfState> node){
         if(node == NULL) return;
         std::cout<<str<<"if"<<std::endl;
         indent();
-        (node -> cond) -> visited(std::shared_ptr<ASTVisitor> (this));
-        (node -> then) -> visited(std::shared_ptr<ASTVisitor> (this));
-        (node -> otherwise) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> cond) -> visited(shared_from_this());
+        (node -> then) -> visited(shared_from_this());
+        if(node -> otherwise != NULL){
+            (node -> otherwise) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<ReturnState> node){
         if(node == NULL) return;
         std::cout<<str<<"return"<<std::endl;
         indent();
-        (node -> value) -> visited(std::shared_ptr<ASTVisitor>(this));
+        if(node -> value != NULL){
+            (node -> value) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<ForLoop> node){
@@ -45,29 +48,31 @@ public:
         std::cout<<str<<"for"<<std::endl;
         indent();
         if (node -> initWithDecl != NULL){
-            (node -> initWithDecl) -> visited(std::shared_ptr<ASTVisitor> (this));
+            (node -> initWithDecl) -> visited(shared_from_this());
         }
         else{
-            (node -> init) -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> init) -> visited(shared_from_this());
         }
-        (node -> cond) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> step) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> body) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> cond) -> visited(shared_from_this());
+        (node -> step) -> visited(shared_from_this());
+        (node -> body) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<VariableDecl> node){
         if(node == NULL) return;
         std::cout<<str<<"VariableDecl"<<": "<<node ->name<<std::endl;
         indent();
-        (node -> type) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> init) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> type) -> visited(shared_from_this());
+        if(node -> init != NULL){
+            (node -> init) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<ArrayTypeNode> node){
         if(node == NULL) return;
         std::cout<<str<<"ArrayTypeNode"<<std::endl;
         indent();
-        (node -> type) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> type) -> visited(shared_from_this());
         std::cout<<str<<"dememsion: "<<node->demension<<std::endl;
         dedent();
     }
@@ -80,7 +85,7 @@ public:
         std::cout<<str<<"CompoundState"<<std::endl;
         indent();
         for(int i = 0; i < node -> stmts.size(); ++i) {
-            (node -> stmts)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> stmts)[i] -> visited(shared_from_this());
         }
         dedent();
     }
@@ -89,11 +94,13 @@ public:
         std::cout<<str<<"ClassDecl: "<<node->name<<std::endl;
         indent();
         for(int i = 0; i < (node -> variableMembers).size(); ++i) {
-            (node -> variableMembers)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> variableMembers)[i] -> visited(shared_from_this());
         }
-        (node -> classconstructor) -> visited(std::shared_ptr<ASTVisitor>(this));
+        if(node -> classconstructor != NULL){
+            (node -> classconstructor) -> visited(shared_from_this());
+        }
         for(int i = 0; i < (node -> functionMembers).size(); ++i) {
-            (node -> functionMembers)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> functionMembers)[i] -> visited(shared_from_this());
         }
         dedent();
     }
@@ -105,8 +112,8 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"WhileLoop"<<std::endl;
         indent();
-        (node -> cond) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> body) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> cond) -> visited(shared_from_this());
+        (node -> body) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<BreakState> node){
@@ -117,35 +124,37 @@ public:
         if(node == NULL)return;
         std::cout<<str<<"FunctionDecl: "<<node->name<<std::endl;
         indent();
-        (node -> returnType) -> visited(std::shared_ptr<ASTVisitor>(this));
-        std::cout<<node->parameterList.size()<<std::endl;
+        (node -> returnType) -> visited(shared_from_this());
+//        std::cout<<node->parameterList.size()<<std::endl;
         for(int i = 0; i <  (node->parameterList).size(); ++i){
-            (node -> parameterList)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> parameterList)[i] -> visited(shared_from_this());
         }
-        (node -> body) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> body) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<ClassConstructor> node){
         if(node == NULL) return;
         std::cout<<str<<"ClassConstructor: "<<node->name<<std::endl;
         indent();
-        (node -> body) -> visited(std::shared_ptr<ASTVisitor> (this));
+        if(node -> body != NULL){
+            (node -> body) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<ArrayAccess> node){
         if(node == NULL) return;
         std::cout<<str<<"ArrayAccess"<<std::endl;
         indent();
-        (node -> array) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> subscript) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> array) -> visited(shared_from_this());
+        (node -> subscript) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<BinaryExpr> node){
         if(node == NULL) return;
         std::cout<<str<<"BinaryExpr: "<<node->op<<std::endl;
         indent();
-        (node -> lhs) -> visited(std::shared_ptr<ASTVisitor>(this));
-        (node -> rhs) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> lhs) -> visited(shared_from_this());
+        (node -> rhs) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<BoolConst> node){
@@ -160,9 +169,9 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"FunctionCall"<<std::endl;
         indent();
-        (node -> name) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> name) -> visited(shared_from_this());
         for(int i = 0; i <  (node->parameters).size(); ++i){
-            (node -> parameters)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> parameters)[i] -> visited(shared_from_this());
         }
     }
     void visit(std::shared_ptr<Identifier> node){
@@ -177,17 +186,17 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"MemberAccess: "<<node->member<<std::endl;
         indent();
-        (node -> record) -> visited(std::shared_ptr<ASTVisitor>(this));
+        (node -> record) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<NewExpr> node){
         if(node == NULL) return;
         std::cout<<str<<"NewExpr"<<std::endl;
         indent();
-        (node -> type) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> type) -> visited(shared_from_this());
         for(int i = 0; i < (node -> dim).size(); ++i) {
             std::cout<<str<<"[ ";
-            (node -> dim)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> dim)[i] -> visited(shared_from_this());
             std::cout<<str<<" ]";
         }
         dedent();
@@ -200,14 +209,14 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"SelfDecrement"<<std::endl;
         indent();
-        (node -> oneself) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> oneself) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<SelfIncrement> node){
         if(node == NULL) return;
         std::cout<<str<<"SelfIncrement"<<std::endl;
         indent();
-        (node -> oneself) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> oneself) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<StringConst> node){
@@ -218,7 +227,7 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"UnaryExpr: "<<node->op<<std::endl;
         indent();
-        (node -> body) -> visited(std::shared_ptr<ASTVisitor> (this));
+        (node -> body) -> visited(shared_from_this());
         dedent();
     }
     void visit(std::shared_ptr<Program> node){
@@ -226,7 +235,7 @@ public:
         std::cout<<str<<"Program"<<std::endl;
         indent();
         for(int i = 0; i < (node -> decls).size(); ++i) {
-            (node -> decls)[i] -> visited(std::shared_ptr<ASTVisitor>(this));
+            (node -> decls)[i] -> visited(shared_from_this());
         }
         dedent();
     }

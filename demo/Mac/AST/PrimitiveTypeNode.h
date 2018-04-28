@@ -3,7 +3,7 @@
 
 #include "ASTNode.h"
 
-class PrimitiveTypeNode : public ASTNode {
+class PrimitiveTypeNode : public ASTNode, public std::enable_shared_from_this<PrimitiveTypeNode>{
 public:
     enum Types {
         INT, BOOL, STRING, VOID
@@ -13,7 +13,7 @@ public:
         type = ty;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(std::shared_ptr<PrimitiveTypeNode>(this));
+        visitor -> visit(shared_from_this());
     }
 };
 
