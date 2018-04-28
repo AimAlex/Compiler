@@ -11,6 +11,7 @@
 #include "ASTNode.h"
 
 class ArrayAccess : public ASTNode{
+public:
     std::shared_ptr<ASTNode> array;
     std::shared_ptr<ASTNode> subscript;
     size_t position;

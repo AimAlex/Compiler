@@ -10,6 +10,7 @@
 #define SelfIncrement_h
 #include "ASTNode.h"
 class SelfIncrement : public ASTNode{
+public:
     std::shared_ptr<ASTNode> oneself;
     size_t position;
     void accept(std::vector<std::shared_ptr<ASTNode>> vec){

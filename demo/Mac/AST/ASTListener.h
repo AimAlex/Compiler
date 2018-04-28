@@ -350,6 +350,7 @@ public:
     void exitFunctionDeclaration(antlrcpptest::MParser::FunctionDeclarationContext * ctx) override {
         std::shared_ptr<ASTNode> ptr(new FunctionDecl());
         std::shared_ptr<ASTNode> iden = ASTTree[ctx->typeSpecifier()];
+//        std::cout<<ctx->typeSpecifier()->getText()<<std::endl;
         ptr -> acceptStr(ctx->Identifier()->getText());
         std::vector<std::shared_ptr<ASTNode>> vec;
         vec.push_back(iden);

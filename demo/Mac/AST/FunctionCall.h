@@ -11,6 +11,7 @@
 #include "ASTNode.h"
 #include <vector>
 class FunctionCall : public ASTNode {
+public:
     std::shared_ptr<ASTNode> name;
     std::vector<std::shared_ptr<ASTNode>> parameters;
     size_t position;
