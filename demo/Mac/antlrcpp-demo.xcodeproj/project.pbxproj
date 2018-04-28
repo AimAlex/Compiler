@@ -91,6 +91,7 @@
 		4C0A6168209021BC007E523D /* Program.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		4C0A616A209033CC007E523D /* ClassTypeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4C0A616B20932F34007E523D /* ASTVisitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTVisitor.h; sourceTree = "<group>"; };
+		4C0A617420937477007E523D /* ASTPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTPrinter.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -204,6 +205,7 @@
 		37D727A11867AF1E007B6D10 = {
 			isa = PBXGroup;
 			children = (
+				4C0A61732093745A007E523D /* VisitAST */,
 				270925A11CDB409400522D32 /* antlrcpp.xcodeproj */,
 				4CB2DAB42085DB7900819419 /* AST */,
 				27C66A681C9591280021E494 /* antlr4-cpp-demo */,
@@ -240,6 +242,14 @@
 				37F1356B1B4AC02800E0CACF /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		4C0A61732093745A007E523D /* VisitAST */ = {
+			isa = PBXGroup;
+			children = (
+				4C0A617420937477007E523D /* ASTPrinter.h */,
+			);
+			path = VisitAST;
 			sourceTree = "<group>";
 		};
 		4CB2DAB42085DB7900819419 /* AST */ = {

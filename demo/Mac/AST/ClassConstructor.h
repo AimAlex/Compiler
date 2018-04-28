@@ -9,7 +9,6 @@
 #ifndef ClassConstructor_h
 #define ClassConstructor_h
 #include "ASTNode.h"
-#include "CompoundState.h"
 #include <vector>
 class ClassConstructor : public ASTNode{
 public:
@@ -23,7 +22,7 @@ public:
         body = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<ClassConstructor>(this));
     }
 };
 

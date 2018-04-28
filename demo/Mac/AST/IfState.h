@@ -14,7 +14,7 @@ public:
         otherwise = ptr[2];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<IfState>(this));
     }
 };
 

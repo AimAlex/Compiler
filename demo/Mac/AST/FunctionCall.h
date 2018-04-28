@@ -21,7 +21,7 @@ class FunctionCall : public ASTNode {
         }
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<FunctionCall>(this));
     }
 };
 #endif /* FunctionCall_h */

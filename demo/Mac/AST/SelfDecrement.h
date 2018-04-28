@@ -16,7 +16,7 @@ class SelfDecrement : public ASTNode {
         oneself = vec[0];
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<SelfDecrement>(this));
     }
 };
 

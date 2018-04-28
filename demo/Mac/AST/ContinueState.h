@@ -6,7 +6,7 @@ class ContinueState : public ASTNode {
 public:
     size_t position;
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<ContinueState>(this));
     }
 };
 

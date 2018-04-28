@@ -16,7 +16,7 @@ public:
         value = i;
     }
     void visited(std::shared_ptr<ASTVisitor> visitor){
-        visitor -> visit(this);
+        visitor -> visit(std::shared_ptr<BoolConst>(this));
     }
 };
 
