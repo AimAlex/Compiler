@@ -19,6 +19,7 @@ public:
     void visited(std::shared_ptr<ASTVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    std::string getType(){return "variable";}
 };
 
 #endif

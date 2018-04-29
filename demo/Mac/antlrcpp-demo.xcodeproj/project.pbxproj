@@ -92,6 +92,13 @@
 		4C0A616A209033CC007E523D /* ClassTypeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4C0A616B20932F34007E523D /* ASTVisitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTVisitor.h; sourceTree = "<group>"; };
 		4C0A617420937477007E523D /* ASTPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTPrinter.h; sourceTree = "<group>"; };
+		4C0A617620958170007E523D /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
+		4C7184D22095820200BAD3FD /* SymbolNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolNode.h; sourceTree = "<group>"; };
+		4C7184D52095BB1300BAD3FD /* ClassType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassType.h; sourceTree = "<group>"; };
+		4C7184D62095BB6500BAD3FD /* VariableType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariableType.h; sourceTree = "<group>"; };
+		4C7184D82095BBF700BAD3FD /* FunctionType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunctionType.h; sourceTree = "<group>"; };
+		4C7184DA2095C75100BAD3FD /* ArrayType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayType.h; sourceTree = "<group>"; };
+		4C7184DC2095E1B000BAD3FD /* ASTClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTClass.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -205,6 +212,7 @@
 		37D727A11867AF1E007B6D10 = {
 			isa = PBXGroup;
 			children = (
+				4C0A617520957C0C007E523D /* Symbol */,
 				4C0A61732093745A007E523D /* VisitAST */,
 				270925A11CDB409400522D32 /* antlrcpp.xcodeproj */,
 				4CB2DAB42085DB7900819419 /* AST */,
@@ -248,8 +256,22 @@
 			isa = PBXGroup;
 			children = (
 				4C0A617420937477007E523D /* ASTPrinter.h */,
+				4C7184DC2095E1B000BAD3FD /* ASTClass.h */,
 			);
 			path = VisitAST;
+			sourceTree = "<group>";
+		};
+		4C0A617520957C0C007E523D /* Symbol */ = {
+			isa = PBXGroup;
+			children = (
+				4C0A617620958170007E523D /* SymbolTable.h */,
+				4C7184D22095820200BAD3FD /* SymbolNode.h */,
+				4C7184D52095BB1300BAD3FD /* ClassType.h */,
+				4C7184D62095BB6500BAD3FD /* VariableType.h */,
+				4C7184D82095BBF700BAD3FD /* FunctionType.h */,
+				4C7184DA2095C75100BAD3FD /* ArrayType.h */,
+			);
+			path = Symbol;
 			sourceTree = "<group>";
 		};
 		4CB2DAB42085DB7900819419 /* AST */ = {

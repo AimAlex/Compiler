@@ -17,6 +17,7 @@
 #include "MParser.h"
 #include "ASTListener.h"
 #include "ASTPrinter.h"
+#include "ASTClass.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -34,7 +35,7 @@ int main(int , const char **) {
     MParser parser(&tokens);
     tree::ParseTree *tree = parser.program();
     
-    std::cout << tree->toStringTree(&parser) << std::endl;
+//    std::cout << tree->toStringTree(&parser) << std::endl;
     
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
     auto listener = std::make_shared<ASTListener>();

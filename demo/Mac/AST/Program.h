@@ -9,9 +9,11 @@
 #ifndef Program_h
 #define Program_h
 #include "ASTNode.h"
+#include "SymbolTable.h"
 class Program : public ASTNode, public std::enable_shared_from_this<Program>{
 public:
     std::vector<std::shared_ptr<ASTNode>> decls;
+    std::shared_ptr<SymbolTable> classTable;
     void accept(std::vector<std::shared_ptr<ASTNode>> vec) {
         for(int i = 0; i < vec.size(); ++i) {
             decls.push_back(vec[i]);
