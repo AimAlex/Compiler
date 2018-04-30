@@ -20,7 +20,28 @@ public:
     void visit(std::shared_ptr<IfState>){}
     void visit(std::shared_ptr<ReturnState>){}
     void visit(std::shared_ptr<ForLoop>){}
-    void visit(std::shared_ptr<VariableDecl>){}
+    void visit(std::shared_ptr<VariableDecl> node){
+        if(currentTable.size() == 1) return;
+        std::shared_ptr<SymbolNode> ptr(new SymbolNode());
+        std::shared_ptr<SymbolTable> currentNode = currentTable[currentTable.size() - 1];
+        if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
+            std::cout<<"exist name： "<<node -> name<<std::endl;
+            exit(1);
+        }
+        currentNode -> symbolTable[node -> name] = ptr;
+        std::shared_ptr<SymbolType> varType = node -> getType();
+        if(varType -> type == SymbolType::ClASS){
+            if(currentTable[0] -> symbolTable.find(varType -> getName()) == currentTable[0] -> symbolTable.end()){
+                std::cout<<"no such class: "<<varType -> getName()<<std::endl;
+                exit(1);
+            }
+            if(currentTable[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::ClASS){
+                std::cout<<"no such class: "<<varType -> getName()<<std::endl;
+                exit(1);
+            }
+        }
+        
+    }
     void visit(std::shared_ptr<ArrayTypeNode>){}
     void visit(std::shared_ptr<PrimitiveTypeNode>){}
     void visit(std::shared_ptr<CompoundState>){}
@@ -30,6 +51,9 @@ public:
         currentTable.push_back(ptr -> table);
         for(int i = 0; i < (node -> functionMembers).size(); ++i) {
             (node -> functionMembers)[i] -> visited(shared_from_this());
+        }
+        for(int i = 0; i < (node -> variableMembers).size(); ++i) {
+            (node -> variableMembers)[i] -> visited(shared_from_this());
         }
         currentTable.pop_back();
     }
@@ -41,13 +65,14 @@ public:
         std::shared_ptr<SymbolNode> ptr(new SymbolNode());
         std::shared_ptr<SymbolTable> currentNode = currentTable[currentTable.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
-            std::cout<<"exist name"<<std::endl;
+            std::cout<<"exist name: "<<node -> name<<std::endl;
             exit(1);
         }
         currentNode -> symbolTable[node -> name] = ptr;
         ptr -> table = std::shared_ptr<SymbolTable>(new SymbolTable());
         ptr -> table -> name = node -> name;
         node -> functionTable = ptr -> table;
+        currentTable.push_back(ptr -> table);
         
         std::vector<std::shared_ptr<SymbolType>> vec;
         std::shared_ptr<SymbolType> returnType = node -> returnType -> getType();
@@ -74,11 +99,12 @@ public:
                     exit(1);
                 }
             }
+            (node -> parameterList)[i] -> visited(shared_from_this());
             vec.push_back(paraType);
         }
         ptr -> type = std::shared_ptr<SymbolType> (new FunctionType(vec));
         ptr -> type -> type = SymbolType::FUNCTION;
-        
+        currentTable.pop_back();
     }
     void visit(std::shared_ptr<ClassConstructor>){}
     void visit(std::shared_ptr<ArrayAccess>){}

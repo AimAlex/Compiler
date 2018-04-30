@@ -78,6 +78,56 @@ public:
         std::shared_ptr<SymbolTable> ptr(new SymbolTable());
         ptr -> name = "Global";
         node -> Table = ptr;
+        
+        std::shared_ptr<SymbolNode> Print(new SymbolNode());
+        std::vector<std::shared_ptr<SymbolType>> Printvec;
+        std::shared_ptr<SymbolType> PrintReturn (new VariableType("void", 0));
+        PrintReturn -> type = SymbolType::VOID;
+        Printvec.push_back(PrintReturn);
+        std::shared_ptr<SymbolType> PrintPar (new VariableType("string", 0));
+        PrintPar -> type = SymbolType::STRING;
+        Printvec.push_back(PrintPar);
+        Print -> type = std::shared_ptr<SymbolType>(new FunctionType(Printvec));
+        ptr -> symbolTable["print"] = Print;
+        
+        std::shared_ptr<SymbolNode> Println(new SymbolNode());
+        std::vector<std::shared_ptr<SymbolType>> Printlnvec;
+        std::shared_ptr<SymbolType> PrintlnReturn (new VariableType("void", 0));
+        PrintlnReturn -> type = SymbolType::VOID;
+        Printlnvec.push_back(PrintlnReturn);
+        std::shared_ptr<SymbolType> PrintlnPar (new VariableType("string", 0));
+        PrintlnPar -> type = SymbolType::STRING;
+        Printlnvec.push_back(PrintlnPar);
+        Println -> type = std::shared_ptr<SymbolType>(new FunctionType(Printlnvec));
+        ptr -> symbolTable["println"] = Println;
+        
+        std::shared_ptr<SymbolNode> GetString(new SymbolNode());
+        std::vector<std::shared_ptr<SymbolType>> GetStringvec;
+        std::shared_ptr<SymbolType> GetStringReturn (new VariableType("string", 0));
+        GetStringReturn -> type = SymbolType::STRING;
+        GetStringvec.push_back(GetStringReturn);
+        GetString -> type = std::shared_ptr<SymbolType>(new FunctionType(GetStringvec));
+        ptr -> symbolTable["getString"] = GetString;
+        
+        std::shared_ptr<SymbolNode> GetInt(new SymbolNode());
+        std::vector<std::shared_ptr<SymbolType>> GetIntvec;
+        std::shared_ptr<SymbolType> GetIntReturn (new VariableType("int", 0));
+        GetIntReturn -> type = SymbolType::INT;
+        GetIntvec.push_back(GetIntReturn);
+        GetInt -> type = std::shared_ptr<SymbolType>(new FunctionType(GetIntvec));
+        ptr -> symbolTable["getInt"] = GetInt;
+        
+        std::shared_ptr<SymbolNode> ToString(new SymbolNode());
+        std::vector<std::shared_ptr<SymbolType>> ToStringvec;
+        std::shared_ptr<SymbolType> ToStringReturn (new VariableType("string", 0));
+        ToStringReturn -> type = SymbolType::STRING;
+        ToStringvec.push_back(ToStringReturn);
+        std::shared_ptr<SymbolType> ToStringPar (new VariableType("int", 0));
+        ToStringPar -> type = SymbolType::INT;
+        ToStringvec.push_back(ToStringPar);
+        ToString -> type = std::shared_ptr<SymbolType>(new FunctionType(ToStringvec));
+        ptr -> symbolTable["toString"] = ToString;
+        
         for(int i = 0; i < (node -> decls).size(); ++i) {
             currentTable = ptr;
             (node -> decls)[i] -> visited(shared_from_this());
