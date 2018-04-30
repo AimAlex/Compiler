@@ -54,7 +54,6 @@ public:
             std::cout<<"exist name： "<<node -> name<<std::endl;
             exit(1);
         }
-        currentNode -> symbolTable[node -> name] = ptr;
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
         if(varType -> type == SymbolType::Null || varType -> type == SymbolType::VOID){
@@ -76,7 +75,7 @@ public:
         if(node -> init != NULL) {
             (node -> init) -> visited(shared_from_this());
         }//to do
-        
+        currentNode -> symbolTable[node -> name] = ptr;
     }
     void visit(std::shared_ptr<BreakState> node){
         if(node == NULL) return;
