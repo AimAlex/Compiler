@@ -12,10 +12,10 @@ class SymbolType{
 public:
     
     enum Types {
-        INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null, CONSTRUCT
+        INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null, CONSTRUCT, THIS
     };
     Types type;
-    virtual std::string getName(){return "";}
+    virtual std::string getName(){return "NULL";}
 };
 
 #endif /* SymbolType_h */

@@ -30,6 +30,7 @@ public:
         }
         currentNode -> symbolTable[node -> name] = ptr;
         std::shared_ptr<SymbolType> varType = node -> getType();
+        ptr -> type = varType;
         if(varType -> type == SymbolType::ClASS){
             if(currentTable[0] -> symbolTable.find(varType -> getName()) == currentTable[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
@@ -124,7 +125,6 @@ public:
     void visit(std::shared_ptr<Program> node){
         if(node == NULL) return;
         std::shared_ptr<SymbolTable> ptr = node -> Table;
-        node -> Table = ptr;
         currentTable.push_back(ptr);
         for(int i = 0; i < (node -> decls).size(); ++i) {
             (node -> decls)[i] -> visited(shared_from_this());

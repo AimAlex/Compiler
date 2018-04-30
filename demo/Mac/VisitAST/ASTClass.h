@@ -14,6 +14,7 @@
 #include "ClassType.h"
 #include "FunctionType.h"
 #include "ConstructorType.h"
+#include "ThisType.h"
 class ASTClass : public ASTVisitor, public std::enable_shared_from_this<ASTClass>{
 public:
     std::shared_ptr<SymbolTable> currentTable;
@@ -37,6 +38,11 @@ public:
         node -> classTable = ptr -> table;
         ptr -> type = std::shared_ptr<SymbolType> (new ClassType(""));
         ptr -> type -> type = SymbolType::ClASS;
+        std::shared_ptr<SymbolType> thisType(new ThisType());
+        thisType -> type = SymbolType::THIS;
+        std::shared_ptr<SymbolNode> thisNode(new SymbolNode());
+        thisNode -> type = thisType;
+        ptr -> table -> symbolTable["this"] = thisNode;
         if(node -> classconstructor != NULL){
             currentTable = ptr -> table;
             (node -> classconstructor) -> visited(shared_from_this());
