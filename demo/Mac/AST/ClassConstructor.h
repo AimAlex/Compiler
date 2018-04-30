@@ -15,6 +15,7 @@ public:
     size_t position;
     std::string name;
     std::shared_ptr<ASTNode> body;
+    std::shared_ptr<SymbolTable> constructorTable;
     void acceptStr(std::string str) {
         name = str;
     }

@@ -12,6 +12,7 @@ public:
     std::vector<std::shared_ptr<ASTNode>> functionMembers;
     std::shared_ptr<ASTNode> classconstructor;
     std::string name;
+    std::shared_ptr<SymbolTable> classTable;
     void acceptStr(std::string str) {
         name = str;
     }

@@ -42,6 +42,7 @@ int main(int , const char **) {
     walker.walk(listener.get(), tree);
     auto printer = std::make_shared<ASTPrinter>();
     (listener->getProgram()) -> visited(printer);
-    
+    auto classer = std::make_shared<ASTClass>();
+    (listener -> getProgram()) -> visited(classer);
     return 0;
 }

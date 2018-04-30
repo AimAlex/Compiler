@@ -99,6 +99,8 @@
 		4C7184D82095BBF700BAD3FD /* FunctionType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FunctionType.h; sourceTree = "<group>"; };
 		4C7184DA2095C75100BAD3FD /* ArrayType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayType.h; sourceTree = "<group>"; };
 		4C7184DC2095E1B000BAD3FD /* ASTClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTClass.h; sourceTree = "<group>"; };
+		4C7184DD2096B01400BAD3FD /* SymbolType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolType.h; sourceTree = "<group>"; };
+		4C7184DE2096BEC900BAD3FD /* ConstructorType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstructorType.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -266,10 +268,12 @@
 			children = (
 				4C0A617620958170007E523D /* SymbolTable.h */,
 				4C7184D22095820200BAD3FD /* SymbolNode.h */,
+				4C7184DD2096B01400BAD3FD /* SymbolType.h */,
 				4C7184D52095BB1300BAD3FD /* ClassType.h */,
 				4C7184D62095BB6500BAD3FD /* VariableType.h */,
 				4C7184D82095BBF700BAD3FD /* FunctionType.h */,
 				4C7184DA2095C75100BAD3FD /* ArrayType.h */,
+				4C7184DE2096BEC900BAD3FD /* ConstructorType.h */,
 			);
 			path = Symbol;
 			sourceTree = "<group>";

@@ -14,7 +14,7 @@
 class SymbolTable{
 public:
     std::map<std::string, std::shared_ptr<SymbolNode>> symbolTable;
-    
+    std::string name;
     void add(std::string str, std::shared_ptr<SymbolNode> node){
         if(symbolTable.find(str) != symbolTable.end()){
             std::cout<<"exist symbol"<<std::endl;

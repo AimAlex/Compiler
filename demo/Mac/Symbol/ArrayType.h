@@ -8,11 +8,9 @@
 
 #ifndef ArrayType_h
 #define ArrayType_h
-#include "SymbolNode.h"
-class ArrayType : public SymbolNode{
+#include "SymbolType.h"
+class ArrayType : public SymbolType{
 public:
-    std::string name;
-    Types type;
     int demension;
 };
 

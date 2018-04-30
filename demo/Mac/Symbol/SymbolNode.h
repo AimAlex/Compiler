@@ -8,12 +8,11 @@
 
 #ifndef SymbolNode_h
 #define SymbolNode_h
+#include "SymbolType.h"
 class SymbolTable;
 class SymbolNode{
 public:
-    enum Types {
-        INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null
-    };
+    std::shared_ptr<SymbolType> type;
     std::shared_ptr<SymbolTable> table;
 };
 

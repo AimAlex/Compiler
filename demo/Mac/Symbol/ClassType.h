@@ -8,10 +8,11 @@
 
 #ifndef ClassType_h
 #define ClassType_h
-#include "SymbolNode.h"
-class ClassType : public SymbolNode{
+#include "SymbolType.h"
+class ClassType : public SymbolType{
 public:
     std::string name;
+    
     ClassType(std::string str) {
         name = str;
     }

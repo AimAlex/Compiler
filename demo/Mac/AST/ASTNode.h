@@ -9,8 +9,8 @@ public:
     virtual void acceptStr(std::string){}
     virtual void acceptFunction(std::vector<std::shared_ptr<ASTNode>>){}
     virtual void acceptConstructor(std::shared_ptr<ASTNode>){}
-    virtual void acceptNum(int){};
-    virtual void visited(std::shared_ptr<ASTVisitor>){};
+    virtual void acceptNum(int){}
+    virtual void visited(std::shared_ptr<ASTVisitor>){}
     virtual std::string getType(){return "";}
 };
 

@@ -8,14 +8,13 @@
 
 #ifndef FunctionType_h
 #define FunctionType_h
-#include "SymbolNode.h"
+#include "SymbolType.h"
 #include "VariableType.h"
 #include <vector>
-class FunctionType : public SymbolNode{
+class FunctionType : public SymbolType{
 public:
-    std::shared_ptr<SymbolNode> returnType;
-    std::string name;
-    std::vector<std::shared_ptr<SymbolNode>> argType;
+    std::shared_ptr<SymbolType> returnType;
+    std::vector<std::shared_ptr<SymbolType>> argType;
 };
 
 

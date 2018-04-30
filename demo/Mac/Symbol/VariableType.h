@@ -8,11 +8,9 @@
 
 #ifndef VariableType_h
 #define VariableType_h
-#include "SymbolNode.h"
-class VariableType : public SymbolNode{
+#include "SymbolType.h"
+class VariableType : public SymbolType{
 public:
-    std::string name;
-    Types type;
 };
 
 #endif /* VariableType_h */
