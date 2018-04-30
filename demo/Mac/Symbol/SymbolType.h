@@ -15,6 +15,7 @@ public:
         INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null, CONSTRUCT
     };
     Types type;
+    virtual std::string getName(){return "";}
 };
 
 #endif /* SymbolType_h */

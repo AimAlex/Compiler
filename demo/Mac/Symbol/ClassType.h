@@ -16,6 +16,9 @@ public:
     ClassType(std::string str) {
         name = str;
     }
+    std::string getClass(){
+        return name;
+    }
 //    SymbolTable members;
 };
 

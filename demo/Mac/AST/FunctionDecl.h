@@ -11,6 +11,7 @@ public:
     std::shared_ptr<ASTNode> returnType;
     std::vector<std::shared_ptr<ASTNode>> parameterList;
     std::shared_ptr<ASTNode> body;
+    std::shared_ptr<SymbolTable> functionTable;
 //    FunctionType functiontype;
     void acceptStr(std::string str) {
         name = str;
@@ -27,7 +28,6 @@ public:
     void visited(std::shared_ptr<ASTVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
-    std::string getType(){return "function";}
 };
 
 #endif

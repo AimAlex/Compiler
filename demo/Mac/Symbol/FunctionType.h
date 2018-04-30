@@ -15,6 +15,12 @@ class FunctionType : public SymbolType{
 public:
     std::shared_ptr<SymbolType> returnType;
     std::vector<std::shared_ptr<SymbolType>> argType;
+    FunctionType(std::vector<std::shared_ptr<SymbolType>> vec){
+        returnType = vec[0];
+        for(int i = 1; i < vec.size(); ++i) {
+            argType.push_back(vec[i]);
+        }
+    }
 };
 
 

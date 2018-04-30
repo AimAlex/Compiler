@@ -18,6 +18,7 @@
 #include "ASTListener.h"
 #include "ASTPrinter.h"
 #include "ASTClass.h"
+#include "ASTFunction.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -44,5 +45,7 @@ int main(int , const char **) {
     (listener->getProgram()) -> visited(printer);
     auto classer = std::make_shared<ASTClass>();
     (listener -> getProgram()) -> visited(classer);
+    auto functioner = std::make_shared<ASTFunction>();
+    (listener -> getProgram()) -> visited(functioner);
     return 0;
 }

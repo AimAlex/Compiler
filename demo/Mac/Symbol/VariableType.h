@@ -11,6 +11,16 @@
 #include "SymbolType.h"
 class VariableType : public SymbolType{
 public:
+    std::string className;
+    int demension;
+    VariableType(std::string str, int n){
+        className = str;
+        demension = n;
+    }
+    std::string getName()
+    {
+        return className;
+    }
 };
 
 #endif /* VariableType_h */
