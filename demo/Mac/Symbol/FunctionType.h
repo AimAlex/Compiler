@@ -20,6 +20,7 @@ public:
         for(int i = 1; i < vec.size(); ++i) {
             argType.push_back(vec[i]);
         }
+//        std::cout<<vec.size()<<std::endl;
     }
     std::vector<std::shared_ptr<SymbolType>> getFunction(){
         std::vector<std::shared_ptr<SymbolType>> vec;

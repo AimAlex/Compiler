@@ -22,6 +22,12 @@ public:
         if(ptr == NULL) {
             return 0;
         }
+        if(this -> type == ClASS && ptr -> type == Null) {
+            return 1;
+        }
+        if(this -> getDemension() != 0 && ptr -> type == Null) {
+            return 1;
+        }
         if(ptr -> type != this -> type){
             return 0;
         }

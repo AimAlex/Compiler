@@ -82,6 +82,7 @@ public:
             }
         }
         currentNode -> symbolTable[node -> name] = ptr;
+//        std::cout<<node -> name<<std::endl;
     }
     void visit(std::shared_ptr<BreakState> node){
         if(node == NULL) return;
@@ -119,9 +120,14 @@ public:
     }
     void visit(std::shared_ptr<CompoundState> node){
         if(node == NULL) return;
+        std::shared_ptr<SymbolTable> ptr(new SymbolTable());
+        tableList.push_back(ptr);
         for(int i = 0; i < node -> stmts.size(); ++i) {
-            (node -> stmts)[i] -> visited(shared_from_this());
+            if((node -> stmts)[i] != NULL){
+                (node -> stmts)[i] -> visited(shared_from_this());
+            }
         }
+        tableList.pop_back();
     }
     void visit(std::shared_ptr<IfState> node){
         if(node == NULL) return;
@@ -228,9 +234,10 @@ public:
             node -> exprType -> type = SymbolType::ClASS;
         }
         else if(ptr -> type == SymbolType::FUNCTION){
+//            std::cout<<ptr->getFunction().size()<<std::endl;
             std::vector<std::shared_ptr<SymbolType>> vec(ptr -> getFunction());
             if(node -> parameters.size() != vec.size() - 1){
-                std::cout<<"parameters number dismatch"<<std::endl;
+                std::cout<<node -> parameters.size()<<" parameters number dismatch: "<<vec.size() - 1<<std::endl;
                 throw(0);
             }
             for(int i = 0; i < node -> parameters.size(); ++i){
@@ -344,16 +351,19 @@ public:
     void visit(std::shared_ptr<Identifier> node){
         std::shared_ptr<SymbolNode> ptr(NULL);
         for(int i = tableList.size() - 1; i >= 0; --i){
+//            std::cout<<i<<std::endl;
             if((tableList[i] -> symbolTable).find(node -> name) == (tableList[i] -> symbolTable).end()){
                 continue;
             }
             ptr = (tableList[i] -> symbolTable)[node -> name];
+            break;
         }
         if (ptr == NULL) {
-            std::cout<<"no such symbol"<<std::endl;
+            std::cout<<"no such symbol: "<<node -> name<<std::endl;
             throw(0);
         }
         std::shared_ptr<SymbolType> t = ptr -> type;
+//        std::cout<<node -> name<<" "<<t -> getFunction().size()<<std::endl;
         node -> exprType = t;
         node -> isLvalue = (t -> type != SymbolType::FUNCTION);
     }
@@ -429,7 +439,7 @@ public:
         node -> lhs -> visited(shared_from_this());
         node -> rhs -> visited(shared_from_this());
         if (!node -> lhs -> exprType -> sameType(node -> rhs -> exprType)) {
-            std::cout<<"The left and right not the same value"<<node -> rhs -> exprType -> getName()<<std::endl;
+            std::cout<<node -> op<<"  The left and right not the same value"<<node -> rhs -> exprType -> getName()<<std::endl;
             throw(0);
         }
         SymbolType::Types operandType = node -> lhs -> exprType -> type;

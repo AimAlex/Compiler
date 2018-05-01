@@ -50,11 +50,15 @@ public:
         if (node -> initWithDecl != NULL){
             (node -> initWithDecl) -> visited(shared_from_this());
         }
-        else{
+        else if(node -> init != NULL){
             (node -> init) -> visited(shared_from_this());
         }
-        (node -> cond) -> visited(shared_from_this());
-        (node -> step) -> visited(shared_from_this());
+        if(node -> cond != NULL){
+            (node -> cond) -> visited(shared_from_this());
+        }
+        if(node -> step != NULL){
+            (node -> step) -> visited(shared_from_this());
+        }
         (node -> body) -> visited(shared_from_this());
         dedent();
     }
@@ -85,7 +89,9 @@ public:
         std::cout<<str<<"CompoundState"<<std::endl;
         indent();
         for(int i = 0; i < node -> stmts.size(); ++i) {
-            (node -> stmts)[i] -> visited(shared_from_this());
+            if((node-> stmts)[i] != NULL){
+                (node -> stmts)[i] -> visited(shared_from_this());
+            }
         }
         dedent();
     }

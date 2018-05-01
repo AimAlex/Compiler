@@ -25,7 +25,7 @@ using namespace antlr4;
 
 int main(int , const char ** ) {
     ANTLRFileStream file("./test.mx");
-//    ANTLRFileStream file(text[1]);
+//    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);

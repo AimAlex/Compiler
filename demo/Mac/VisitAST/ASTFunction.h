@@ -103,6 +103,7 @@ public:
             (node -> parameterList)[i] -> visited(shared_from_this());
             vec.push_back(paraType);
         }
+//        std::cout<<node ->name <<" "<<node -> parameterList.size()<<std::endl;
         ptr -> type = std::shared_ptr<SymbolType> (new FunctionType(vec));
         ptr -> type -> type = SymbolType::FUNCTION;
         currentTable.pop_back();
@@ -128,6 +129,24 @@ public:
         currentTable.push_back(ptr);
         for(int i = 0; i < (node -> decls).size(); ++i) {
             (node -> decls)[i] -> visited(shared_from_this());
+        }
+        if(currentTable[0] -> symbolTable.find("main") == currentTable[0] -> symbolTable.end()){
+            std::cout<<"no main"<<std::endl;
+            throw(0);
+        }
+        std::shared_ptr<SymbolNode> m = currentTable[0]-> symbolTable["main"];
+        if(m -> type -> type != SymbolType::FUNCTION){
+            std::cout<<"main is not function"<<std::endl;
+            throw(0);
+        }
+        std::vector<std::shared_ptr<SymbolType>> vec(m -> type -> getFunction());
+        if(vec.size() != 1){
+            std::cout<<"main has parameter"<<std::endl;
+            throw(0);
+        }
+        if(vec[0] -> type != SymbolType::INT){
+            std::cout<<"main returntype error"<<std::endl;
+            throw(0);
         }
         currentTable.pop_back();
         //        auto iter = node -> Table -> symbolTable.begin();
