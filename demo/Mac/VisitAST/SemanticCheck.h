@@ -54,23 +54,23 @@ public:
         std::shared_ptr<SymbolTable> currentNode = tableList[tableList.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
             std::cout<<"exist name： "<<node -> name<<std::endl;
-            exit(1);
+            throw(0);
         }
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
         if(varType -> type == SymbolType::Null || varType -> type == SymbolType::VOID){
             std::cout<<"variable error: "<<node -> name<<std::endl;
-            exit(1);
+            throw(0);
         }
 //        std::cout<<"name"<<varType -> getName()<<std::endl;
         if(varType -> type == SymbolType::ClASS){
             if(tableList[0] -> symbolTable.find(varType -> getName()) == tableList[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
             if(tableList[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         
@@ -78,7 +78,7 @@ public:
             (node -> init) -> visited(shared_from_this());
             if (!varType -> sameType(node -> init -> exprType)) {
                 std::cout<<"not same type: "<<node -> name<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         currentNode -> symbolTable[node -> name] = ptr;
@@ -87,21 +87,21 @@ public:
         if(node == NULL) return;
         if (loopStack.empty()) {
             std::cout<<"break error"<<std::endl;
-            exit(1);
+            throw(0);
         }
     }
     void visit(std::shared_ptr<ContinueState> node){
         if(node == NULL) return;
         if(loopStack.empty()){
             std::cout<<"continue error" <<std::endl;
-            exit(1);
+            throw(0);
         }
     }
     void visit(std::shared_ptr<ReturnState> node){
         if(node == NULL) return;
         if(currentFunctionType == NULL) {
             std::cout<<"return not in function"<<std::endl;
-            exit(1);
+            throw(0);
         }
         std::shared_ptr<SymbolType> returnType;
         if(node -> value != NULL){
@@ -114,7 +114,7 @@ public:
         }
         if(!currentFunctionType -> sameType(returnType)){
             std::cout<<"return type error"<<std::endl;
-            exit(1);
+            throw(0);
         }
     }
     void visit(std::shared_ptr<CompoundState> node){
@@ -129,7 +129,7 @@ public:
         std::shared_ptr<SymbolType> condType = node -> cond -> exprType;
         if(condType -> type != SymbolType::BOOL){
             std::cout<<"condition is not a bool"<<std::endl;
-            exit(1);
+            throw(0);
         }
         std::shared_ptr<SymbolTable> ptr(new SymbolTable());
         tableList.push_back(ptr);
@@ -157,7 +157,7 @@ public:
             (node -> cond) -> visited(shared_from_this());
             if(node -> cond -> exprType -> type != SymbolType::BOOL){
                 std::cout<<"condition is not a bool"<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         
@@ -178,7 +178,7 @@ public:
             (node -> cond) -> visited(shared_from_this());
             if(node -> cond -> exprType -> type != SymbolType::BOOL){
                 std::cout<<"condition is not a bool"<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         loopStack.push(node);
@@ -201,11 +201,11 @@ public:
         (node -> subscript) -> visited(shared_from_this());
         if (node -> array -> exprType -> type != SymbolType::ARRAY) {
             std::cout<<"Array access occurs at non-array expression"<<std::endl;
-            exit(1);
+            throw(0);
         }
         if (node -> subscript -> exprType -> type != SymbolType::INT) {
             std::cout<<"Array subscript is not int"<<std::endl;
-            exit(1);
+            throw(0);
         }
 //        node -> exprType = ((ArrayType)node.array.exprType).bodyType;
 //        todo
@@ -218,7 +218,7 @@ public:
         if(ptr -> type == SymbolType::CLASSTYPE){
             if(node -> parameters.size() != 0){
                 std::cout<<"constructor no parametres"<<std::endl;
-                exit(1);
+                throw(0);
             }
             node -> isLvalue = false;
             node -> exprType = std::shared_ptr<SymbolType>(new VariableType(ptr -> getName(), 0));
@@ -228,13 +228,13 @@ public:
             std::vector<std::shared_ptr<SymbolType>> vec(ptr -> getFunction());
             if(node -> parameters.size() != vec.size() - 1){
                 std::cout<<"parameters number dismatch"<<std::endl;
-                exit(1);
+                throw(0);
             }
             for(int i = 0; i < node -> parameters.size(); ++i){
                 (node -> parameters)[i] -> visited(shared_from_this());
                 if(!(node -> parameters)[i] -> exprType -> sameType(vec[i + 1])){
                     std::cout<<"parameters types error"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
             }
             node -> isLvalue = false;
@@ -243,7 +243,7 @@ public:
         }
         else{
             std::cout<<"functioncall not function"<<std::endl;
-            exit(1);
+            throw(0);
         }
     }
     void visit(std::shared_ptr<MemberAccess> node){
@@ -254,12 +254,12 @@ public:
             std::string name = recordType -> getName();
             if(tableList[0] -> symbolTable.find(name) == tableList[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<name<<std::endl;
-                exit(1);
+                throw(0);
             }
             std::shared_ptr<SymbolTable> ptr = tableList[0] -> symbolTable[name] -> table;
             if(ptr -> symbolTable.find(node -> member) == ptr -> symbolTable.end()){
                 std::cout<<"no such member: "<<node -> member<<std::endl;
-                exit(1);
+                throw(0);
             }
             std::shared_ptr<SymbolType> type = ptr -> symbolTable[node -> member] -> type;
             node -> isLvalue = true;
@@ -317,7 +317,7 @@ public:
             }
             else{
                 std::cout<<"no such member: "<<node -> member<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         else if(recordType -> getDemension() != 0){
@@ -335,7 +335,7 @@ public:
         }
         else{
             std::cout<<"member access error"<<std::endl;
-            exit(1);
+            throw(0);
         }
     }
     void visit(std::shared_ptr<Identifier> node){
@@ -364,7 +364,7 @@ public:
             x -> visited(shared_from_this());
             if (x -> exprType -> type != SymbolType::INT) {
                 std::cout<<"Dimension expression not int"<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         std::shared_ptr<SymbolType> type (new VariableType(nodeType -> getName(), node -> dim.size()));
@@ -381,11 +381,11 @@ public:
             case UnaryExpr::DEC:
                 if (!node -> body -> isLvalue) {
                     std::cout<<"++ -- not lvalues."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 if (node -> body -> exprType -> type != SymbolType::INT) {
                     std::cout<<"++ -- not int`."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("int", 0));
                 node -> exprType -> type = SymbolType::INT;
@@ -396,11 +396,11 @@ public:
             case UnaryExpr::BITWISE_NOT:
                 if (!node -> body -> isLvalue) {
                     std::cout<<"+ - ~ not lvalues."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 if (node -> body -> exprType -> type != SymbolType::INT) {
                     std::cout<<"+ - ~ not int."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("int", 0));
                 node -> exprType -> type = SymbolType::INT;
@@ -409,11 +409,11 @@ public:
             case UnaryExpr::LOGICAL_NOT:
                 if (!node -> body -> isLvalue) {
                     std::cout<<"!not lvalues."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 if (node -> body -> exprType -> type != SymbolType::BOOL) {
                     std::cout<<"! not bool."<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("bool", 0));
                 node -> exprType -> type = SymbolType::BOOL;
@@ -427,14 +427,14 @@ public:
         node -> rhs -> visited(shared_from_this());
         if (!node -> lhs -> exprType -> sameType(node -> rhs -> exprType)) {
             std::cout<<"The left and right not the same value"<<node -> rhs -> exprType -> getName()<<std::endl;
-            exit(1);
+            throw(0);
         }
         SymbolType::Types operandType = node -> lhs -> exprType -> type;
         switch (node -> op) {
             case BinaryExpr::ASSIGN:
                 if (!node -> lhs -> isLvalue) {
                     std::cout<<"assignment expression not lvalue"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = node -> rhs -> exprType;//samearea
                 node -> isLvalue = true;
@@ -443,7 +443,7 @@ public:
             case BinaryExpr::LOGICAL_AND:
                 if (operandType != SymbolType::BOOL) {
                     std::cout<<"or/and not`bool`"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("bool", 0));
                 node -> exprType -> type = SymbolType::BOOL;
@@ -461,7 +461,7 @@ public:
             case BinaryExpr::GE:
                 if (operandType != SymbolType::INT && operandType != SymbolType::STRING) {
                     std::cout<<"relational operation not `int` or a `string`"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("bool", 0));
                 node -> exprType -> type = SymbolType::BOOL;
@@ -478,7 +478,7 @@ public:
             case BinaryExpr::MOD:
                 if (operandType != SymbolType::INT) {
                     std::cout<<"binary arithmetic operation not`int`"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 node -> exprType = std::shared_ptr<SymbolType> (new VariableType("int", 0));
                 node -> exprType -> type = SymbolType::INT;
@@ -497,7 +497,7 @@ public:
                 }
                 else{
                     std::cout<<"binary arithmetic operation not`int` or `string`"<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 break;
         }

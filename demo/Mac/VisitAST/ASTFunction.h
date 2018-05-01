@@ -26,7 +26,7 @@ public:
         std::shared_ptr<SymbolTable> currentNode = currentTable[currentTable.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
             std::cout<<"exist name： "<<node -> name<<std::endl;
-            exit(1);
+            throw(0);
         }
         currentNode -> symbolTable[node -> name] = ptr;
         std::shared_ptr<SymbolType> varType = node -> getType();
@@ -34,11 +34,11 @@ public:
         if(varType -> type == SymbolType::ClASS){
             if(currentTable[0] -> symbolTable.find(varType -> getName()) == currentTable[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
             if(currentTable[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         
@@ -67,7 +67,7 @@ public:
         std::shared_ptr<SymbolTable> currentNode = currentTable[currentTable.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
             std::cout<<"exist name: "<<node -> name<<std::endl;
-            exit(1);
+            throw(0);
         }
         currentNode -> symbolTable[node -> name] = ptr;
         ptr -> table = std::shared_ptr<SymbolTable>(new SymbolTable());
@@ -80,11 +80,11 @@ public:
         if(returnType -> type == SymbolType::ClASS){
             if(currentTable[0] -> symbolTable.find(returnType -> getName()) == currentTable[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<returnType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
             if(currentTable[0] -> symbolTable[returnType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<returnType -> getName()<<std::endl;
-                exit(1);
+                throw(0);
             }
         }
         vec.push_back(returnType);
@@ -93,11 +93,11 @@ public:
             if(paraType -> type == SymbolType::ClASS){
                 if(currentTable[0] -> symbolTable.find(paraType -> getName()) == currentTable[0] -> symbolTable.end()){
                     std::cout<<"no such class: "<<paraType -> getName()<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
                 if(currentTable[0] -> symbolTable[paraType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                     std::cout<<"no such class: "<<paraType -> getName()<<std::endl;
-                    exit(1);
+                    throw(0);
                 }
             }
             (node -> parameterList)[i] -> visited(shared_from_this());

@@ -29,7 +29,7 @@ public:
         std::shared_ptr<SymbolNode> ptr(new SymbolNode());
         if(currentTable -> symbolTable.find(node -> name) != currentTable -> symbolTable.end()){
             std::cout<<"exist class"<<std::endl;
-            exit(1);
+            throw(0);
         }
         currentTable -> symbolTable[node -> name] = ptr;
         ptr -> table = std::shared_ptr<SymbolTable>(new SymbolTable());
