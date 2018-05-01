@@ -245,7 +245,7 @@ public:
             node -> exprType -> type = vec[0] -> type;
         }
         else{
-            std::cout<<"functioncall not function"<<std::endl;
+            std::cout<<"functioncall not function"<<ptr -> getName()<<std::endl;
             throw(0);
         }
     }

@@ -94,6 +94,7 @@ public:
         PrintPar -> type = SymbolType::STRING;
         Printvec.push_back(PrintPar);
         Print -> type = std::shared_ptr<SymbolType>(new FunctionType(Printvec));
+        Print -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["print"] = Print;
         
         std::shared_ptr<SymbolNode> Println(new SymbolNode());
@@ -105,6 +106,7 @@ public:
         PrintlnPar -> type = SymbolType::STRING;
         Printlnvec.push_back(PrintlnPar);
         Println -> type = std::shared_ptr<SymbolType>(new FunctionType(Printlnvec));
+        Println -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["println"] = Println;
         
         std::shared_ptr<SymbolNode> GetString(new SymbolNode());
@@ -113,6 +115,7 @@ public:
         GetStringReturn -> type = SymbolType::STRING;
         GetStringvec.push_back(GetStringReturn);
         GetString -> type = std::shared_ptr<SymbolType>(new FunctionType(GetStringvec));
+        GetString -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["getString"] = GetString;
         
         std::shared_ptr<SymbolNode> GetInt(new SymbolNode());
@@ -121,6 +124,7 @@ public:
         GetIntReturn -> type = SymbolType::INT;
         GetIntvec.push_back(GetIntReturn);
         GetInt -> type = std::shared_ptr<SymbolType>(new FunctionType(GetIntvec));
+        GetInt -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["getInt"] = GetInt;
         
         std::shared_ptr<SymbolNode> ToString(new SymbolNode());
@@ -132,6 +136,7 @@ public:
         ToStringPar -> type = SymbolType::INT;
         ToStringvec.push_back(ToStringPar);
         ToString -> type = std::shared_ptr<SymbolType>(new FunctionType(ToStringvec));
+        ToString -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["toString"] = ToString;
         
         for(int i = 0; i < (node -> decls).size(); ++i) {
