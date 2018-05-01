@@ -27,8 +27,12 @@ public:
         if(node == NULL) return;
         std::cout<<str<<"if"<<std::endl;
         indent();
-        (node -> cond) -> visited(shared_from_this());
-        (node -> then) -> visited(shared_from_this());
+        if(node -> cond != NULL){
+            (node -> cond) -> visited(shared_from_this());
+        }
+        if(node -> then != NULL){
+            (node -> then) -> visited(shared_from_this());
+        }
         if(node -> otherwise != NULL){
             (node -> otherwise) -> visited(shared_from_this());
         }

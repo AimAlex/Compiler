@@ -56,6 +56,7 @@ public:
         if(node == NULL)return;
         if(node -> name != currentTable -> name) {
             std::cout<<"constructor not match"<<std::endl;
+            throw(0);
         }
         std::shared_ptr<SymbolNode> ptr (new SymbolNode());
         currentTable -> symbolTable[node -> name] = ptr;
