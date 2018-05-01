@@ -199,7 +199,7 @@ public:
         if(node == NULL) return;
         (node -> array) -> visited(shared_from_this());
         (node -> subscript) -> visited(shared_from_this());
-        if (node -> array -> exprType -> type != SymbolType::ARRAY) {
+        if (node -> array -> exprType -> getDemension() == 0) {
             std::cout<<"Array access occurs at non-array expression"<<std::endl;
             throw(0);
         }
@@ -209,6 +209,9 @@ public:
         }
 //        node -> exprType = ((ArrayType)node.array.exprType).bodyType;
 //        todo
+        std::shared_ptr<SymbolType> ptr (new VariableType(node -> array -> exprType -> getName(), node -> array -> exprType -> getDemension() - 1));
+        ptr -> type = node -> array -> exprType -> type;
+        node -> exprType  = ptr;
         node -> isLvalue = true;
     }
     void visit(std::shared_ptr<FunctionCall> node){

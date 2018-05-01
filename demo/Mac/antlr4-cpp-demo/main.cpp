@@ -23,8 +23,8 @@
 using namespace antlrcpptest;
 using namespace antlr4;
 
-int main(int , const char **) {
-    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+int main(int , const char ** text) {
+    ANTLRFileStream file(text[1]);
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
