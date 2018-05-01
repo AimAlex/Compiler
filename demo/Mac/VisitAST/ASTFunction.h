@@ -36,7 +36,7 @@ public:
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
                 exit(1);
             }
-            if(currentTable[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::ClASS){
+            if(currentTable[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
                 exit(1);
             }
@@ -82,7 +82,7 @@ public:
                 std::cout<<"no such class: "<<returnType -> getName()<<std::endl;
                 exit(1);
             }
-            if(currentTable[0] -> symbolTable[returnType -> getName()] -> type -> type != SymbolType::ClASS){
+            if(currentTable[0] -> symbolTable[returnType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<returnType -> getName()<<std::endl;
                 exit(1);
             }
@@ -95,7 +95,7 @@ public:
                     std::cout<<"no such class: "<<paraType -> getName()<<std::endl;
                     exit(1);
                 }
-                if(currentTable[0] -> symbolTable[paraType -> getName()] -> type -> type != SymbolType::ClASS){
+                if(currentTable[0] -> symbolTable[paraType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                     std::cout<<"no such class: "<<paraType -> getName()<<std::endl;
                     exit(1);
                 }

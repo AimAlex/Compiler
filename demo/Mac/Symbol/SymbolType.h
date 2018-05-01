@@ -12,7 +12,7 @@ class SymbolType{
 public:
     
     enum Types {
-        INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null, CONSTRUCT, THIS
+        INT, BOOL, STRING, VOID, ARRAY, ClASS, FUNCTION, Null, CONSTRUCT, CLASSTYPE
     };
     Types type;
     virtual std::string getName(){return "NULL";}

@@ -170,7 +170,6 @@ Continue : 'continue';
 Return : 'return';
 New : 'new';
 Class : 'class';
-This : 'this';
 
 //------ Symbol
 Plus : '+';

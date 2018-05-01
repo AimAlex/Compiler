@@ -48,7 +48,7 @@ int main(int , const char **) {
     (listener -> getProgram()) -> visited(classer);
     auto functioner = std::make_shared<ASTFunction>();
     (listener -> getProgram()) -> visited(functioner);
-//    auto checker = std::make_shared<SemanticCheck>();
-//    (listener -> getProgram()) -> visited(checker);
+    auto checker = std::make_shared<SemanticCheck>();
+    (listener -> getProgram()) -> visited(checker);
     return 0;
 }

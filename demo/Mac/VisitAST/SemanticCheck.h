@@ -32,13 +32,15 @@ public:
         for(int i = 0; i < (node -> functionMembers).size(); ++i) {
             (node -> functionMembers)[i] -> visited(shared_from_this());
         }
-        (node -> classconstructor) -> visited(shared_from_this());
+        if(node -> classconstructor != NULL){
+            (node -> classconstructor) -> visited(shared_from_this());
+        }
         tableList.pop_back();
     }
     void visit(std::shared_ptr<FunctionDecl> node){
         if(node == NULL) return;
         std::shared_ptr<SymbolTable> ptr = node -> functionTable;
-        currentFunctionType = node -> getType();
+        currentFunctionType = node -> returnType -> getType();
         currentFunction = node;
         tableList.push_back(ptr);
         (node -> body) -> visited(shared_from_this());
@@ -60,13 +62,13 @@ public:
             std::cout<<"variable error: "<<node -> name<<std::endl;
             exit(1);
         }
-        
+//        std::cout<<"name"<<varType -> getName()<<std::endl;
         if(varType -> type == SymbolType::ClASS){
             if(tableList[0] -> symbolTable.find(varType -> getName()) == tableList[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
                 exit(1);
             }
-            if(tableList[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::ClASS){
+            if(tableList[0] -> symbolTable[varType -> getName()] -> type -> type != SymbolType::CLASSTYPE){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;
                 exit(1);
             }
@@ -104,14 +106,14 @@ public:
         else{
             
         }
-        if(returnType -> type != currentFunctionType -> type){
-            std::cout<<"return type error"<<std::endl;
-            exit(1);
-        }
-        if(returnType -> type == SymbolType::ClASS && returnType -> getName() != currentFunctionType -> getName()){
-            std::cout<<"return classtype error"<<std::endl;
-            exit(1);
-        }
+//        if(returnType -> type != currentFunctionType -> type){
+//            std::cout<<"return type error"<<std::endl;
+//            exit(1);
+//        }
+//        if(returnType -> type == SymbolType::ClASS && returnType -> getName() != currentFunctionType -> getName()){
+//            std::cout<<"return classtype error"<<std::endl;
+//            exit(1);
+//        }
     }
     void visit(std::shared_ptr<CompoundState> node){
         if(node == NULL) return;
@@ -190,19 +192,19 @@ public:
         (node -> subscript) -> visited(shared_from_this());
         //todo
     }
-    virtual void visit(std::shared_ptr<BinaryExpr> node)=0;
-    virtual void visit(std::shared_ptr<BoolConst> node)=0;
-    virtual void visit(std::shared_ptr<EmptyExpr> node)=0;
-    virtual void visit(std::shared_ptr<FunctionCall> node)=0;
-    virtual void visit(std::shared_ptr<Identifier> node)=0;
-    virtual void visit(std::shared_ptr<IntConst> node)=0;
-    virtual void visit(std::shared_ptr<MemberAccess> node)=0;
-    virtual void visit(std::shared_ptr<NewExpr> node)=0;
-    virtual void visit(std::shared_ptr<NullLiteral> node)=0;
-    virtual void visit(std::shared_ptr<SelfDecrement> node)=0;
-    virtual void visit(std::shared_ptr<SelfIncrement> node)=0;
-    virtual void visit(std::shared_ptr<StringConst> node)=0;
-    virtual void visit(std::shared_ptr<UnaryExpr> node)=0;
+    void visit(std::shared_ptr<BinaryExpr> node){}
+    void visit(std::shared_ptr<BoolConst> node){}
+    void visit(std::shared_ptr<EmptyExpr> node){}
+    void visit(std::shared_ptr<FunctionCall> node){}
+    void visit(std::shared_ptr<Identifier> node){}
+    void visit(std::shared_ptr<IntConst> node){}
+    void visit(std::shared_ptr<MemberAccess> node){}
+    void visit(std::shared_ptr<NewExpr> node){}
+    void visit(std::shared_ptr<NullLiteral> node){}
+    void visit(std::shared_ptr<SelfDecrement> node){}
+    void visit(std::shared_ptr<SelfIncrement> node){}
+    void visit(std::shared_ptr<StringConst> node){}
+    void visit(std::shared_ptr<UnaryExpr> node){}
     void visit(std::shared_ptr<ClassTypeNode>){}
     void visit(std::shared_ptr<ArrayTypeNode>){}
     void visit(std::shared_ptr<PrimitiveTypeNode>){}

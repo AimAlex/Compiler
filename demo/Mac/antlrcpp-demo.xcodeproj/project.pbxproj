@@ -145,7 +145,6 @@
 		4CB2DADB2089778300819419 /* StringConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StringConst.h; sourceTree = "<group>"; };
 		4CB2DADC208977F200819419 /* UnaryExpr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnaryExpr.h; sourceTree = "<group>"; };
 		4CC74041209750AF00174EF7 /* SemanticCheck.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SemanticCheck.h; sourceTree = "<group>"; };
-		4CC7404420975A7700174EF7 /* ThisType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThisType.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,7 +279,6 @@
 				4C7184D82095BBF700BAD3FD /* FunctionType.h */,
 				4C7184DA2095C75100BAD3FD /* ArrayType.h */,
 				4C7184DE2096BEC900BAD3FD /* ConstructorType.h */,
-				4CC7404420975A7700174EF7 /* ThisType.h */,
 			);
 			path = Symbol;
 			sourceTree = "<group>";
