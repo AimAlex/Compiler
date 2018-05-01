@@ -33,7 +33,7 @@ expressionStatement
     ;
 
 selectionStatement
-    :   'if' '(' expression ')' statement ('else' statement)?
+:   'if' '(' expression ')' statement (iselse='else' statement)?
     ;
 
 iterationStatement

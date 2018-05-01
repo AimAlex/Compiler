@@ -141,19 +141,22 @@ public:
     }
     void visit(std::shared_ptr<IfState> node){
         if(node == NULL) return;
+        std::shared_ptr<SymbolTable> ptr(new SymbolTable());
+        tableList.push_back(ptr);
+        
         (node -> cond) -> visited(shared_from_this());
         std::shared_ptr<SymbolType> condType = node -> cond -> exprType;
         if(condType -> type != SymbolType::BOOL){
             std::cout<<"condition is not a bool"<<std::endl;
             throw(0);
         }
-        std::shared_ptr<SymbolTable> ptr(new SymbolTable());
-        tableList.push_back(ptr);
         if(node -> then != NULL){
             (node -> then) -> visited(shared_from_this());
         }
+        
         tableList.pop_back();
         if (node -> otherwise != NULL) {
+//            std::cout<<"NULl"<<std::endl;
             std::shared_ptr<SymbolTable> optr(new SymbolTable());
             tableList.push_back(optr);
             (node -> otherwise) -> visited(shared_from_this());
@@ -168,7 +171,7 @@ public:
             (node -> init) -> visited(shared_from_this());
         }
         else if(node -> initWithDecl != NULL){
-            (node -> init) -> visited(shared_from_this());
+            (node -> initWithDecl) -> visited(shared_from_this());
         }
         
         if(node -> cond != NULL){
@@ -384,6 +387,7 @@ public:
             std::cout<<"no such symbol: "<<node -> name<<std::endl;
             throw(0);
         }
+//        std::cout<<node -> name<<std::endl;
         std::shared_ptr<SymbolType> t = ptr -> type;
 //        std::cout<<node -> name<<" "<<t -> getFunction().size()<<std::endl;
         node -> exprType = t;

@@ -78,6 +78,7 @@ public:
     
     void enterStatement(antlrcpptest::MParser::StatementContext * /*ctx*/) override { }
     void exitStatement(antlrcpptest::MParser::StatementContext * ctx) override {
+//        std::cout<<ctx->getText()<<std::endl;
         if(ctx->blockStatement() != NULL) {
             ASTTree[ctx] = ASTTree[ctx->blockStatement()];
         }
@@ -104,6 +105,7 @@ public:
         std::vector<std::shared_ptr<ASTNode>> vec;
         for(int i = 0; i < ctx->blockItem().size(); ++i) {
             vec.push_back(ASTTree[ctx->blockItem()[i]]);
+//            std::cout<<ctx->blockItem()[i] -> getText()<<std::endl;
         }
         ptr -> accept(vec);
         ASTTree[ctx] = ptr;
@@ -142,11 +144,13 @@ public:
         std::vector<std::shared_ptr<ASTNode>> vec;
         vec.push_back(ASTTree[ctx -> expression()]);
         vec.push_back(ASTTree[ctx -> statement()[0]]);
-        if(ctx -> statement()[1] ==  NULL) {
+//        std::cout<<"     "<<ctx->statement()[0] -> getText()<<std::endl;
+        if(ctx -> iselse ==  NULL) {
             vec.push_back(NULL);
         }
         else {
             vec.push_back(ASTTree[ctx -> statement()[1]]);
+//            std::cout<<"ssss"<<std::endl;
         }
         ptr -> accept(vec);
         ASTTree[ctx] = ptr;

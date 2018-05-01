@@ -651,7 +651,7 @@ MParser::SelectionStatementContext* MParser::selectionStatement() {
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 6, _ctx)) {
     case 1: {
       setState(91);
-      match(MParser::T__0);
+      dynamic_cast<SelectionStatementContext *>(_localctx)->iselse = match(MParser::T__0);
       setState(92);
       statement();
       break;

@@ -43,8 +43,8 @@ int main(int , const char ** ) {
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
     auto listener = std::make_shared<ASTListener>();
     walker.walk(listener.get(), tree);
-//    auto printer = std::make_shared<ASTPrinter>();
-//    (listener->getProgram()) -> visited(printer);
+    auto printer = std::make_shared<ASTPrinter>();
+    (listener->getProgram()) -> visited(printer);
     auto classer = std::make_shared<ASTClass>();
     (listener -> getProgram()) -> visited(classer);
     auto functioner = std::make_shared<ASTFunction>();
