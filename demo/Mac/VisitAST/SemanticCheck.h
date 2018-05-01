@@ -351,7 +351,7 @@ public:
         }
         if (ptr == NULL) {
             std::cout<<"no such symbol"<<std::endl;
-            exit(0);
+            throw(0);
         }
         std::shared_ptr<SymbolType> t = ptr -> type;
         node -> exprType = t;
