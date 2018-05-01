@@ -172,7 +172,9 @@ public:
         }
         
         loopStack.push(node);
-        (node -> body) -> visited(shared_from_this());
+        if(node -> body != NULL){
+            (node -> body) -> visited(shared_from_this());
+        }
         loopStack.pop();
         tableList.pop_back();
     }
@@ -188,7 +190,9 @@ public:
             }
         }
         loopStack.push(node);
-        (node -> body) -> visited(shared_from_this());
+        if(node -> body != NULL){
+            (node -> body) -> visited(shared_from_this());
+        }
         loopStack.pop();
         
         tableList.pop_back();
@@ -243,7 +247,7 @@ public:
             for(int i = 0; i < node -> parameters.size(); ++i){
                 (node -> parameters)[i] -> visited(shared_from_this());
                 if(!(node -> parameters)[i] -> exprType -> sameType(vec[i + 1])){
-                    std::cout<<"parameters types error "<<vec[i + 1] -> getName()<<std::endl;
+                    std::cout<<node -> parameters[i] -> exprType -> getName()<<"parameters types error "<<vec[i + 1] -> getName()<<std::endl;
                     throw(0);
                 }
             }

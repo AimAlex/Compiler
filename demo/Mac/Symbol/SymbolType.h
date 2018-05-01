@@ -19,6 +19,12 @@ public:
     virtual int getDemension(){return 0;}
     virtual std::vector<std::shared_ptr<SymbolType>> getFunction(){std::vector<std::shared_ptr<SymbolType>> vec; return vec;}
     bool sameType(std::shared_ptr<SymbolType> ptr){
+        if(this -> type == Null && ptr -> type == ClASS){
+            return 1;
+        }
+        if(this -> type == Null && ptr -> getDemension()  != 0){
+            return 1;
+        }
         if(ptr == NULL) {
             return 0;
         }

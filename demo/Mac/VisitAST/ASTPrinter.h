@@ -59,7 +59,9 @@ public:
         if(node -> step != NULL){
             (node -> step) -> visited(shared_from_this());
         }
-        (node -> body) -> visited(shared_from_this());
+        if(node -> body != NULL){
+            (node -> body) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<VariableDecl> node){
@@ -119,7 +121,9 @@ public:
         std::cout<<str<<"WhileLoop"<<std::endl;
         indent();
         (node -> cond) -> visited(shared_from_this());
-        (node -> body) -> visited(shared_from_this());
+        if(node -> body != NULL){
+            (node -> body) -> visited(shared_from_this());
+        }
         dedent();
     }
     void visit(std::shared_ptr<BreakState> node){
