@@ -22,6 +22,11 @@ public:
     std::string gettype(){
         return name;
     }
+    std::shared_ptr<SymbolType> getType(){
+        std::shared_ptr<SymbolType> ptr (new VariableType(name, 0));
+        ptr -> type = SymbolType::ClASS;
+        return ptr;
+    }
 };
 
 #endif /* ClassTypeNode_h */

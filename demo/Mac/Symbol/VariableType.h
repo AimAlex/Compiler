@@ -21,6 +21,9 @@ public:
     {
         return className;
     }
+    int getDemension(){
+        return demension;
+    }
 };
 
 #endif /* VariableType_h */

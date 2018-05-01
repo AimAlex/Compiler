@@ -14,6 +14,8 @@ public:
     virtual void visited(std::shared_ptr<ASTVisitor>){}
     virtual std::shared_ptr<SymbolType> getType(){return NULL;}
     virtual std::string gettype(){return "";}
+    std::shared_ptr<SymbolType> exprType;
+    bool isLvalue;
 };
 
 #endif

@@ -29,6 +29,33 @@ public:
             return "void";
         }
     }
+    std::shared_ptr<SymbolType> getType(){
+        if(type == INT){
+            std::shared_ptr<SymbolType> ptr (new VariableType("int", 0));
+            ptr -> type = SymbolType::INT;
+            return ptr;
+        }
+        else if(type == BOOL){
+            std::shared_ptr<SymbolType> ptr (new VariableType("bool", 0));
+            ptr -> type = SymbolType::BOOL;
+            return ptr;
+        }
+        else if(type == STRING){
+            std::shared_ptr<SymbolType> ptr (new VariableType("string", 0));
+            ptr -> type = SymbolType::STRING;
+            return ptr;
+        }
+        else if(type == VOID){
+            std::shared_ptr<SymbolType> ptr (new VariableType("void", 0));
+            ptr -> type = SymbolType::VOID;
+            return ptr;
+        }
+        else{
+            std::shared_ptr<SymbolType> ptr (new VariableType("class", 0));
+            ptr -> type = SymbolType::ClASS;
+            return ptr;
+        }
+    }
 };
 
 #endif

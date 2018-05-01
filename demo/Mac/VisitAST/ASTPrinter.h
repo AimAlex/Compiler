@@ -196,7 +196,9 @@ public:
         (node -> type) -> visited(shared_from_this());
         for(int i = 0; i < (node -> dim).size(); ++i) {
             std::cout<<str<<"[ ";
-            (node -> dim)[i] -> visited(shared_from_this());
+            if((node -> dim)[i] != NULL){
+                (node -> dim)[i] -> visited(shared_from_this());
+            }
             std::cout<<str<<" ]";
         }
         dedent();

@@ -21,6 +21,15 @@ public:
             argType.push_back(vec[i]);
         }
     }
+    std::vector<std::shared_ptr<SymbolType>> getFunction(){
+        std::vector<std::shared_ptr<SymbolType>> vec;
+        vec.push_back(returnType);
+        for(int i = 0; i < argType.size(); ++i){
+            vec.push_back(argType[i]);
+        }
+        return vec;
+    }
+    
 };
 
 

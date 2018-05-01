@@ -16,6 +16,23 @@ public:
     };
     Types type;
     virtual std::string getName(){return "NULL";}
+    virtual int getDemension(){return 0;}
+    virtual std::vector<std::shared_ptr<SymbolType>> getFunction(){std::vector<std::shared_ptr<SymbolType>> vec; return vec;}
+    bool sameType(std::shared_ptr<SymbolType> ptr){
+        if(ptr == NULL) {
+            return 0;
+        }
+        if(ptr -> type != this -> type){
+            return 0;
+        }
+        if(ptr -> type == ClASS && ptr -> getName() != this -> getName()){
+            return 0;
+        }
+        if(ptr -> getDemension() != this -> getDemension()){
+            return 0;
+        }
+        return 1;
+    }
 };
 
 #endif /* SymbolType_h */
