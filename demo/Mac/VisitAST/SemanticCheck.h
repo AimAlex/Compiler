@@ -113,7 +113,7 @@ public:
             returnType -> type = SymbolType::VOID;
         }
         if(!currentFunctionType -> sameType(returnType)){
-            std::cout<<"return type error"<<std::endl;
+            std::cout<<"return type error "<<returnType -> getName()<<std::endl;
             throw(0);
         }
     }
@@ -236,7 +236,7 @@ public:
             for(int i = 0; i < node -> parameters.size(); ++i){
                 (node -> parameters)[i] -> visited(shared_from_this());
                 if(!(node -> parameters)[i] -> exprType -> sameType(vec[i + 1])){
-                    std::cout<<"parameters types error"<<std::endl;
+                    std::cout<<"parameters types error "<<vec[i + 1] -> getName()<<std::endl;
                     throw(0);
                 }
             }
@@ -307,8 +307,8 @@ public:
             }
             else if(node -> member == "ord"){
                 std::vector<std::shared_ptr<SymbolType>> vec;
-                std::shared_ptr<SymbolType> newNode(new VariableType("string", 0));
-                newNode -> type = SymbolType::STRING;
+                std::shared_ptr<SymbolType> newNode(new VariableType("int", 0));
+                newNode -> type = SymbolType::INT;
                 std::shared_ptr<SymbolType> paraNode(new VariableType("int", 0));
                 paraNode -> type = SymbolType::INT;
                 vec.push_back(newNode);
@@ -397,10 +397,10 @@ public:
             case UnaryExpr::POS:
             case UnaryExpr::NEG:
             case UnaryExpr::BITWISE_NOT:
-                if (!node -> body -> isLvalue) {
-                    std::cout<<"+ - ~ not lvalues."<<std::endl;
-                    throw(0);
-                }
+//                if (!node -> body -> isLvalue) {
+//                    std::cout<<"+ - ~ not lvalues."<<std::endl;
+//                    throw(0);
+//                }
                 if (node -> body -> exprType -> type != SymbolType::INT) {
                     std::cout<<"+ - ~ not int."<<std::endl;
                     throw(0);
@@ -410,10 +410,10 @@ public:
                 node -> isLvalue = false;
                 break;
             case UnaryExpr::LOGICAL_NOT:
-                if (!node -> body -> isLvalue) {
-                    std::cout<<"!not lvalues."<<std::endl;
-                    throw(0);
-                }
+//                if (!node -> body -> isLvalue) {
+//                    std::cout<<"!not lvalues."<<std::endl;
+//                    throw(0);
+//                }
                 if (node -> body -> exprType -> type != SymbolType::BOOL) {
                     std::cout<<"! not bool."<<std::endl;
                     throw(0);
@@ -539,13 +539,13 @@ public:
     void visit(std::shared_ptr<SelfDecrement> node){
         if(node == NULL) return;
         node -> oneself -> visited(shared_from_this());
-        if (!node -> isLvalue) {
+        if (!node -> oneself -> isLvalue) {
             std::cout<<"Self decrement not lvalue."<<std::endl;
-            return;
+            throw (0);
         }
         if (node -> oneself -> exprType -> type != SymbolType::INT) {
             std::cout<<"Self decrement not int "<<std::endl;
-            return;
+            throw(0);
         }
         node -> exprType = std::shared_ptr<SymbolType> (new VariableType("int", 0));
         node -> exprType -> type = SymbolType::INT;
@@ -554,13 +554,13 @@ public:
     void visit(std::shared_ptr<SelfIncrement> node){
         if(node == NULL) return;
         node -> oneself -> visited(shared_from_this());
-        if (!node -> isLvalue) {
+        if (!node -> oneself -> isLvalue) {
             std::cout<<"Self increment not lvalue."<<std::endl;
-            return;
+            throw (0);
         }
         if (node -> oneself -> exprType -> type != SymbolType::INT) {
             std::cout<<"Self increment not int "<<std::endl;
-            return;
+            throw (0);
         }
         node -> exprType = std::shared_ptr<SymbolType> (new VariableType("int", 0));
         node -> exprType -> type = SymbolType::INT;
