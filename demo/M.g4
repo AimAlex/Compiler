@@ -60,7 +60,7 @@ nonArrayTypeSpecifier
     |   type='bool'
     |   type='string'
     |   type='void'
-    |   type=Identifier
+    |   (type=Identifier) ('(' ')')?
     ;
 
 typeSpecifier

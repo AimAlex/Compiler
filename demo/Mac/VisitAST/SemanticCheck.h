@@ -391,11 +391,16 @@ public:
         std::shared_ptr<SymbolType> t = ptr -> type;
 //        std::cout<<node -> name<<" "<<t -> getFunction().size()<<std::endl;
         node -> exprType = t;
+//        std::cout<<node -> name<<" "<<t -> getName()<<std::endl;
         node -> isLvalue = (t -> type != SymbolType::FUNCTION);
     }
     void visit(std::shared_ptr<NewExpr> node){
         if(node == NULL) return;
         std::shared_ptr<SymbolType> nodeType = node -> type -> getType();
+        if(nodeType -> getName() == "void"){
+            std::cout<<"cannot new void"<<std::endl;
+            throw(0);
+        }
 //        std::cout<<nodeType -> getName()<<std::endl;
         for (int i = 0; i < node -> dim.size(); ++i) {
             std::shared_ptr<ASTNode> x = node -> dim[i];
