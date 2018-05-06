@@ -392,7 +392,7 @@ public:
 //        std::cout<<node -> name<<" "<<t -> getFunction().size()<<std::endl;
         node -> exprType = t;
 //        std::cout<<node -> name<<" "<<t -> getName()<<std::endl;
-        node -> isLvalue = (t -> type != SymbolType::FUNCTION);
+        node -> isLvalue = (t -> type != SymbolType::FUNCTION && node -> name != "this");
     }
     void visit(std::shared_ptr<NewExpr> node){
         if(node == NULL) return;
