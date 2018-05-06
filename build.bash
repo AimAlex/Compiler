@@ -1,3 +1,4 @@
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./lib
 set -e
 cd "$(dirname "$0")"
 mkdir -p bin
