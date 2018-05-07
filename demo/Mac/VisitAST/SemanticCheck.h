@@ -54,6 +54,10 @@ public:
             std::cout<<"this errpr"<<std::endl;
             throw (0);
         }
+        if(node -> name[0] == '_'){
+            std::cout<<"variable not _"<<std::endl;
+            throw(0);
+        }
         std::shared_ptr<SymbolNode> ptr(new SymbolNode());
         std::shared_ptr<SymbolTable> currentNode = tableList[tableList.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){

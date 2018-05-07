@@ -28,6 +28,10 @@ public:
             std::cout<<"exist name： "<<node -> name<<std::endl;
             throw(0);
         }
+        if(node -> name[0] == '_'){
+            std::cout<<"variable not _"<<std::endl;
+            throw(0);
+        }
         currentNode -> symbolTable[node -> name] = ptr;
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
@@ -67,6 +71,10 @@ public:
         std::shared_ptr<SymbolTable> currentNode = currentTable[currentTable.size() - 1];
         if(currentNode -> symbolTable.find(node -> name) != currentNode -> symbolTable.end()){
             std::cout<<"exist name: "<<node -> name<<std::endl;
+            throw(0);
+        }
+        if(node -> name[0] == '_'){
+            std::cout<<"function not _"<<std::endl;
             throw(0);
         }
         currentNode -> symbolTable[node -> name] = ptr;

@@ -31,6 +31,10 @@ public:
             std::cout<<"exist class"<<std::endl;
             throw(0);
         }
+        if(node -> name[0] == '_'){
+            std::cout<<"class name not _"<<std::endl;
+            throw(0);
+        }
         currentTable -> symbolTable[node -> name] = ptr;
         ptr -> table = std::shared_ptr<SymbolTable>(new SymbolTable());
         ptr -> table -> name = node -> name;
