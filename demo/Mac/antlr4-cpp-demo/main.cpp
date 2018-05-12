@@ -20,12 +20,13 @@
 #include "ASTClass.h"
 #include "ASTFunction.h"
 #include "SemanticCheck.h"
+#include "IRBuilder.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char ** ) {
-    ANTLRFileStream file("./test.mx");
-//    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+//    ANTLRFileStream file("./test.mx");
+    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
@@ -43,8 +44,8 @@ int main(int , const char ** ) {
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
     auto listener = std::make_shared<ASTListener>();
     walker.walk(listener.get(), tree);
-//    auto printer = std::make_shared<ASTPrinter>();
-//    (listener->getProgram()) -> visited(printer);
+    auto printer = std::make_shared<ASTPrinter>();
+    (listener->getProgram()) -> visited(printer);
     auto classer = std::make_shared<ASTClass>();
     (listener -> getProgram()) -> visited(classer);
     auto functioner = std::make_shared<ASTFunction>();

@@ -102,6 +102,31 @@
 		4C7184DD2096B01400BAD3FD /* SymbolType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolType.h; sourceTree = "<group>"; };
 		4C7184DE2096BEC900BAD3FD /* ConstructorType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstructorType.h; sourceTree = "<group>"; };
 		4C7184DF2096C36C00BAD3FD /* ASTFunction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTFunction.h; sourceTree = "<group>"; };
+		4C87867420A57BC800BCBE6F /* IRBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRBuilder.h; sourceTree = "<group>"; };
+		4C87867720A6877100BCBE6F /* BasicBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasicBlock.h; sourceTree = "<group>"; };
+		4C87867820A6881C00BCBE6F /* IRInstruction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRInstruction.h; sourceTree = "<group>"; };
+		4C87867920A6888900BCBE6F /* Function.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Function.h; sourceTree = "<group>"; };
+		4C87867A20A688F400BCBE6F /* IRRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRRoot.h; sourceTree = "<group>"; };
+		4C87867B20A689E400BCBE6F /* IntValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntValue.h; sourceTree = "<group>"; };
+		4C87867C20A68E5A00BCBE6F /* BinaryOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BinaryOperation.h; sourceTree = "<group>"; };
+		4C87867D20A68F3700BCBE6F /* Branch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Branch.h; sourceTree = "<group>"; };
+		4C87867E20A68FC700BCBE6F /* HeapAllocate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeapAllocate.h; sourceTree = "<group>"; };
+		4C87867F20A6903500BCBE6F /* IntComparison.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntComparison.h; sourceTree = "<group>"; };
+		4C87868020A690E600BCBE6F /* IntImmediate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntImmediate.h; sourceTree = "<group>"; };
+		4C87868120A6916600BCBE6F /* Jump.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Jump.h; sourceTree = "<group>"; };
+		4C87868220A6919E00BCBE6F /* Load.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Load.h; sourceTree = "<group>"; };
+		4C87868320A6920000BCBE6F /* Move.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Move.h; sourceTree = "<group>"; };
+		4C87868420A6928800BCBE6F /* PhiInstruction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhiInstruction.h; sourceTree = "<group>"; };
+		4C87868520A6936B00BCBE6F /* PhysicalRegister.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicalRegister.h; sourceTree = "<group>"; };
+		4C87868620A693AA00BCBE6F /* Return.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Return.h; sourceTree = "<group>"; };
+		4C87868720A693F600BCBE6F /* StackSlot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StackSlot.h; sourceTree = "<group>"; };
+		4C87868920A6948400BCBE6F /* StaticData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticData.h; sourceTree = "<group>"; };
+		4C87868A20A694C500BCBE6F /* StaticSpace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticSpace.h; sourceTree = "<group>"; };
+		4C87868B20A6952600BCBE6F /* StaticString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticString.h; sourceTree = "<group>"; };
+		4C87868C20A6957700BCBE6F /* Store.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Store.h; sourceTree = "<group>"; };
+		4C87868D20A695DE00BCBE6F /* SystemCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemCall.h; sourceTree = "<group>"; };
+		4C87868E20A6962E00BCBE6F /* UnaryOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnaryOperation.h; sourceTree = "<group>"; };
+		4C87868F20A696C200BCBE6F /* VirtualRegister.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VirtualRegister.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -216,6 +241,7 @@
 		37D727A11867AF1E007B6D10 = {
 			isa = PBXGroup;
 			children = (
+				4C87867620A57CA200BCBE6F /* IR */,
 				4C0A617520957C0C007E523D /* Symbol */,
 				4C0A61732093745A007E523D /* VisitAST */,
 				270925A11CDB409400522D32 /* antlrcpp.xcodeproj */,
@@ -264,6 +290,7 @@
 				4C7184DC2095E1B000BAD3FD /* ASTClass.h */,
 				4C7184DF2096C36C00BAD3FD /* ASTFunction.h */,
 				4CC74041209750AF00174EF7 /* SemanticCheck.h */,
+				4C87867420A57BC800BCBE6F /* IRBuilder.h */,
 			);
 			path = VisitAST;
 			sourceTree = "<group>";
@@ -281,6 +308,37 @@
 				4C7184DE2096BEC900BAD3FD /* ConstructorType.h */,
 			);
 			path = Symbol;
+			sourceTree = "<group>";
+		};
+		4C87867620A57CA200BCBE6F /* IR */ = {
+			isa = PBXGroup;
+			children = (
+				4C87867720A6877100BCBE6F /* BasicBlock.h */,
+				4C87867820A6881C00BCBE6F /* IRInstruction.h */,
+				4C87867920A6888900BCBE6F /* Function.h */,
+				4C87867A20A688F400BCBE6F /* IRRoot.h */,
+				4C87867B20A689E400BCBE6F /* IntValue.h */,
+				4C87867C20A68E5A00BCBE6F /* BinaryOperation.h */,
+				4C87867D20A68F3700BCBE6F /* Branch.h */,
+				4C87867E20A68FC700BCBE6F /* HeapAllocate.h */,
+				4C87867F20A6903500BCBE6F /* IntComparison.h */,
+				4C87868020A690E600BCBE6F /* IntImmediate.h */,
+				4C87868120A6916600BCBE6F /* Jump.h */,
+				4C87868220A6919E00BCBE6F /* Load.h */,
+				4C87868320A6920000BCBE6F /* Move.h */,
+				4C87868420A6928800BCBE6F /* PhiInstruction.h */,
+				4C87868520A6936B00BCBE6F /* PhysicalRegister.h */,
+				4C87868620A693AA00BCBE6F /* Return.h */,
+				4C87868720A693F600BCBE6F /* StackSlot.h */,
+				4C87868920A6948400BCBE6F /* StaticData.h */,
+				4C87868A20A694C500BCBE6F /* StaticSpace.h */,
+				4C87868B20A6952600BCBE6F /* StaticString.h */,
+				4C87868C20A6957700BCBE6F /* Store.h */,
+				4C87868D20A695DE00BCBE6F /* SystemCall.h */,
+				4C87868E20A6962E00BCBE6F /* UnaryOperation.h */,
+				4C87868F20A696C200BCBE6F /* VirtualRegister.h */,
+			);
+			path = IR;
 			sourceTree = "<group>";
 		};
 		4CB2DAB42085DB7900819419 /* AST */ = {
