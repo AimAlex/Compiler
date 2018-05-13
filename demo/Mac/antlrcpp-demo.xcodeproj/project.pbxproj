@@ -107,7 +107,7 @@
 		4C87867820A6881C00BCBE6F /* IRInstruction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRInstruction.h; sourceTree = "<group>"; };
 		4C87867920A6888900BCBE6F /* Function.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Function.h; sourceTree = "<group>"; };
 		4C87867A20A688F400BCBE6F /* IRRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRRoot.h; sourceTree = "<group>"; };
-		4C87867B20A689E400BCBE6F /* IntValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IntValue.h; sourceTree = "<group>"; };
+		4C87867B20A689E400BCBE6F /* Register.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = "<group>"; };
 		4C87867C20A68E5A00BCBE6F /* BinaryOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BinaryOperation.h; sourceTree = "<group>"; };
 		4C87867D20A68F3700BCBE6F /* Branch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Branch.h; sourceTree = "<group>"; };
 		4C87867E20A68FC700BCBE6F /* HeapAllocate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeapAllocate.h; sourceTree = "<group>"; };
@@ -317,7 +317,7 @@
 				4C87867820A6881C00BCBE6F /* IRInstruction.h */,
 				4C87867920A6888900BCBE6F /* Function.h */,
 				4C87867A20A688F400BCBE6F /* IRRoot.h */,
-				4C87867B20A689E400BCBE6F /* IntValue.h */,
+				4C87867B20A689E400BCBE6F /* Register.h */,
 				4C87867C20A68E5A00BCBE6F /* BinaryOperation.h */,
 				4C87867D20A68F3700BCBE6F /* Branch.h */,
 				4C87867E20A68FC700BCBE6F /* HeapAllocate.h */,

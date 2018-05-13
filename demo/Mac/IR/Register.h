@@ -6,9 +6,9 @@
 //  Copyright © 2018 ANTLR4 Project. All rights reserved.
 //
 
-#ifndef IntValue_h
-#define IntValue_h
-class IntValue{
+#ifndef Register_h
+#define Register_h
+class Register{
 public:
 };
 

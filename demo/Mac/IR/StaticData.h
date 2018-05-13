@@ -8,7 +8,7 @@
 
 #ifndef StaticData_h
 #define StaticData_h
-class StaticData : public IntValue{
+class StaticData : public Register{
 public:
     std::string hintName;
 };

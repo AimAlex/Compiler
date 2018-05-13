@@ -8,7 +8,7 @@
 
 #ifndef PhysicalRegister_h
 #define PhysicalRegister_h
-class PhysicalRegister : public IntValue{
+class PhysicalRegister : public Register{
 public:
     
 };

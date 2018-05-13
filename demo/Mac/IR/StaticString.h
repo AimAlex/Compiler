@@ -8,7 +8,7 @@
 
 #ifndef StaticString_h
 #define StaticString_h
-class StaticString : public IntValue {
+class StaticString : public Register {
 public:
     std::string hintName;
     std::string value;

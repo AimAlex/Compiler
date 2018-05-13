@@ -8,7 +8,7 @@
 
 #ifndef StaticSpace_h
 #define StaticSpace_h
-class StaticSpace : public IntValue{
+class StaticSpace : public Register{
 public:
     std::string hintName;
     int length;

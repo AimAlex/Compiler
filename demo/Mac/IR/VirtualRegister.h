@@ -8,7 +8,7 @@
 
 #ifndef VirtualRegister_h
 #define VirtualRegister_h
-class VirtualRegister : public IntValue {
+class VirtualRegister : public Register {
 public:
     std::string hintName;
     int ssaId = -1;

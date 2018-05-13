@@ -9,7 +9,7 @@
 #ifndef StackSlot_h
 #define StackSlot_h
 #include "Function.h"
-class StackSlot : public IntValue {
+class StackSlot : public Register {
     std::shared_ptr<Function> parent;
     std::string hintName;
 }

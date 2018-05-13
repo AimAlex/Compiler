@@ -8,7 +8,7 @@
 
 #ifndef IntImmediate_h
 #define IntImmediate_h
-class IntImmediate : public IntValue {
+class IntImmediate : public Register {
 public:
     int value;
 };
