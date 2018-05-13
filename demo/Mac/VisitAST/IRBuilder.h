@@ -12,7 +12,7 @@
 #include "BasicBlock.h"
 #include "Function.h"
 #include "IRRoot.h"
-class IRBuilder : public ASTVisitor{
+class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
     std::shared_ptr<BasicBlock> curBlock;
     std::shared_ptr<BasicBlock> curLoopStepBlock;
@@ -21,17 +21,31 @@ public:
     bool getAddress = false;
     bool isFunctionArgDecl = false;
     std::shared_ptr<IRRoot> irRoot;
+    std::shared_ptr<SymbolTable> GlobalSymbolTable;
     
     std::map<std::shared_ptr<IntValue>, std::shared_ptr<IntValue>> curFuncStaticMap;
     
     std::shared_ptr<IRRoot> getRoot() {
         return irRoot;
     }
-    
+    void visit(std::shared_ptr<Program> node){
+        GlobalSymbolTable = node -> Table;
+        for(int i = 0; i < (node -> decls).size(); ++i) {
+            (node -> decls)[i] -> visited(shared_from_this());
+        }
+    }
+    void visit(std::shared_ptr<VariableDecl> node){
+        std::shared_ptr<SymbolNode> info = node -> scope -> table -> symbolTable[node -> name];
+        if(node -> scope -> table == GlobalSymbolTable){
+            
+        }
+        else{
+            
+        }
+    }
     virtual void visit(std::shared_ptr<IfState> node)=0;
     virtual void visit(std::shared_ptr<ReturnState> node)=0;
     virtual void visit(std::shared_ptr<ForLoop> node)=0;
-    virtual void visit(std::shared_ptr<VariableDecl> node)=0;
     virtual void visit(std::shared_ptr<ArrayTypeNode> node)=0;
     virtual void visit(std::shared_ptr<PrimitiveTypeNode> node)=0;
     virtual void visit(std::shared_ptr<CompoundState> node)=0;
@@ -55,7 +69,6 @@ public:
     virtual void visit(std::shared_ptr<SelfIncrement> node)=0;
     virtual void visit(std::shared_ptr<StringConst> node)=0;
     virtual void visit(std::shared_ptr<UnaryExpr> node)=0;
-    virtual void visit(std::shared_ptr<Program> node)=0;
     virtual void visit(std::shared_ptr<ClassTypeNode> node)=0;
 };
 

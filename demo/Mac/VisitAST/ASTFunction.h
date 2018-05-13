@@ -35,6 +35,7 @@ public:
         currentNode -> symbolTable[node -> name] = ptr;
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
+        node -> scope = ptr;
         if(varType -> type == SymbolType::ClASS){
             if(currentTable[0] -> symbolTable.find(varType -> getName()) == currentTable[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;

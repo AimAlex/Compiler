@@ -9,6 +9,7 @@ public:
     std::shared_ptr <ASTNode> type;
     std::string name;
     std::shared_ptr<ASTNode> init;
+    std::shared_ptr<SymbolNode> scope;
     void accept(std::vector<std::shared_ptr<ASTNode>> ptr){
         type = ptr[0];
         init = ptr[1];

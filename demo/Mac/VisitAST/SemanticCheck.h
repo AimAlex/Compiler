@@ -66,6 +66,7 @@ public:
         }
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
+        node -> scope = ptr;
         if(varType -> type == SymbolType::Null || varType -> type == SymbolType::VOID){
             std::cout<<"variable error: "<<node -> name<<std::endl;
             throw(0);
