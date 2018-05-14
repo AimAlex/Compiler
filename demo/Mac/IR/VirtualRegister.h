@@ -12,8 +12,11 @@ class VirtualRegister : public Register {
 public:
     std::string hintName;
     int ssaId = -1;
-    std::shared_ptr<IntValue> oldName = NULL;
-    std::shared_ptr<IntValue> physicalRegister = NULL;
+    std::shared_ptr<Register> oldName = NULL;
+    std::shared_ptr<Register> physicalRegister = NULL;
+    VirtualRegister(std::string str){
+        hintName = str;
+    }
 };
 
 #endif /* VirtualRegister_h */

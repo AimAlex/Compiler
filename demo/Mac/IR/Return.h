@@ -8,7 +8,7 @@
 
 #ifndef Return_h
 #define Return_h
-class Return : public Branch {
+class Return : public IRInstruction {
 public:
     std::shared_ptr<IntValue> ret;
 };

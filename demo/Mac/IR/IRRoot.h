@@ -10,12 +10,12 @@
 #define IRRoot_h
 #include <map>
 #include "Function.h"
-#include "IntValue.h"
+#include "Register.h"
 class IRRoot{
 public:
     std::map<std::string, std::shared_ptr<Function>> functions;
-    std::map<std::string, std::shared_ptr<IntValue>> strings;
-    std::map<std::string, std::shared_ptr<IntValue>> dataList;
+    std::map<std::string, std::shared_ptr<Register>> strings;
+    std::vector<std::shared_ptr<Register>> dataList;
 };
 
 #endif /* IRRoot_h */

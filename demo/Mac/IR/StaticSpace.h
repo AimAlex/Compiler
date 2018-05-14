@@ -12,6 +12,10 @@ class StaticSpace : public Register{
 public:
     std::string hintName;
     int length;
+    StaticSpace(std::string str, int l){
+        hintName = str;
+        length = l;
+    }
 };
 
 #endif /* StaticSpace_h */

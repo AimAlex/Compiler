@@ -32,6 +32,17 @@ public:
         lhs = vec[0];
         rhs = vec[1];
     }
+    std::string gettype(){
+        return "BinaryExpr";
+    }
+    bool isLogicalExpression(){
+        if(op == LOGICAL_AND || op == LOGICAL_OR){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     void visited(std::shared_ptr<ASTVisitor> visitor){
         visitor -> visit(shared_from_this());
     }

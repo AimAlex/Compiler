@@ -8,13 +8,21 @@
 
 #ifndef Store_h
 #define Store_h
+#include "IRInstruction.h"
 class Store : public IRInstruction {
 public:
     int size;
-    std::shared_ptr<IntValue> address;
+    std::shared_ptr<Register> address;
     int offset;
-    std::shared_ptr<IntValue> value;
+    std::shared_ptr<Register> value;
     bool isStaticData;
+    Store(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> val, int s, std::shared_ptr<Register> addr, int off) {
+        size = s;
+        address = addr;
+        offset = off;
+        value = val;
+        isStaticData = false;
+    }
 };
 
 #endif /* Store_h */

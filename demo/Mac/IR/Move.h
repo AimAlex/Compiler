@@ -8,10 +8,16 @@
 
 #ifndef Move_h
 #define Move_h
+#include "IRInstruction.h"
 class Move : public IRInstruction {
 public:
-    std::shared_ptr<IntValue> dest;
-    std::shared_ptr<IntValue> source;
+    std::shared_ptr<Register> dest;
+    std::shared_ptr<Register> source;
+    Move(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> destination, std::shared_ptr<Register> sour) {
+        dest = destination;
+        source = sour;
+//        reloadUsedRegisterCollection();
+    }
 };
 
 #endif /* Move_h */

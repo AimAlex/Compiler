@@ -11,6 +11,9 @@
 class IntImmediate : public Register {
 public:
     int value;
+    IntImmediate(int v){
+        value = v;
+    }
 };
 
 #endif /* IntImmediate_h */

@@ -4,6 +4,8 @@
 #include "ASTVisitor.h"
 #include "SymbolTable.h"
 #include "VariableType.h"
+#include "BasicBlock.h"
+#include "Register.h"
 class ASTNode {
 public:
     virtual void accept(std::vector<std::shared_ptr<ASTNode>>){}
@@ -16,6 +18,14 @@ public:
     virtual std::string gettype(){return "";}
     std::shared_ptr<SymbolType> exprType;
     bool isLvalue;
+    virtual bool isLogicalExpression(){return false;}
+    
+    std::shared_ptr<BasicBlock> ifTrue = NULL;
+    std::shared_ptr<BasicBlock> ifFalse = NULL;
+    
+    std::shared_ptr<Register> intValue;
+    std::shared_ptr<Register> addressValue;
+    int addressOffset;
 };
 
 #endif

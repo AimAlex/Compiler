@@ -9,11 +9,13 @@
 #ifndef SymbolNode_h
 #define SymbolNode_h
 #include "SymbolType.h"
+#include "Register.h"
 class SymbolTable;
 class SymbolNode{
 public:
     std::shared_ptr<SymbolType> type;
     std::shared_ptr<SymbolTable> table;
+    std::shared_ptr<Register> reg = NULL;
 };
 
 #endif /* SymbolNode_h */

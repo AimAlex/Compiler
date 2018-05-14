@@ -8,7 +8,7 @@
 
 #ifndef Jump_h
 #define Jump_h
-class Jump : public Branch {
+class Jump : public IRInstruction {
 public:
     BasicBlock target;
 };

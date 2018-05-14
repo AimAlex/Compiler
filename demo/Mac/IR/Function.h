@@ -13,7 +13,7 @@
 #include <map>
 class Function{
 public:
-    std::vector<std::shared_ptr<IntValue>> argVarRegList;
+    std::vector<std::shared_ptr<Register>> argVarRegList;
     std::string name;
     std::shared_ptr<BasicBlock> startBlock;
     std::shared_ptr<BasicBlock> exitBlock;
@@ -28,9 +28,9 @@ public:
     std::vector<std::shared_ptr<Function>> calleeSet;
     std::vector<std::shared_ptr<Function>> recursiveCalleeSet;
     
-    std::map<std::shared_ptr<IntValue>, std::shared_ptr<IntValue>> argStackSlotMap;
-    std::vector<std::shared_ptr<IntValue>> stackSlots;
-    std::vector<std::shared_ptr<IntValue>> usedPhysicalGeneralRegister;
+    std::map<std::shared_ptr<Register>, std::shared_ptr<Register>> argStackSlotMap;
+    std::vector<std::shared_ptr<Register>> stackSlots;
+    std::vector<std::shared_ptr<Register>> usedPhysicalGeneralRegister;
     
     std::string builtinFunctionHackName;
     

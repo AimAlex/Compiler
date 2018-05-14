@@ -8,18 +8,22 @@
 
 #ifndef IRInstruction_h
 #define IRInstruction_h
-#include "BasicBlock.h"
-#include "IntValue.h"
+#include "Register.h"
 #include <vector>
-class IRInstruction {
+class BasicBlock;
+class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
-    BasicBlock curBlock;
+    std::shared_ptr<BasicBlock> curBlock = NULL;
     std::shared_ptr<IRInstruction> prev = NULL;
     std::shared_ptr<IRInstruction> next = NULL;
     bool removed = false;
-    std::vector<IntValue> usedReg;
-    std::vector<IntValue> usedIntValue;
+    std::vector<Register> usedReg;
+    std::vector<Register> usedIntValue;
     
+    void linkNext(std::shared_ptr<IRInstruction> node) {
+        next = node;
+        node -> prev = shared_from_this();
+    }
 };
 
 #endif /* IRInstruction_h */
