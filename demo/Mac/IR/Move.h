@@ -13,7 +13,7 @@ class Move : public IRInstruction {
 public:
     std::shared_ptr<Register> dest;
     std::shared_ptr<Register> source;
-    Move(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> destination, std::shared_ptr<Register> sour) {
+    Move(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> destination, std::shared_ptr<Register> sour) : IRInstruction(BB){
         dest = destination;
         source = sour;
 //        reloadUsedRegisterCollection();

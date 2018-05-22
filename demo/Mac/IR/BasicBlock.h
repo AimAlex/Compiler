@@ -11,8 +11,8 @@
 #include <map>
 #include "Register.h"
 #include "IRInstruction.h"
-class Function;
-class BasicBlock{
+#include "Function.h"
+class BasicBlock : public std::enable_shared_from_this<BasicBlock>{
 public:
     std::shared_ptr<IRInstruction> head = NULL;
     std::shared_ptr<IRInstruction> last = NULL;
@@ -20,6 +20,8 @@ public:
     std::string hintName;
     std::shared_ptr<Function> parent;
     std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>> phi;
+    std::vector<std::shared_ptr<BasicBlock>> successor;
+    std::vector<std::shared_ptr<BasicBlock>> predecessor;
     BasicBlock(std::shared_ptr<Function> func, std::string str) {
         parent = func;
         if(str == ""){
@@ -43,20 +45,28 @@ public:
         }
     }
     
-//    void end(std::shared_ptr<IRInstruction> next) {
-//        append(next);
-//        ended = true;
-//        if (next instanceof Branch) {
-//            addSucc(((Branch) next).getThen());
-//            addSucc(((Branch) next).getElse());
-//        } else if (next instanceof Jump) {
-//            addSucc(((Jump) next).getTarget());
-//        } else if (next instanceof Return) {
-//            parent.retInstruction.add((Return) next);
-//        } else {
-//            assert false;
-//        }
-//    }
+    void end(std::shared_ptr<IRInstruction> next) {
+        append(next);
+        ended = true;
+        std::string str = next -> getType();
+        if (str == "Branch") {
+            addSuccessor(next
+                         -> getThen());
+            addSuccessor(next -> getElse());
+        } else if (str == "Jump") {
+            addSuccessor(next -> getTarget());
+        } else if (str == "Return") {
+            parent -> retInstruction.push_back(next);
+        } else {
+            return;
+        }
+    }
+    
+    void addSuccessor(std::shared_ptr<BasicBlock> BB) {
+        if (BB == NULL) return;
+        successor.push_back(BB);
+        BB -> predecessor.push_back(shared_from_this());
+    }
 };
 
 #endif /* BasicBlock_h */

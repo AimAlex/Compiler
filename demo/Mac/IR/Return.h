@@ -11,6 +11,10 @@
 class Return : public IRInstruction {
 public:
     std::shared_ptr<IntValue> ret;
+    
+    std::string getType(){
+        return "Return";
+    }
 };
 
 #endif /* Return_h */

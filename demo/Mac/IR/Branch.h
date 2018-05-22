@@ -13,6 +13,18 @@ public:
     std::shared_ptr<IntValue> cond;
     std::shared_ptr<BasicBlock> then;
     std::shared_ptr<BasicBlock> otherwise;
+    
+    std::string getType(){
+        return "Branch";
+    }
+    
+    std::shared_ptr<BasicBlock> getThen(){
+        return then;
+    }
+    
+    std::shared_ptr<BasicBlock> getElse(){
+        return otherwise;
+    }
 };
 
 #endif /* Branch_h */

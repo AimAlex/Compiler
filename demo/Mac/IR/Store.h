@@ -16,7 +16,7 @@ public:
     int offset;
     std::shared_ptr<Register> value;
     bool isStaticData;
-    Store(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> val, int s, std::shared_ptr<Register> addr, int off) {
+    Store(std::shared_ptr<BasicBlock> BB, std::shared_ptr<Register> val, int s, std::shared_ptr<Register> addr, int off):IRInstruction(BB) {
         size = s;
         address = addr;
         offset = off;

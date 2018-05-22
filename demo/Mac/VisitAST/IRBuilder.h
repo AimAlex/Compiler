@@ -19,6 +19,7 @@
 #include "IntImmediate.h"
 #include "IRInstruction.h"
 #include "Move.h"
+#include "Jump.h"
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
     std::shared_ptr<BasicBlock> curBlock;
@@ -38,24 +39,24 @@ public:
     
     void assign(bool isMemOp, int size, std::shared_ptr<Register> addr, int offset, std::shared_ptr<ASTNode> rhs) {
         if (rhs -> ifTrue != NULL) {
-            // for short-circuit evaluation
             std::shared_ptr<BasicBlock> merge = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
             if (isMemOp) {
                 rhs -> ifTrue -> append(std::shared_ptr<IRInstruction>(new Store(curBlock, std::shared_ptr<Register>(new IntImmediate(1)), size, addr, offset)));
                 rhs -> ifFalse -> append(std::shared_ptr<IRInstruction>(new Store(curBlock, std::shared_ptr<Register>(new IntImmediate(0)), size, addr, offset)));
-            } else {
+            }
+            else {
                 rhs -> ifTrue -> append(std::shared_ptr<IRInstruction>(new Move(curBlock, addr, std::shared_ptr<Register>(new IntImmediate(1)))));
                 rhs -> ifFalse -> append(std::shared_ptr<IRInstruction>(new Move(curBlock, addr, std::shared_ptr<Register>(new IntImmediate(0)))));
             }
-//            rhs -> ifTrue -> end(std::shared_ptr<IRInstruction>(new Jump(curBlock, merge)));
-//            rhs -> ifFalse -> end(std::shared_ptr<IRInstruction>(new Jump(curBlock, merge)));
-//            curBB = merge;
+            rhs -> ifTrue -> end(std::shared_ptr<IRInstruction>(new Jump(curBlock, merge)));
+            rhs -> ifFalse -> end(std::shared_ptr<IRInstruction>(new Jump(curBlock, merge)));
+            curBlock = merge;
         } else {
-//            if (isMemOp) {
-//                curBB.append(new Store(curBB, rhs.intValue, size, addr, offset));
-//            } else {
-//                curBB.append(new Move(curBB, (Register) addr, rhs.intValue));
-//            }
+            if (isMemOp) {
+                curBlock -> append(std::shared_ptr<IRInstruction>(new Store(curBlock, rhs -> intValue, size, addr, offset)));
+            } else {
+                curBlock -> append(std::shared_ptr<IRInstruction>(new Move(curBlock, addr, rhs -> intValue)));
+            }
         }
     }
     
@@ -86,10 +87,9 @@ public:
                     node -> init -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
                 }
                 node -> init -> visited(shared_from_this());
-//                assign(false, node.init.exprType.getRegisterSize(), reg, 0, node.init);
+                assign(false, node -> init -> exprType -> getsize(), reg, 0, node -> init);
             } else if (!isFunctionArgDecl) {
-                // set 0 if no initial value
-//                curBB.append(new Move(curBB, reg, new IntImmediate(0)));
+                curBlock -> append(std::shared_ptr<IRInstruction>(new Move(curBlock, reg, std::shared_ptr<Register>(new IntImmediate(0)))));
             }
         }
     }

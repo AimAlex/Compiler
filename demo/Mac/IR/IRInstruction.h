@@ -19,11 +19,17 @@ public:
     bool removed = false;
     std::vector<Register> usedReg;
     std::vector<Register> usedIntValue;
-    
+    IRInstruction(std::shared_ptr<BasicBlock> curBB) {
+        curBlock = curBB;
+    }
     void linkNext(std::shared_ptr<IRInstruction> node) {
         next = node;
         node -> prev = shared_from_this();
     }
+    virtual std::string getType();
+    virtual std::shared_ptr<BasicBlock> getThen();
+    virtual std::shared_ptr<BasicBlock> getElse();
+    virtual std::shared_ptr<BasicBlock> getTarget();
 };
 
 #endif /* IRInstruction_h */

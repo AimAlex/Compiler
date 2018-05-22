@@ -10,7 +10,18 @@
 #define Jump_h
 class Jump : public IRInstruction {
 public:
-    BasicBlock target;
+    std::shared_ptr<BasicBlock> target;
+    Jump(std::shared_ptr<BasicBlock> BB, std::shared_ptr<BasicBlock> tar) : IRInstruction(BB){
+        target = tar;
+    }
+    
+    std::string getType(){
+        return "Jump";
+    }
+    
+    std::shared_ptr<BasicBlock> getTarget(){
+        return target;
+    }
 };
 
 #endif /* Jump_h */
