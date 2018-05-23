@@ -20,6 +20,7 @@
 #include "IRInstruction.h"
 #include "Move.h"
 #include "Jump.h"
+#include "Return.h"
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
     std::shared_ptr<BasicBlock> curBlock;
@@ -93,6 +94,43 @@ public:
             }
         }
     }
+    
+    void visit(std::shared_ptr<FunctionDecl> node){
+        curFuncStaticMap.clear();
+        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
+        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
+        irRoot -> functions[node -> name] = curFunction;
+        curBlock = curFunction -> startBlock;
+        isFunctionArgDecl = true;
+        for(int i = 0; i < node -> parameterList.size(); ++i) {
+            node -> parameterList[i] -> visited(shared_from_this());
+        }
+        isFunctionArgDecl = false;
+        node -> body -> visited(shared_from_this());
+        if(!curBlock -> ended){
+            if(curFunction -> type -> returnType -> type == SymbolType::VOID){
+                curBlock -> end(std::shared_ptr<Return> (new Return(curBlock, NULL)));
+            }
+            else{
+                curBlock -> end(std::shared_ptr<Return>(new Return(curBlock, std::shared_ptr<Register>(new IntImmediate(0)))));
+            }
+        }
+        if(curFunction -> retInstruction .size() > 1){
+            std::shared_ptr<BasicBlock> exitBlock = std::shared_ptr<BasicBlock> (new BasicBlock(curFunction, curFunction -> name + "_exit"));
+            std::shared_ptr<VirtualRegister> retReg;
+            if(node -> functiontype -> returnType -> type == SymbolType::VOID){
+                retReg = NULL;
+            }
+            else{
+                retReg = std::shared_ptr<VirtualRegister>(new VirtualRegister("retValue"));
+            }
+            std::vector<std::shared_ptr<Return>> retInstructions(curFunction -> retInstruction);
+            for(int i = 0; i < retInstructions.size(); ++i){
+                std::shared_ptr<BasicBlock> Block = retInstructions[i] -> curBlock;
+//                if(retInstructions[i] -> ret != NULL)
+            }
+        }
+    }
     virtual void visit(std::shared_ptr<IfState> node)=0;
     virtual void visit(std::shared_ptr<ReturnState> node)=0;
     virtual void visit(std::shared_ptr<ForLoop> node)=0;
@@ -103,7 +141,6 @@ public:
     virtual void visit(std::shared_ptr<ContinueState> node)=0;
     virtual void visit(std::shared_ptr<WhileLoop> node)=0;
     virtual void visit(std::shared_ptr<BreakState> node)=0;
-    virtual void visit(std::shared_ptr<FunctionDecl> node)=0;
     virtual void visit(std::shared_ptr<ClassConstructor> node)=0;
     virtual void visit(std::shared_ptr<ArrayAccess> node)=0;
     virtual void visit(std::shared_ptr<BinaryExpr> node)=0;

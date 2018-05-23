@@ -10,6 +10,7 @@
 #define IRInstruction_h
 #include "Register.h"
 #include <vector>
+class Function;
 class BasicBlock;
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
@@ -26,10 +27,20 @@ public:
         next = node;
         node -> prev = shared_from_this();
     }
+    
+    void prepend(std::shared_ptr<IRInstruction> node){
+        if(prev != NULL) {
+            prev -> linkNext(node);
+        }
+        else{
+//            curBlock -> head;
+        }
+    }
     virtual std::string getType();
     virtual std::shared_ptr<BasicBlock> getThen();
     virtual std::shared_ptr<BasicBlock> getElse();
     virtual std::shared_ptr<BasicBlock> getTarget();
+    virtual void addReturn(std::shared_ptr<Function>);
 };
 
 #endif /* IRInstruction_h */

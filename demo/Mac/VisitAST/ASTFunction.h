@@ -113,7 +113,8 @@ public:
             vec.push_back(paraType);
         }
 //        std::cout<<node ->name <<" "<<node -> parameterList.size()<<std::endl;
-        ptr -> type = std::shared_ptr<SymbolType> (new FunctionType(vec));
+        node -> functiontype = std::shared_ptr<FunctionType> (new FunctionType(vec, node -> name));
+        ptr -> type = node -> functiontype;
         ptr -> type -> type = SymbolType::FUNCTION;
         currentTable.pop_back();
     }

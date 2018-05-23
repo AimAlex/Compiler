@@ -98,7 +98,7 @@ public:
         std::shared_ptr<SymbolType> PrintPar (new VariableType("string", 0));
         PrintPar -> type = SymbolType::STRING;
         Printvec.push_back(PrintPar);
-        Print -> type = std::shared_ptr<SymbolType>(new FunctionType(Printvec));
+        Print -> type = std::shared_ptr<SymbolType>(new FunctionType(Printvec, "print"));
         Print -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["print"] = Print;
         
@@ -110,7 +110,7 @@ public:
         std::shared_ptr<SymbolType> PrintlnPar (new VariableType("string", 0));
         PrintlnPar -> type = SymbolType::STRING;
         Printlnvec.push_back(PrintlnPar);
-        Println -> type = std::shared_ptr<SymbolType>(new FunctionType(Printlnvec));
+        Println -> type = std::shared_ptr<SymbolType>(new FunctionType(Printlnvec, "println"));
         Println -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["println"] = Println;
         
@@ -119,7 +119,7 @@ public:
         std::shared_ptr<SymbolType> GetStringReturn (new VariableType("string", 0));
         GetStringReturn -> type = SymbolType::STRING;
         GetStringvec.push_back(GetStringReturn);
-        GetString -> type = std::shared_ptr<SymbolType>(new FunctionType(GetStringvec));
+        GetString -> type = std::shared_ptr<SymbolType>(new FunctionType(GetStringvec, "getString"));
         GetString -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["getString"] = GetString;
         
@@ -128,7 +128,7 @@ public:
         std::shared_ptr<SymbolType> GetIntReturn (new VariableType("int", 0));
         GetIntReturn -> type = SymbolType::INT;
         GetIntvec.push_back(GetIntReturn);
-        GetInt -> type = std::shared_ptr<SymbolType>(new FunctionType(GetIntvec));
+        GetInt -> type = std::shared_ptr<SymbolType>(new FunctionType(GetIntvec, "getInt"));
         GetInt -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["getInt"] = GetInt;
         
@@ -140,7 +140,7 @@ public:
         std::shared_ptr<SymbolType> ToStringPar (new VariableType("int", 0));
         ToStringPar -> type = SymbolType::INT;
         ToStringvec.push_back(ToStringPar);
-        ToString -> type = std::shared_ptr<SymbolType>(new FunctionType(ToStringvec));
+        ToString -> type = std::shared_ptr<SymbolType>(new FunctionType(ToStringvec, "toString"));
         ToString -> type -> type = SymbolType::FUNCTION;
         ptr -> symbolTable["toString"] = ToString;
         

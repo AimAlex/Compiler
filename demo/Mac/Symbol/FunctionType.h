@@ -15,11 +15,13 @@ class FunctionType : public SymbolType{
 public:
     std::shared_ptr<SymbolType> returnType;
     std::vector<std::shared_ptr<SymbolType>> argType;
-    FunctionType(std::vector<std::shared_ptr<SymbolType>> vec){
+    std::string name;
+    FunctionType(std::vector<std::shared_ptr<SymbolType>> vec, std::string str){
         returnType = vec[0];
         for(int i = 1; i < vec.size(); ++i) {
             argType.push_back(vec[i]);
         }
+        name = str;
 //        std::cout<<vec.size()<<std::endl;
     }
     std::vector<std::shared_ptr<SymbolType>> getFunction(){

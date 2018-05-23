@@ -31,7 +31,6 @@ public:
             hintName = str;
         }
     }
-    
     void append(std::shared_ptr<IRInstruction> next) {
         if (ended) {
             std::cout<<"Cannot append instruction after a basic block ends."<<std::endl;
@@ -53,11 +52,14 @@ public:
             addSuccessor(next
                          -> getThen());
             addSuccessor(next -> getElse());
-        } else if (str == "Jump") {
+        }
+        else if (str == "Jump") {
             addSuccessor(next -> getTarget());
-        } else if (str == "Return") {
-            parent -> retInstruction.push_back(next);
-        } else {
+        }
+        else if (str == "Return") {
+            next -> addReturn(parent);
+        }
+        else {
             return;
         }
     }

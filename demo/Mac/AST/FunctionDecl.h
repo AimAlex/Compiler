@@ -4,6 +4,7 @@
 #include <vector>
 #include "VariableDecl.h"
 #include "CompoundState.h"
+#include "FunctionType.h"
 class FunctionDecl : public ASTNode, public std::enable_shared_from_this<FunctionDecl>{
 public:
     size_t position;
@@ -12,7 +13,7 @@ public:
     std::vector<std::shared_ptr<ASTNode>> parameterList;
     std::shared_ptr<ASTNode> body;
     std::shared_ptr<SymbolTable> functionTable;
-//    FunctionType functiontype;
+    std::shared_ptr<FunctionType> functiontype;
     void acceptStr(std::string str) {
         name = str;
     }

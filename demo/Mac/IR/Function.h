@@ -11,20 +11,23 @@
 #include <vector>
 #include "SymbolType.h"
 #include <map>
-class Function{
+#include "FunctionType.h"
+class Return;
+class BasicBlock;
+class Function : public std::enable_shared_from_this<Function>{
 public:
     std::vector<std::shared_ptr<Register>> argVarRegList;
     std::string name;
     std::shared_ptr<BasicBlock> startBlock;
     std::shared_ptr<BasicBlock> exitBlock;
-    std::shared_ptr<SymbolType> type;
+    std::shared_ptr<FunctionType> type;
     int retsize;
     
     std::vector<std::shared_ptr<BasicBlock>> reversePostOrder;
     std::vector<std::shared_ptr<BasicBlock>> reversePreOrder;
     std::vector<std::shared_ptr<BasicBlock>> DTPreOrder;
     std::vector<std::shared_ptr<BasicBlock>> visited;
-    std::vector<std::shared_ptr<IRInstruction>> retInstruction;
+    std::vector<std::shared_ptr<Return>> retInstruction;
     std::vector<std::shared_ptr<Function>> calleeSet;
     std::vector<std::shared_ptr<Function>> recursiveCalleeSet;
     
@@ -34,6 +37,12 @@ public:
     
     std::string builtinFunctionHackName;
     
+    Function(std::shared_ptr<FunctionType> function){
+        retsize = function -> returnType -> getsize();
+        name = function -> name;
+        type = function;
+//        startBlock = std::shared_ptr<BasicBlock> (new BasicBlock(shared_from_this(), name + "_entry"))
+    }
 };
 
 #endif /* Function_h */

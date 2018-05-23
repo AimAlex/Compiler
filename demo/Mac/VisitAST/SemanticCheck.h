@@ -311,7 +311,7 @@ public:
                 std::shared_ptr<SymbolType> newNode(new VariableType("int", 0));
                 newNode -> type = SymbolType::INT;
                 vec.push_back(newNode);
-                std::shared_ptr<SymbolType> ptr (new FunctionType(vec));
+                std::shared_ptr<SymbolType> ptr (new FunctionType(vec, "length"));
                 ptr -> type = SymbolType::FUNCTION;
                 node -> isLvalue = false;
                 node -> exprType = ptr;
@@ -327,7 +327,7 @@ public:
                 vec.push_back(newNode);
                 vec.push_back(paraNode1);
                 vec.push_back(paraNode2);
-                std::shared_ptr<SymbolType> ptr (new FunctionType(vec));
+                std::shared_ptr<SymbolType> ptr (new FunctionType(vec, "substring"));
                 ptr -> type = SymbolType::FUNCTION;
                 node -> isLvalue = false;
                 node -> exprType = ptr;
@@ -337,7 +337,7 @@ public:
                 std::shared_ptr<SymbolType> newNode(new VariableType("int", 0));
                 newNode -> type = SymbolType::INT;
                 vec.push_back(newNode);
-                std::shared_ptr<SymbolType> ptr (new FunctionType(vec));
+                std::shared_ptr<SymbolType> ptr (new FunctionType(vec, "parseInt"));
                 ptr -> type = SymbolType::FUNCTION;
                 node -> isLvalue = false;
                 node -> exprType = ptr;
@@ -350,7 +350,7 @@ public:
                 paraNode -> type = SymbolType::INT;
                 vec.push_back(newNode);
                 vec.push_back(paraNode);
-                std::shared_ptr<SymbolType> ptr (new FunctionType(vec));
+                std::shared_ptr<SymbolType> ptr (new FunctionType(vec, "ord"));
                 ptr -> type = SymbolType::FUNCTION;
                 node -> isLvalue = false;
                 node -> exprType = ptr;
@@ -368,7 +368,7 @@ public:
             std::shared_ptr<SymbolType> newNode(new VariableType("int", 0));
             newNode -> type = SymbolType::INT;
             vec.push_back(newNode);
-            std::shared_ptr<SymbolType> ptr (new FunctionType(vec));
+            std::shared_ptr<SymbolType> ptr (new FunctionType(vec, "size"));
             ptr -> type = SymbolType::FUNCTION;
             node -> isLvalue = false;
             node -> exprType = ptr;
