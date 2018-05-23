@@ -10,6 +10,7 @@
 #define IRInstruction_h
 #include "Register.h"
 #include <vector>
+#include "BasicBlock.h"
 class Function;
 class BasicBlock;
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
@@ -33,9 +34,43 @@ public:
             prev -> linkNext(node);
         }
         else{
-//            curBlock -> head;
+            curBlock -> head = node;
+        }
+        node -> linkNext(shared_from_this());
+    }
+    
+    void append(std::shared_ptr<BasicBlock> block) {
+        if (block -> ended) {
+            std::cout<<"Cannot append instruction after a basic block ends."<<std::endl;
+            throw (0);
+        }
+        if (block -> last != NULL) {
+            block -> last -> linkNext(shared_from_this());
+            block -> last = shared_from_this();
+        } else {
+            block -> head = block -> last = shared_from_this();
         }
     }
+    
+    void end(std::shared_ptr<BasicBlock> block) {
+        append(block);
+        block -> ended = true;
+        std::string str = getType();
+        if (str == "Branch") {
+            block -> addSuccessor(getThen());
+            block -> addSuccessor(getElse());
+        }
+        else if (str == "Jump") {
+            block -> addSuccessor(getTarget());
+        }
+        else if (str == "Return") {
+            addReturn(block -> parent);
+        }
+        else {
+            return;
+        }
+    }
+    
     virtual std::string getType();
     virtual std::shared_ptr<BasicBlock> getThen();
     virtual std::shared_ptr<BasicBlock> getElse();
