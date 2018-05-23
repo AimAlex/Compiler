@@ -12,8 +12,8 @@
 #include "SymbolType.h"
 #include <map>
 #include "FunctionType.h"
+#include "BasicBlock.h"
 class Return;
-class BasicBlock;
 class Function : public std::enable_shared_from_this<Function>{
 public:
     std::vector<std::shared_ptr<Register>> argVarRegList;
@@ -42,6 +42,28 @@ public:
         name = function -> name;
         type = function;
 //        startBlock = std::shared_ptr<BasicBlock> (new BasicBlock(shared_from_this(), name + "_entry"))
+    }
+    
+    void dfsPreOrder(std::shared_ptr<BasicBlock> node) {
+        if (std::find(visited.begin(), visited.end(), node) != visited.end()) return;
+        visited.push_back(node);
+        reversePreOrder.push_back(node);
+        for(int i = 0; i < node -> successor.size(); ++i){
+            dfsPreOrder(node -> successor[i]);
+        }
+    }
+    
+    void calcReversePreOrder() {
+        reversePreOrder.clear();
+        visited.clear();
+        dfsPreOrder(startBlock);
+        std::reverse(reversePreOrder.begin(), reversePreOrder.end());
+        visited.clear();
+    }
+    
+    std::vector<std::shared_ptr<BasicBlock>> getReversePreOrder() {
+        if (reversePreOrder.size() == 0) calcReversePreOrder();
+        return reversePreOrder;
     }
 };
 

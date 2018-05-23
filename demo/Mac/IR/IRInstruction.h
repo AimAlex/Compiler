@@ -11,8 +11,8 @@
 #include "Register.h"
 #include <vector>
 #include "BasicBlock.h"
-class Function;
-class BasicBlock;
+#include "Function.h"
+#include <algorithm>
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
     std::shared_ptr<BasicBlock> curBlock = NULL;
@@ -69,6 +69,33 @@ public:
         else {
             return;
         }
+    }
+    
+    void cleanEnd(std::shared_ptr<BasicBlock> block) {
+        block -> ended = false;
+        if (getType() == "Branch") {
+            block -> delSuccessor(getThen());
+            block -> delSuccessor(getElse());
+        }
+        else if (getType() ==  "Jump") {
+            block -> delSuccessor(getTarget());
+        }
+        else if (getType() == "Return") {
+            block -> parent -> retInstruction.erase(find(block -> parent -> retInstruction.begin(),block -> parent -> retInstruction.end(),shared_from_this()));
+            
+        } else {
+            return;
+        }
+    }
+    
+    void remove() {
+        if(!removed) return;
+        if (getType() == "Branch") curBlock -> last -> cleanEnd(curBlock);
+        if (prev != NULL) prev -> next = next;
+        if (next != NULL) next -> prev = prev;
+        if (curBlock -> head == shared_from_this()) curBlock -> head = next;
+        if (curBlock -> last == shared_from_this()) curBlock -> last = prev;
+        removed = true;
     }
     
     virtual std::string getType();

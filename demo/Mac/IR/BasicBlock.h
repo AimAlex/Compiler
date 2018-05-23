@@ -10,9 +10,8 @@
 #define BasicBlock_h
 #include <map>
 #include "Register.h"
-#include "Function.h"
-class IRInstruction;
 class Function;
+class IRInstruction;
 class BasicBlock : public std::enable_shared_from_this<BasicBlock>{
 public:
     std::shared_ptr<IRInstruction> head = NULL;
@@ -23,6 +22,9 @@ public:
     std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>> phi;
     std::vector<std::shared_ptr<BasicBlock>> successor;
     std::vector<std::shared_ptr<BasicBlock>> predecessor;
+    
+    std::vector<std::shared_ptr<BasicBlock>> DTChildren;
+    
     BasicBlock(std::shared_ptr<Function> func, std::string str) {
         parent = func;
         if(str == ""){
@@ -37,6 +39,12 @@ public:
         if (BB == NULL) return;
         successor.push_back(BB);
         BB -> predecessor.push_back(shared_from_this());
+    }
+
+    void delSuccessor(std::shared_ptr<BasicBlock> BB){
+        if(BB == NULL)return;
+        successor.erase(find(successor.begin(),successor.end(), BB));
+        BB -> predecessor.erase(find(BB -> predecessor.begin(),BB -> predecessor.end(), shared_from_this()));
     }
 };
 

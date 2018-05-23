@@ -129,9 +129,27 @@ public:
             std::vector<std::shared_ptr<Return>> retInstructions(curFunction -> retInstruction);
             for(int i = 0; i < retInstructions.size(); ++i){
                 std::shared_ptr<BasicBlock> Block = retInstructions[i] -> curBlock;
-//                if(retInstructions[i] -> ret != NULL)
+                if(retInstructions[i] -> ret != NULL){
+                    retInstructions[i] -> prepend(std::shared_ptr<IRInstruction>(new Move(Block, retReg, retInstructions[i] -> ret)));
+                }
+                retInstructions[i] -> remove();
+                std::shared_ptr<IRInstruction> (new Jump(Block, exitBlock)) -> end(Block);
             }
+            if(curFunction -> retInstruction.size() != 0) std::cout<<"fuck"<<std::endl;
+            std::shared_ptr<IRInstruction> (new Return(exitBlock, retReg)) -> end(exitBlock);
+            curFunction -> exitBlock = exitBlock;
         }
+        else{
+            curFunction -> exitBlock = curFunction -> retInstruction[0] -> curBlock;
+        }
+        if(curFunction -> retInstruction.size() != 1) std::cout<<"fuck"<<std::endl;
+        
+        int resize = 0;
+        std::vector<std::shared_ptr<BasicBlock>> vec(curFunction -> getReversePreOrder());
+        for(int i = 0 ;i < curFunction -> exitBlock -> predecessor.size(); ++i) {
+            
+        }
+        curFunction = NULL;
     }
     virtual void visit(std::shared_ptr<IfState> node)=0;
     virtual void visit(std::shared_ptr<ReturnState> node)=0;
