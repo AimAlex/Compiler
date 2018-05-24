@@ -147,8 +147,12 @@ public:
         int resize = 0;
         std::vector<std::shared_ptr<BasicBlock>> vec(curFunction -> getReversePreOrder());
         for(int i = 0 ;i < curFunction -> exitBlock -> predecessor.size(); ++i) {
-            
+            std::vector<std::shared_ptr<BasicBlock>>::iterator iter = find(vec.begin(), vec.end(), curFunction -> exitBlock -> predecessor[i]);
+            if(iter == vec.end()) continue;
+            curFunction -> exitBlock -> predecessor[resize] = *iter;
+            ++resize;
         }
+        curFunction -> exitBlock -> predecessor.resize(resize + 1);
         curFunction = NULL;
     }
     virtual void visit(std::shared_ptr<IfState> node)=0;
