@@ -21,6 +21,7 @@
 #include "Move.h"
 #include "Jump.h"
 #include "Return.h"
+#define INTSIZE 8
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
     std::shared_ptr<BasicBlock> curBlock;
@@ -155,16 +156,147 @@ public:
         curFunction -> exitBlock -> predecessor.resize(resize + 1);
         curFunction = NULL;
     }
-    virtual void visit(std::shared_ptr<IfState> node)=0;
-    virtual void visit(std::shared_ptr<ReturnState> node)=0;
-    virtual void visit(std::shared_ptr<ForLoop> node)=0;
+    
+    void visit(std::shared_ptr<BreakState>){
+        std::shared_ptr<IRInstruction>(new Jump(curBlock, curLoopAfterBlock)) -> end(curBlock);
+    }
+    
+    void visit(std::shared_ptr<ContinueState>){
+        std::shared_ptr<IRInstruction>(new Jump(curBlock, curLoopStepBlock)) -> end(curBlock);
+    }
+    
+    void visit(std::shared_ptr<ReturnState> node){
+        if(curFunction -> type -> returnType -> type == SymbolType::VOID){
+            std::shared_ptr<IRInstruction>(new Return(curBlock, NULL)) -> end(curBlock);
+        }
+        else{
+            if(node -> value -> isLogicalExpression()){
+                node -> value -> ifTrue = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
+                node -> value -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
+                node -> value -> visited(shared_from_this());
+                
+                std::shared_ptr<Register> reg (new VirtualRegister("retValue"));
+                assign(false, INTSIZE, reg, 0, node -> value);
+                
+                std::shared_ptr<IRInstruction>(new Return(curBlock, reg)) -> end(curBlock);
+            }
+            else{
+                node -> value -> visited(shared_from_this());
+                std::shared_ptr<IRInstruction>(new Return(curBlock, node -> value -> intValue)) -> end(curBlock);
+            }
+        }
+    }
+    void visit(std::shared_ptr<CompoundState> node){
+        for(int i = 0; i < node -> stmts.size(); ++i) {
+            node -> stmts[i] -> visited(shared_from_this());
+        }
+    }
+    void visit(std::shared_ptr<IfState> node){
+        std::shared_ptr<BasicBlock> BlockTrue (new BasicBlock(curFunction, "if_true"));
+        std::shared_ptr<BasicBlock> BlockFalse (new BasicBlock(curFunction, "if_false"));
+        std::shared_ptr<BasicBlock> BlockMerge (new BasicBlock(curFunction, "if_merge"));
+        node -> cond -> ifTrue = BlockTrue;
+        if(node -> otherwise == NULL) {
+            node -> cond -> ifFalse = BlockMerge;
+            BlockFalse = NULL;
+        }
+        else{
+            node -> cond -> ifFalse = BlockFalse;
+        }
+        node -> cond -> visited(shared_from_this());
+        
+        curBlock = BlockTrue;
+        node -> then -> visited(shared_from_this());
+        if(!curBlock -> ended){
+            std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockMerge)) -> end(curBlock);
+        }
+        
+        if(node -> otherwise != NULL){
+            curBlock = BlockFalse;
+            node -> otherwise -> visited(shared_from_this());
+            if(!curBlock -> ended){
+                std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockMerge)) -> end(curBlock);
+            }
+        }
+        
+        curBlock = BlockMerge;
+    }
+    void visit(std::shared_ptr<ForLoop> node){
+        std::shared_ptr<BasicBlock> BlockCond (new BasicBlock(curFunction, "for_cond"));
+        std::shared_ptr<BasicBlock> BlockLoop (new BasicBlock(curFunction, "for_loop"));
+        std::shared_ptr<BasicBlock> BlockStep (new BasicBlock(curFunction, "for_step"));
+        std::shared_ptr<BasicBlock> BlockAfter (new BasicBlock(curFunction, "for_after"));
+        if(node -> cond == NULL){
+            BlockCond = BlockLoop;
+        }
+        if(node -> step == NULL){
+            BlockStep = BlockCond;
+        }
+        
+        std::shared_ptr<BasicBlock> oldLoopCondBlock = curLoopStepBlock;
+        std::shared_ptr<BasicBlock> oldLoopAfterBlock = curLoopAfterBlock;
+        curLoopStepBlock = BlockStep;
+        curLoopAfterBlock = BlockAfter;
+        
+        if(node -> init != NULL){
+            node -> init -> visited(shared_from_this());
+        }
+        else if (node -> initWithDecl != NULL){
+            node -> initWithDecl -> visited(shared_from_this());
+        }
+        
+        std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockCond)) -> end(curBlock);
+        
+        if(node -> cond != NULL){
+            curBlock = BlockCond;
+            node -> cond -> ifTrue = BlockLoop;
+            node -> cond -> ifFalse = BlockAfter;
+            node -> cond -> visited(shared_from_this());
+        }
+        
+        curBlock = BlockLoop;
+        node -> body -> visited(shared_from_this());
+        std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockStep)) -> end(curBlock);
+        
+        if(node -> step != NULL) {
+            curBlock = BlockStep;
+            node -> step -> visited(shared_from_this());
+            std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockCond)) -> end(curBlock);
+        }
+        
+        curLoopStepBlock = oldLoopCondBlock;
+        curLoopAfterBlock = oldLoopAfterBlock;
+        curBlock = BlockAfter;
+    }
+    
+    void visit(std::shared_ptr<WhileLoop> node){
+        std::shared_ptr<BasicBlock> BlockCond (new BasicBlock(curFunction, "for_cond"));
+        std::shared_ptr<BasicBlock> BlockLoop (new BasicBlock(curFunction, "for_loop"));
+        std::shared_ptr<BasicBlock> BlockAfter (new BasicBlock(curFunction, "for_after"));
+        
+        std::shared_ptr<BasicBlock> oldLoopCondBlock = curLoopStepBlock;
+        std::shared_ptr<BasicBlock> oldLoopAfterBlock = curLoopAfterBlock;
+        curLoopStepBlock = BlockCond;
+        curLoopAfterBlock = BlockAfter;
+        
+        std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockCond)) -> end(curBlock);
+        
+        curBlock = BlockCond;
+        node -> cond -> ifTrue = BlockLoop;
+        node -> cond -> ifFalse = BlockAfter;
+        node -> cond -> visited(shared_from_this());
+        
+        curBlock = BlockLoop;
+        node -> body -> visited(shared_from_this());
+        std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockCond)) -> end(curBlock);
+        
+        curLoopStepBlock = oldLoopCondBlock;
+        curLoopAfterBlock = oldLoopAfterBlock;
+        curBlock = BlockAfter;
+    }
     virtual void visit(std::shared_ptr<ArrayTypeNode> node)=0;
     virtual void visit(std::shared_ptr<PrimitiveTypeNode> node)=0;
-    virtual void visit(std::shared_ptr<CompoundState> node)=0;
     virtual void visit(std::shared_ptr<ClassDecl> node)=0;
-    virtual void visit(std::shared_ptr<ContinueState> node)=0;
-    virtual void visit(std::shared_ptr<WhileLoop> node)=0;
-    virtual void visit(std::shared_ptr<BreakState> node)=0;
     virtual void visit(std::shared_ptr<ClassConstructor> node)=0;
     virtual void visit(std::shared_ptr<ArrayAccess> node)=0;
     virtual void visit(std::shared_ptr<BinaryExpr> node)=0;
