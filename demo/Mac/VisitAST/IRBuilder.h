@@ -21,6 +21,12 @@
 #include "Move.h"
 #include "Jump.h"
 #include "Return.h"
+#include "BinaryOperation.h"
+#include "Load.h"
+#include "Branch.h"
+#include "UnaryOperation.h"
+#include "StaticString.h"
+#include "HeapAllocate.h"
 #define INTSIZE 8
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
@@ -294,24 +300,141 @@ public:
         curLoopAfterBlock = oldLoopAfterBlock;
         curBlock = BlockAfter;
     }
+    void visit(std::shared_ptr<ArrayAccess> node){
+        bool getAddr = getAddress;
+        getAddress = false;
+        node -> array -> visited(shared_from_this());
+        node -> subscript -> visited(shared_from_this());
+        getAddress = getAddr;
+        
+        std::shared_ptr<Register> tmp(new IntImmediate(node -> array -> exprType -> getsize()));
+        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::MUL, node -> subscript -> intValue, tmp)) -> append(curBlock);
+        std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::ADD, node -> array -> intValue, reg));
+        if(getAddress) {
+            node -> addressValue = reg;
+            node -> addressOffset = INTSIZE;
+        }
+        else{
+            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, node -> exprType -> getsize(), reg, INTSIZE)) -> append(curBlock);
+            node -> intValue = reg;
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+        }
+    }
+    
+    void visit(std::shared_ptr<UnaryExpr> node){
+        if(node -> op == UnaryExpr::LOGICAL_NOT){
+            node -> body -> ifTrue = node -> ifFalse;
+            node -> body -> ifFalse = node -> ifTrue;
+            node -> body -> visited(shared_from_this());
+            return;
+        }
+        
+        node -> body -> visited(shared_from_this());
+        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        switch (node -> op) {
+            case UnaryExpr::INC:
+//
+                break;
+            case UnaryExpr::DEC:
+//
+                break;
+            case UnaryExpr::POS:
+                node -> intValue = node -> body -> intValue;
+                break;
+            case UnaryExpr::NEG:
+                node -> intValue = reg;
+                std::shared_ptr<IRInstruction>(new UnaryOperation(curBlock, reg, UnaryOperation::NEG, node -> body -> intValue)) -> append(curBlock);
+                break;
+            case UnaryExpr::BITWISE_NOT:
+                node -> intValue = reg;
+                std::shared_ptr<IRInstruction>(new UnaryOperation(curBlock, reg, UnaryOperation::NOT, node -> body -> intValue)) -> append(curBlock);
+            default:
+                break;
+        }
+    }
+    
+    void visit(std::shared_ptr<BinaryExpr> node){
+        switch (node -> op) {
+            case BinaryExpr::ASSIGN:
+//
+                break;
+            case BinaryExpr::LOGICAL_OR:
+            case BinaryExpr::LOGICAL_AND:
+//
+                break;
+            case BinaryExpr::EQ:
+            case BinaryExpr::NE:
+            case BinaryExpr::LT:
+            case BinaryExpr::GT:
+            case BinaryExpr::LE:
+            case BinaryExpr::GE:
+                
+                break;
+            case BinaryExpr::SHL:
+            case BinaryExpr::SHR:
+            case BinaryExpr::ADD:
+            case BinaryExpr::SUB:
+            case BinaryExpr::MUL:
+            case BinaryExpr::DIV:
+            case BinaryExpr::MOD:
+            case BinaryExpr::XOR:
+            case BinaryExpr::BITWISE_OR:
+            case BinaryExpr::BITWISE_AND:
+//
+                break;
+            default:
+                break;
+        }
+    }
+    
+    void visit(std::shared_ptr<BoolConst> node){
+        node -> intValue = std::shared_ptr<Register>(new IntImmediate((int)node -> value));
+    }
+    
+    void visit(std::shared_ptr<IntConst> node){
+        node -> intValue = std::shared_ptr<Register>(new IntImmediate(node -> value));
+    }
+    
+    void visit(std::shared_ptr<NullLiteral> node){
+        node -> intValue = std::shared_ptr<Register>(new IntImmediate(0));
+    }
+    
+    void visit(std::shared_ptr<StringConst> node){
+        std::map<std::string, std::shared_ptr<Register>>::iterator iter = irRoot -> strings.find(node -> value);
+        if(iter == irRoot -> strings.end()){
+            std::shared_ptr<Register> ss(new StaticString(node -> value));
+            irRoot -> strings[node -> value] = ss;
+            node -> intValue = ss;
+        }
+        else{
+            node -> intValue = iter -> second;
+        }
+    }
+    
+    void visit(std::shared_ptr<NewExpr> node){
+        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        if(node -> exprType -> type == SymbolType::ClASS){
+            
+        }
+        else{
+            bool getaddress = getAddress;
+            getAddress = false;
+            
+        }
+    }
     virtual void visit(std::shared_ptr<ArrayTypeNode> node)=0;
     virtual void visit(std::shared_ptr<PrimitiveTypeNode> node)=0;
     virtual void visit(std::shared_ptr<ClassDecl> node)=0;
     virtual void visit(std::shared_ptr<ClassConstructor> node)=0;
-    virtual void visit(std::shared_ptr<ArrayAccess> node)=0;
-    virtual void visit(std::shared_ptr<BinaryExpr> node)=0;
-    virtual void visit(std::shared_ptr<BoolConst> node)=0;
     virtual void visit(std::shared_ptr<EmptyExpr> node)=0;
     virtual void visit(std::shared_ptr<FunctionCall> node)=0;
     virtual void visit(std::shared_ptr<Identifier> node)=0;
-    virtual void visit(std::shared_ptr<IntConst> node)=0;
     virtual void visit(std::shared_ptr<MemberAccess> node)=0;
-    virtual void visit(std::shared_ptr<NewExpr> node)=0;
-    virtual void visit(std::shared_ptr<NullLiteral> node)=0;
     virtual void visit(std::shared_ptr<SelfDecrement> node)=0;
     virtual void visit(std::shared_ptr<SelfIncrement> node)=0;
-    virtual void visit(std::shared_ptr<StringConst> node)=0;
-    virtual void visit(std::shared_ptr<UnaryExpr> node)=0;
     virtual void visit(std::shared_ptr<ClassTypeNode> node)=0;
 };
 

@@ -12,6 +12,10 @@ class StaticString : public Register {
 public:
     std::string hintName;
     std::string value;
+    StaticString(std::string str){
+        hintName = "string";
+        value = str;
+    }
 };
 
 #endif /* StaticString_h */

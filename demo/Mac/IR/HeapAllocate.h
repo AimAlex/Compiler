@@ -8,10 +8,15 @@
 
 #ifndef HeapAllocate_h
 #define HeapAllocate_h
+#include "IRInstruction.h"
 class HeapAllocate : public IRInstruction {
 public:
-    std::shared_ptr<IntValue> dest;
-    std::shared_ptr<IntValue> allocSize;
+    std::shared_ptr<Register> dest;
+    std::shared_ptr<Register> allocSize;
+    HeapAllocate(std::shared_ptr<BasicBlock> Block, std::shared_ptr<Register> Dest, std::shared_ptr<Register> allocsize) : IRInstruction(Block){
+        dest = Dest;
+        allocSize = allocsize;
+    }
 };
 
 #endif /* HeapAllocate_h */

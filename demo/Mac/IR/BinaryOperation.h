@@ -8,17 +8,23 @@
 
 #ifndef BinaryOperation_h
 #define BinaryOperation_h
-#include "IRInstruction"
-#include "IntValue"
+#include "IRInstruction.h"
 class BinaryOperation : public IRInstruction{
 public:
     enum BinaryOp {
         ADD, SUB, MUL, DIV, MOD, SHL, SHR, AND, OR, XOR
-    }
-    std::shared_ptr<IntValue> dest;
+    };
+    std::shared_ptr<Register> dest;
     BinaryOp op;
-    std::shared_ptr<IntValue> lhs;
-    std::shared_ptr<IntValue> rhs;
+    std::shared_ptr<Register> lhs;
+    std::shared_ptr<Register> rhs;
+    
+    BinaryOperation(std::shared_ptr<BasicBlock> Block, std::shared_ptr<Register> destination, BinaryOp Op, std::shared_ptr<Register> Lhs, std::shared_ptr<Register> Rhs) : IRInstruction(Block){
+        dest = destination;
+        op = Op;
+        lhs = Lhs;
+        rhs = Rhs;
+    }
 };
 
 #endif /* BinaryOperation_h */

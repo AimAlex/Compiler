@@ -8,9 +8,10 @@
 
 #ifndef Branch_h
 #define Branch_h
+#include "IRInstruction.h"
 class Branch : public IRInstruction {
 public:
-    std::shared_ptr<IntValue> cond;
+    std::shared_ptr<Register> cond;
     std::shared_ptr<BasicBlock> then;
     std::shared_ptr<BasicBlock> otherwise;
     
@@ -24,6 +25,12 @@ public:
     
     std::shared_ptr<BasicBlock> getElse(){
         return otherwise;
+    }
+    
+    Branch (std::shared_ptr<BasicBlock> Block, std::shared_ptr<Register> Cond, std::shared_ptr<BasicBlock> Then, std::shared_ptr<BasicBlock> Otherwise) :IRInstruction(Block){
+        cond = Cond;
+        then = Then;
+        otherwise = Otherwise;
     }
 };
 
