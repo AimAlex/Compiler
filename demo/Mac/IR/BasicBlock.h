@@ -10,6 +10,7 @@
 #define BasicBlock_h
 #include <map>
 #include "Register.h"
+#include "IRVisitor.h"
 class Function;
 class IRInstruction;
 class BasicBlock : public std::enable_shared_from_this<BasicBlock>{
@@ -45,6 +46,10 @@ public:
         if(BB == NULL)return;
         successor.erase(find(successor.begin(),successor.end(), BB));
         BB -> predecessor.erase(find(BB -> predecessor.begin(),BB -> predecessor.end(), shared_from_this()));
+    }
+    
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

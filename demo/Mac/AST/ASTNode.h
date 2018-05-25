@@ -19,6 +19,7 @@ public:
     std::shared_ptr<SymbolType> exprType;
     bool isLvalue;
     virtual bool isLogicalExpression(){return false;}
+    virtual bool needMemoryAccess(){return false;}
     
     std::shared_ptr<BasicBlock> ifTrue = NULL;
     std::shared_ptr<BasicBlock> ifFalse = NULL;

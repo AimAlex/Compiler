@@ -23,6 +23,9 @@ public:
         op = Op;
         operand = Operand;
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<UnaryOperation>(shared_from_this()));
+    }
 };
 
 #endif /* UnaryOperation_h */

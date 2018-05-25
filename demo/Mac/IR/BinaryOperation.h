@@ -25,6 +25,9 @@ public:
         lhs = Lhs;
         rhs = Rhs;
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<BinaryOperation>(shared_from_this()));
+    }
 };
 
 #endif /* BinaryOperation_h */

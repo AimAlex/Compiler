@@ -17,6 +17,9 @@ public:
         dest = Dest;
         allocSize = allocsize;
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<HeapAllocate>(shared_from_this()));
+    }
 };
 
 #endif /* HeapAllocate_h */

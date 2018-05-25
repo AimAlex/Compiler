@@ -8,13 +8,17 @@
 
 #ifndef StaticSpace_h
 #define StaticSpace_h
-class StaticSpace : public Register{
+#include "Register.h"
+class StaticSpace : public Register, public std::enable_shared_from_this<StaticSpace>{
 public:
     std::string hintName;
     int length;
     StaticSpace(std::string str, int l){
         hintName = str;
         length = l;
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

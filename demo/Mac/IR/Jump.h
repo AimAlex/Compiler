@@ -22,6 +22,9 @@ public:
     std::shared_ptr<BasicBlock> getTarget(){
         return target;
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Jump>(shared_from_this()));
+    }
 };
 
 #endif /* Jump_h */

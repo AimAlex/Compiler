@@ -9,7 +9,7 @@
 #ifndef Branch_h
 #define Branch_h
 #include "IRInstruction.h"
-class Branch : public IRInstruction {
+class Branch : public IRInstruction{
 public:
     std::shared_ptr<Register> cond;
     std::shared_ptr<BasicBlock> then;
@@ -31,6 +31,9 @@ public:
         cond = Cond;
         then = Then;
         otherwise = Otherwise;
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Branch>(shared_from_this()));
     }
 };
 

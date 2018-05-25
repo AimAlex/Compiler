@@ -13,6 +13,7 @@
 #include <map>
 #include "FunctionType.h"
 #include "BasicBlock.h"
+#include "IRVisitor.h"
 class Return;
 class Function : public std::enable_shared_from_this<Function>{
 public:
@@ -26,7 +27,7 @@ public:
     std::vector<std::shared_ptr<BasicBlock>> reversePostOrder;
     std::vector<std::shared_ptr<BasicBlock>> reversePreOrder;
     std::vector<std::shared_ptr<BasicBlock>> DTPreOrder;
-    std::vector<std::shared_ptr<BasicBlock>> visited;
+    std::vector<std::shared_ptr<BasicBlock>> Visited;
     std::vector<std::shared_ptr<Return>> retInstruction;
     std::vector<std::shared_ptr<Function>> calleeSet;
     std::vector<std::shared_ptr<Function>> recursiveCalleeSet;
@@ -45,8 +46,8 @@ public:
     }
     
     void dfsPreOrder(std::shared_ptr<BasicBlock> node) {
-        if (std::find(visited.begin(), visited.end(), node) != visited.end()) return;
-        visited.push_back(node);
+        if (std::find(Visited.begin(), Visited.end(), node) != Visited.end()) return;
+        Visited.push_back(node);
         reversePreOrder.push_back(node);
         for(int i = 0; i < node -> successor.size(); ++i){
             dfsPreOrder(node -> successor[i]);
@@ -55,15 +56,19 @@ public:
     
     void calcReversePreOrder() {
         reversePreOrder.clear();
-        visited.clear();
+        Visited.clear();
         dfsPreOrder(startBlock);
         std::reverse(reversePreOrder.begin(), reversePreOrder.end());
-        visited.clear();
+        Visited.clear();
     }
     
     std::vector<std::shared_ptr<BasicBlock>> getReversePreOrder() {
         if (reversePreOrder.size() == 0) calcReversePreOrder();
         return reversePreOrder;
+    }
+    
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

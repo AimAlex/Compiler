@@ -23,7 +23,10 @@ public:
         address = Address;
         offset = Offset;
         isStaticData = false;
-        
+//        
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Load>(shared_from_this()));
     }
 };
 

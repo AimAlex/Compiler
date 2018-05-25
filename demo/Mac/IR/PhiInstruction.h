@@ -14,6 +14,9 @@ public:
     BasicBlock Block;
     std::shared_ptr<IntValue> dest;
     std::map<std::shared_ptr<BasicBlock>, std::shared_ptr<IntValue>> paths;
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<PhiInstruction>(shared_from_this()));
+    }
 };
 
 #endif /* PhiInstruction_h */

@@ -23,6 +23,9 @@ public:
         value = val;
         isStaticData = false;
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Store>(shared_from_this()));
+    }
 };
 
 #endif /* Store_h */

@@ -8,7 +8,7 @@
 
 #ifndef VirtualRegister_h
 #define VirtualRegister_h
-class VirtualRegister : public Register {
+class VirtualRegister : public Register, public std::enable_shared_from_this<VirtualRegister>{
 public:
     std::string hintName;
     int ssaId = -1;
@@ -16,6 +16,9 @@ public:
     std::shared_ptr<Register> physicalRegister = NULL;
     VirtualRegister(std::string str){
         hintName = str;
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

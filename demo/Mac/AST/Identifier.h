@@ -14,7 +14,7 @@ class Identifier : public ASTNode, public std::enable_shared_from_this<Identifie
 public:
     std::string name;
     size_t pos;
-//    SymbolInfo symbolInfo;
+    std::shared_ptr<SymbolNode> info;
     void acceptStr(std::string str){
         name = str;
     }

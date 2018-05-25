@@ -66,6 +66,7 @@ public:
         }
         std::shared_ptr<SymbolType> varType = node -> getType();
         ptr -> type = varType;
+        ptr -> table = currentNode;
         node -> scope = ptr;
         if(varType -> type == SymbolType::Null || varType -> type == SymbolType::VOID){
             std::cout<<"variable error: "<<node -> name<<std::endl;
@@ -392,6 +393,7 @@ public:
             std::cout<<"no such symbol: "<<node -> name<<std::endl;
             throw(0);
         }
+        node -> info = ptr;
 //        std::cout<<node -> name<<std::endl;
         std::shared_ptr<SymbolType> t = ptr -> type;
 //        std::cout<<node -> name<<" "<<t -> getFunction().size()<<std::endl;

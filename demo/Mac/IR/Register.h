@@ -8,8 +8,10 @@
 
 #ifndef Register_h
 #define Register_h
+#include "IRVisitor.h"
 class Register{
 public:
+    virtual void visited(std::shared_ptr<IRVisitor>){}
 };
 
 #endif /* IntValue_h */

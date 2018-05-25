@@ -8,13 +8,17 @@
 
 #ifndef StaticString_h
 #define StaticString_h
-class StaticString : public Register {
+#include "Register.h"
+class StaticString : public Register , public std::enable_shared_from_this<StaticString>{
 public:
     std::string hintName;
     std::string value;
     StaticString(std::string str){
         hintName = "string";
         value = str;
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

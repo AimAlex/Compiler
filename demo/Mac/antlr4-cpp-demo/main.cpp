@@ -21,6 +21,7 @@
 #include "ASTFunction.h"
 #include "SemanticCheck.h"
 #include "IRBuilder.h"
+#include "IRPrinter.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -52,5 +53,9 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(functioner);
     auto checker = std::make_shared<SemanticCheck>();
     (listener -> getProgram()) -> visited(checker);
+    auto Builder = std::make_shared<IRBuilder>();
+    (listener -> getProgram()) -> visited(Builder);
+    auto IRPrint = std::make_shared<IRPrinter>();
+    (Builder -> getRoot()) -> visited(IRPrint);
     return 0;
 }

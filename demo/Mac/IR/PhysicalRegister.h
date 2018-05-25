@@ -8,9 +8,11 @@
 
 #ifndef PhysicalRegister_h
 #define PhysicalRegister_h
-class PhysicalRegister : public Register{
+class PhysicalRegister : public Register, public std::enable_shared_from_this<PhysicalRegister>{
 public:
-    
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
+    }
 };
 
 #endif /* PhysicalRegister_h */

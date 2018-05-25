@@ -8,11 +8,14 @@
 
 #ifndef IntImmediate_h
 #define IntImmediate_h
-class IntImmediate : public Register {
+class IntImmediate : public Register, public std::enable_shared_from_this<IntImmediate>{
 public:
     int value;
     IntImmediate(int v){
         value = v;
+    }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
     }
 };
 

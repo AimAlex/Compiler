@@ -18,6 +18,9 @@ public:
         source = sour;
 //        reloadUsedRegisterCollection();
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Move>(shared_from_this()));
+    }
 };
 
 #endif /* Move_h */

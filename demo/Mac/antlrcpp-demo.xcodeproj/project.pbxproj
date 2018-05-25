@@ -127,6 +127,8 @@
 		4C87868D20A695DE00BCBE6F /* SystemCall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SystemCall.h; sourceTree = "<group>"; };
 		4C87868E20A6962E00BCBE6F /* UnaryOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UnaryOperation.h; sourceTree = "<group>"; };
 		4C87868F20A696C200BCBE6F /* VirtualRegister.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VirtualRegister.h; sourceTree = "<group>"; };
+		4C8F211720B83B6D00AF9007 /* IRPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRPrinter.h; sourceTree = "<group>"; };
+		4C8F211820B83BB600AF9007 /* IRVisitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8B20837FB700819419 /* MVisitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVisitor.h; path = ../generated/MVisitor.h; sourceTree = "<group>"; };
 		4CB2DA8C20837FB700819419 /* MBaseVisitor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MBaseVisitor.cpp; path = ../generated/MBaseVisitor.cpp; sourceTree = "<group>"; };
 		4CB2DA8D20837FB700819419 /* MLexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLexer.cpp; path = ../generated/MLexer.cpp; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 		37D727A11867AF1E007B6D10 = {
 			isa = PBXGroup;
 			children = (
+				4C8F211520B83B4200AF9007 /* VisitIR */,
 				4C87867620A57CA200BCBE6F /* IR */,
 				4C0A617520957C0C007E523D /* Symbol */,
 				4C0A61732093745A007E523D /* VisitAST */,
@@ -339,6 +342,15 @@
 				4C87868F20A696C200BCBE6F /* VirtualRegister.h */,
 			);
 			path = IR;
+			sourceTree = "<group>";
+		};
+		4C8F211520B83B4200AF9007 /* VisitIR */ = {
+			isa = PBXGroup;
+			children = (
+				4C8F211820B83BB600AF9007 /* IRVisitor.h */,
+				4C8F211720B83B6D00AF9007 /* IRPrinter.h */,
+			);
+			path = VisitIR;
 			sourceTree = "<group>";
 		};
 		4CB2DAB42085DB7900819419 /* AST */ = {

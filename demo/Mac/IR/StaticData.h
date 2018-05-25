@@ -8,9 +8,12 @@
 
 #ifndef StaticData_h
 #define StaticData_h
-class StaticData : public Register{
+class StaticData : public Register, public std::enable_shared_from_this<StaticData>{
 public:
     std::string hintName;
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(shared_from_this());
+    }
 };
 
 #endif /* StaticData_h */

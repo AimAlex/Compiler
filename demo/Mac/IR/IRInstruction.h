@@ -13,6 +13,7 @@
 #include "BasicBlock.h"
 #include "Function.h"
 #include <algorithm>
+#include "IRVisitor.h"
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
     std::shared_ptr<BasicBlock> curBlock = NULL;
@@ -98,11 +99,12 @@ public:
         removed = true;
     }
     
-    virtual std::string getType();
-    virtual std::shared_ptr<BasicBlock> getThen();
-    virtual std::shared_ptr<BasicBlock> getElse();
-    virtual std::shared_ptr<BasicBlock> getTarget();
-    virtual void addReturn(std::shared_ptr<Function>);
+    virtual std::string getType(){return "";}
+    virtual std::shared_ptr<BasicBlock> getThen(){return NULL;}
+    virtual std::shared_ptr<BasicBlock> getElse(){return NULL;}
+    virtual std::shared_ptr<BasicBlock> getTarget(){return NULL;}
+    virtual void addReturn(std::shared_ptr<Function>){return ;}
+    virtual void visited(std::shared_ptr<IRVisitor>){}
 };
 
 #endif /* IRInstruction_h */

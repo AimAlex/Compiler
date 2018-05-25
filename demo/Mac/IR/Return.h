@@ -24,6 +24,9 @@ public:
     void addReturn(std::shared_ptr<Function> func){
         func -> retInstruction.push_back(std::dynamic_pointer_cast<Return>(shared_from_this()));
     }
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Return>(shared_from_this()));
+    }
 };
 
 #endif /* Return_h */
