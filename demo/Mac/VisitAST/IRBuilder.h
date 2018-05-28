@@ -40,6 +40,7 @@ public:
     bool isFunctionArgDecl = false;
     std::shared_ptr<IRRoot> irRoot;
     std::shared_ptr<SymbolTable> GlobalSymbolTable;
+    std::map<std::string, std::shared_ptr<Function>> ownfunctions;
 
     std::map<std::shared_ptr<Register>, std::shared_ptr<Register>> curFuncStaticMap;
 
@@ -73,6 +74,12 @@ public:
     void visit(std::shared_ptr<Program> node){
         GlobalSymbolTable = node -> Table;
         irRoot = std::shared_ptr<IRRoot>(new IRRoot);
+        for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter= GlobalSymbolTable -> symbolTable.begin(); iter != GlobalSymbolTable -> symbolTable.end(); ++iter){
+            if(iter -> second -> type -> type == SymbolType::FUNCTION) {
+//                std::cout<<iter -> first<<std::endl;
+                ownfunctions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
+            }
+        }
         for(int i = 0; i < (node -> decls).size(); ++i) {
             (node -> decls)[i] -> visited(shared_from_this());
         }
@@ -108,9 +115,11 @@ public:
 
     void visit(std::shared_ptr<FunctionDecl> node){
         curFuncStaticMap.clear();
-        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
+        irRoot -> functions[node -> name] = ownfunctions[node -> name];
+        curFunction = irRoot -> functions[node -> name];
+//        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
         curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
-        irRoot -> functions[node -> name] = curFunction;
+//        irRoot -> functions[node -> name] = curFunction;
         curBlock = curFunction -> startBlock;
         isFunctionArgDecl = true;
         for(int i = 0; i < node -> parameterList.size(); ++i) {
@@ -623,7 +632,8 @@ public:
         std::shared_ptr<SymbolType> type = node -> name -> exprType;
 //        if(processBuiltinFunctionCall(node, type)) return;
         
-        std::shared_ptr<Function> func = irRoot -> functions[type -> getName()];
+        std::shared_ptr<Function> func = ownfunctions[type -> getName()];
+//        std::cout<<func -> name<<std::endl;
 //        std::cout<<type -> getName()<<std::endl;
         for(int i = 0; i < node -> parameters.size(); ++i) {
             node -> parameters[i] -> visited(shared_from_this());

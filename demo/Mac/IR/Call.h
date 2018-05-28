@@ -18,5 +18,9 @@ public:
         dest = Dest;
         func = Func;
     }
+    
+    void visited(std::shared_ptr<IRVisitor> visitor){
+        visitor -> visit(std::dynamic_pointer_cast<Call>(shared_from_this()));
+    }
 };
 #endif /* Call_h */
