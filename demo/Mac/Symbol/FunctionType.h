@@ -32,7 +32,7 @@ public:
         }
         return vec;
     }
-    
+    std::string getName(){return name;}
 };
 
 

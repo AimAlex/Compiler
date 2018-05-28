@@ -28,6 +28,7 @@
 #include "StaticString.h"
 #include "HeapAllocate.h"
 #include "IntComparison.h"
+#include "Call.h"
 #define INTSIZE 8
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
@@ -425,18 +426,6 @@ public:
         }
     }
 
-    void visit(std::shared_ptr<NewExpr> node){
-        std::shared_ptr<Register> reg(new VirtualRegister(""));
-        if(node -> exprType -> type == SymbolType::ClASS){
-
-        }
-        else{
-            bool getaddress = getAddress;
-            getAddress = false;
-//
-        }
-    }
-
     void selfIncDec(std::shared_ptr<ASTNode> body, std::shared_ptr<ASTNode> node, bool isInc, bool isPostfix){
         bool isMemOp = body -> needMemoryAccess();
         bool getaddr = getAddress;
@@ -619,15 +608,49 @@ public:
             std::shared_ptr<IRInstruction> (new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
     }
-
-    void visit(std::shared_ptr<ArrayTypeNode> node){};
-    void visit(std::shared_ptr<PrimitiveTypeNode> node){};
+    void visit(std::shared_ptr<NewExpr> node){
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
+        if(node -> exprType -> type == SymbolType::ClASS){
+            
+        }
+        else{
+            bool getaddress = getAddress;
+            getAddress = false;
+            //
+        }
+    }
+    void visit(std::shared_ptr<FunctionCall> node){
+        std::shared_ptr<SymbolType> type = node -> name -> exprType;
+//        if(processBuiltinFunctionCall(node, type)) return;
+        
+        std::shared_ptr<Function> func = irRoot -> functions[type -> getName()];
+//        std::cout<<type -> getName()<<std::endl;
+        for(int i = 0; i < node -> parameters.size(); ++i) {
+            node -> parameters[i] -> visited(shared_from_this());
+        }
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
+        std::shared_ptr<Call> call(new Call(curBlock, reg, func));
+//        if (node -> argThis != NULL) { // for builtin string & array function
+//            node -> argThis -> visited(shared_from_this());
+//            call -> appendArg(node -> argThis -> intValue);
+//        }
+        for(int i = 0; i < node -> parameters.size(); ++i) {
+            call -> args.push_back(node -> parameters[i] -> intValue);
+        }
+        call -> append(curBlock);
+        node -> intValue = reg;
+        
+        if(node -> ifTrue != NULL){
+            std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+        }
+    }
     void visit(std::shared_ptr<ClassDecl> node){};
     void visit(std::shared_ptr<ClassConstructor> node){};
-    void visit(std::shared_ptr<FunctionCall> node){};
     void visit(std::shared_ptr<MemberAccess> node){};
-    void visit(std::shared_ptr<ClassTypeNode> node){};
+    void visit(std::shared_ptr<ClassTypeNode>){};
     void visit(std::shared_ptr<EmptyExpr>){};
+    void visit(std::shared_ptr<ArrayTypeNode>){};
+    void visit(std::shared_ptr<PrimitiveTypeNode>){};
 };
 
 #endif /* IRBuilder_h */

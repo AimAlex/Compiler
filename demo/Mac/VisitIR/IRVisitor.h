@@ -27,6 +27,7 @@ class Return;
 class StaticString;
 class StaticSpace;
 class HeapAllocate;
+class Call;
 
 class IRVisitor{
 public:
@@ -56,6 +57,7 @@ public:
 
     virtual void visit(std::shared_ptr<StaticSpace> node) = 0;
     virtual void visit(std::shared_ptr<StaticString> node) = 0;
+    virtual void visit(std::shared_ptr<Call> node) = 0;
 };
 
 #endif /* IRVisitor_h */

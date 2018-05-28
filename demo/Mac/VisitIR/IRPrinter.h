@@ -269,6 +269,19 @@ public:
             std::cout<<"@"<<dataId(node)<<std::endl;
         }
     }
+    void visit(std::shared_ptr<Call> node){
+        std::cout<<"    ";
+        if(node -> dest != NULL){
+            node -> dest -> visited(shared_from_this());
+            std::cout<<" = ";
+        }
+        std::cout<<"call "<<node -> func -> name<<" ";
+        for(int i = 0; i < node -> args.size(); ++i) {
+            node -> args[i] -> visited(shared_from_this());
+            std::cout<<" ";
+        }
+        std::cout<<std::endl;
+    }
 };
 
 #endif /* IRPrinter_h */

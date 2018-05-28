@@ -88,6 +88,7 @@
 		37F135681B4AC02800E0CACF /* antlrcpp Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "antlrcpp Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		37F1356B1B4AC02800E0CACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37F1356C1B4AC02800E0CACF /* antlrcpp_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = antlrcpp_Tests.mm; sourceTree = "<group>"; };
+		4C0800C320BC420B00273A10 /* Call.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Call.h; sourceTree = "<group>"; };
 		4C0A6168209021BC007E523D /* Program.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		4C0A616A209033CC007E523D /* ClassTypeNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassTypeNode.h; sourceTree = "<group>"; };
 		4C0A616B20932F34007E523D /* ASTVisitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTVisitor.h; sourceTree = "<group>"; };
@@ -340,6 +341,7 @@
 				4C87868D20A695DE00BCBE6F /* SystemCall.h */,
 				4C87868E20A6962E00BCBE6F /* UnaryOperation.h */,
 				4C87868F20A696C200BCBE6F /* VirtualRegister.h */,
+				4C0800C320BC420B00273A10 /* Call.h */,
 			);
 			path = IR;
 			sourceTree = "<group>";
