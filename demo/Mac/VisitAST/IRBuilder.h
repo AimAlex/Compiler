@@ -78,6 +78,7 @@ public:
     }
 
     void visit(std::shared_ptr<VariableDecl> node){
+//        std::cout<<node -> name<<std::endl;
         std::shared_ptr<SymbolNode> info = node -> scope -> table -> symbolTable[node -> name];
         if(node -> scope -> table == GlobalSymbolTable){
             std::shared_ptr<Register> data(new StaticSpace(node -> name, info -> type -> getsize()));
@@ -308,7 +309,7 @@ public:
         getAddress = getAddr;
 
         std::shared_ptr<Register> tmp(new IntImmediate(node -> array -> exprType -> getsize()));
-        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
         std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::MUL, node -> subscript -> intValue, tmp)) -> append(curBlock);
         std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::ADD, node -> array -> intValue, reg));
         if(getAddress) {
@@ -333,7 +334,7 @@ public:
         }
 
         node -> body -> visited(shared_from_this());
-        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
         switch (node -> op) {
             case UnaryExpr::INC:
                 selfIncDec(node -> body, node, true, false);
@@ -425,7 +426,7 @@ public:
     }
 
     void visit(std::shared_ptr<NewExpr> node){
-        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
         if(node -> exprType -> type == SymbolType::ClASS){
 
         }
@@ -457,7 +458,7 @@ public:
         }
 
         std::shared_ptr<Register> one(new IntImmediate(1));
-        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
 
         if(isPostfix){
             std::shared_ptr<IRInstruction> (new Move(curBlock, reg, body -> intValue)) -> append(curBlock);
@@ -558,7 +559,7 @@ public:
                 break;
         }
 
-        std::shared_ptr<Register> reg(new VirtualRegister(NULL));
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
         std::shared_ptr<IRInstruction>(new IntComparison(curBlock, reg, Op, node -> lhs -> intValue, node -> rhs -> intValue)) -> append(curBlock);
         if(node -> ifTrue != NULL) {
             std::shared_ptr<IRInstruction>(new Branch(curBlock, reg, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
@@ -606,7 +607,7 @@ public:
                 break;
         }
 
-        std::shared_ptr<Register>reg (new VirtualRegister (NULL));
+        std::shared_ptr<Register>reg (new VirtualRegister (""));
         node -> intValue = reg;
         std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, Op, node -> lhs -> intValue, node -> rhs -> intValue)) -> append(curBlock);
     }

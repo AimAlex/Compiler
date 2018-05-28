@@ -14,6 +14,9 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    std::string getHintName(){
+        return hintName;
+    }
 };
 
 #endif /* StaticData_h */
