@@ -66,7 +66,9 @@ public:
         for(std::map<std::string, std::shared_ptr<Register>>::iterator iter = node -> strings.begin(); iter != (node -> strings.end()); ++iter) {
             iter -> second -> visited(shared_from_this());
         }
-        
+        for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = node -> classList.begin(); iter != node -> classList.end(); ++iter){
+            iter -> second -> visited(shared_from_this());
+        }
         definingStatic = false;
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             iter -> second -> visited(shared_from_this());
@@ -282,7 +284,12 @@ public:
         }
         std::cout<<std::endl;
     }
-    void visit(std::shared_ptr<ClassRoot> node) {}
+    void visit(std::shared_ptr<ClassRoot> node) {
+        node -> constructor -> visited(shared_from_this());
+        for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != node -> functions.end(); ++iter) {
+            iter -> second -> visited(shared_from_this());
+        }
+    }
 };
 
 #endif /* IRPrinter_h */

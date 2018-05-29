@@ -120,8 +120,13 @@ public:
 
     void visit(std::shared_ptr<FunctionDecl> node){
         curFuncStaticMap.clear();
-        irRoot -> functions[node -> name] = ownfunctions[node -> name];
-        curFunction = irRoot -> functions[node -> name];
+        if(currentClass != NULL){
+            curFunction = currentClass -> functions[node -> name];
+        }
+        else{
+            irRoot -> functions[node -> name] = ownfunctions[node -> name];
+            curFunction = irRoot -> functions[node -> name];
+        }
 //        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
         curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
 //        irRoot -> functions[node -> name] = curFunction;
@@ -684,60 +689,43 @@ public:
     
     void visit(std::shared_ptr<ClassConstructor> node){
         curFuncStaticMap.clear();
-//        irRoot -> functions[node -> name] = ownfunctions[node -> name];
         curFunction = currentClass -> constructor;
-//        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
-//        curBlock = curFunction -> startBlock;
-//        std::shared_ptr<Register> reg(new VirtualRegister(node -> name));
-//        curFunction -> argVarRegList.push_back(reg);
-//        node -> body -> visited(shared_from_this());
-//        if(!curBlock -> ended){
-//            if(curFunction -> type -> returnType -> type == SymbolType::VOID){
-//                std::shared_ptr<Return> (new Return(curBlock, NULL)) -> end(curBlock);
-//            }
-//            else{
-//                std::shared_ptr<Return>(new Return(curBlock, std::shared_ptr<Register>(new IntImmediate(0)))) -> end(curBlock);
-//            }
-//        }
-//        if(curFunction -> retInstruction .size() > 1){
-//            std::shared_ptr<BasicBlock> exitBlock = std::shared_ptr<BasicBlock> (new BasicBlock(curFunction, curFunction -> name + "_exit"));
-//            std::shared_ptr<VirtualRegister> retReg;
-//            if(node -> functiontype -> returnType -> type == SymbolType::VOID){
-//                retReg = NULL;
-//            }
-//            else{
-//                retReg = std::shared_ptr<VirtualRegister>(new VirtualRegister("retValue"));
-//            }
-//            std::vector<std::shared_ptr<Return>> retInstructions(curFunction -> retInstruction);
-//            for(int i = 0; i < retInstructions.size(); ++i){
-//                std::shared_ptr<BasicBlock> Block = retInstructions[i] -> curBlock;
-//                if(retInstructions[i] -> ret != NULL){
-//                    retInstructions[i] -> prepend(std::shared_ptr<IRInstruction>(new Move(Block, retReg, retInstructions[i] -> ret)));
-//                }
-//                retInstructions[i] -> remove();
-//                std::shared_ptr<IRInstruction> (new Jump(Block, exitBlock)) -> end(Block);
-//            }
-//            if(curFunction -> retInstruction.size() != 0) std::cout<<"fuck"<<std::endl;
-//            std::shared_ptr<IRInstruction> (new Return(exitBlock, retReg)) -> end(exitBlock);
-//            curFunction -> exitBlock = exitBlock;
-//        }
-//        else{
-//            curFunction -> exitBlock = curFunction -> retInstruction[0] -> curBlock;
-//        }
+        //        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
+        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
+        //        irRoot -> functions[node -> name] = curFunction;
+        curBlock = curFunction -> startBlock;
+        isFunctionArgDecl = true;
+        std::shared_ptr<Register> reg(new VirtualRegister(node -> name));
+        curFunction -> argVarRegList.push_back(reg);
+        isFunctionArgDecl = false;
+        node -> body -> visited(shared_from_this());
+        if(!curBlock -> ended){
+            std::shared_ptr<Return> (new Return(curBlock, NULL)) -> end(curBlock);
+        }
+        
+        curFunction -> exitBlock = curFunction -> retInstruction[0] -> curBlock;
 //        if(curFunction -> retInstruction.size() != 1) std::cout<<"fuck"<<std::endl;
-//        
-//        int resize = 0;
-//        std::vector<std::shared_ptr<BasicBlock>> vec(curFunction -> getReversePreOrder());
-//        for(int i = 0 ;i < curFunction -> exitBlock -> predecessor.size(); ++i) {
-//            std::vector<std::shared_ptr<BasicBlock>>::iterator iter = find(vec.begin(), vec.end(), curFunction -> exitBlock -> predecessor[i]);
-//            if(iter == vec.end()) continue;
-//            curFunction -> exitBlock -> predecessor[resize] = *iter;
-//            ++resize;
-//        }
-//        curFunction -> exitBlock -> predecessor.resize(resize + 1);
-//        curFunction = NULL;
+        
+        int resize = 0;
+        std::vector<std::shared_ptr<BasicBlock>> vec(curFunction -> getReversePreOrder());
+        for(int i = 0 ;i < curFunction -> exitBlock -> predecessor.size(); ++i) {
+            std::vector<std::shared_ptr<BasicBlock>>::iterator iter = find(vec.begin(), vec.end(), curFunction -> exitBlock -> predecessor[i]);
+            if(iter == vec.end()) continue;
+            curFunction -> exitBlock -> predecessor[resize] = *iter;
+            ++resize;
+        }
+        curFunction -> exitBlock -> predecessor.resize(resize + 1);
+        curFunction = NULL;
     }
-    void visit(std::shared_ptr<MemberAccess> node){};
+    void visit(std::shared_ptr<MemberAccess> node){
+        bool getaddr = getAddress;
+        getAddress = false;
+        node -> record -> visited(shared_from_this());
+        getAddress = getaddr;
+        
+        std::shared_ptr<Register> addr = node -> record -> intValue;
+        
+    }
     void visit(std::shared_ptr<ClassTypeNode>){};
     void visit(std::shared_ptr<EmptyExpr>){};
     void visit(std::shared_ptr<ArrayTypeNode>){};

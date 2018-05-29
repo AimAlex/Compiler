@@ -39,7 +39,12 @@ public:
     std::string builtinFunctionHackName;
     
     Function(std::shared_ptr<FunctionType> function){
-        retsize = function -> returnType -> getsize();
+        if(function -> returnType == NULL){
+            retsize = 0;
+        }
+        else{
+            retsize = function -> returnType -> getsize();
+        }
         name = function -> name;
         type = function;
 //        startBlock = std::shared_ptr<BasicBlock> (new BasicBlock(shared_from_this(), name + "_entry"))
