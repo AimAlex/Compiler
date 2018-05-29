@@ -94,6 +94,7 @@
 		4C0A616B20932F34007E523D /* ASTVisitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTVisitor.h; sourceTree = "<group>"; };
 		4C0A617420937477007E523D /* ASTPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTPrinter.h; sourceTree = "<group>"; };
 		4C0A617620958170007E523D /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
+		4C2D272820BD4DF000C57360 /* ClassRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassRoot.h; sourceTree = "<group>"; };
 		4C7184D22095820200BAD3FD /* SymbolNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolNode.h; sourceTree = "<group>"; };
 		4C7184D52095BB1300BAD3FD /* ClassType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassType.h; sourceTree = "<group>"; };
 		4C7184D62095BB6500BAD3FD /* VariableType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariableType.h; sourceTree = "<group>"; };
@@ -101,7 +102,6 @@
 		4C7184DA2095C75100BAD3FD /* ArrayType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArrayType.h; sourceTree = "<group>"; };
 		4C7184DC2095E1B000BAD3FD /* ASTClass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTClass.h; sourceTree = "<group>"; };
 		4C7184DD2096B01400BAD3FD /* SymbolType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolType.h; sourceTree = "<group>"; };
-		4C7184DE2096BEC900BAD3FD /* ConstructorType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConstructorType.h; sourceTree = "<group>"; };
 		4C7184DF2096C36C00BAD3FD /* ASTFunction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTFunction.h; sourceTree = "<group>"; };
 		4C87867420A57BC800BCBE6F /* IRBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRBuilder.h; sourceTree = "<group>"; };
 		4C87867720A6877100BCBE6F /* BasicBlock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BasicBlock.h; sourceTree = "<group>"; };
@@ -309,7 +309,6 @@
 				4C7184D62095BB6500BAD3FD /* VariableType.h */,
 				4C7184D82095BBF700BAD3FD /* FunctionType.h */,
 				4C7184DA2095C75100BAD3FD /* ArrayType.h */,
-				4C7184DE2096BEC900BAD3FD /* ConstructorType.h */,
 			);
 			path = Symbol;
 			sourceTree = "<group>";
@@ -321,6 +320,7 @@
 				4C87867820A6881C00BCBE6F /* IRInstruction.h */,
 				4C87867920A6888900BCBE6F /* Function.h */,
 				4C87867A20A688F400BCBE6F /* IRRoot.h */,
+				4C2D272820BD4DF000C57360 /* ClassRoot.h */,
 				4C87867B20A689E400BCBE6F /* Register.h */,
 				4C87867C20A68E5A00BCBE6F /* BinaryOperation.h */,
 				4C87867D20A68F3700BCBE6F /* Branch.h */,

@@ -18,8 +18,8 @@ public:
     virtual std::string getName(){return "NULL";}
     virtual int getDemension(){return 0;}
     virtual std::vector<std::shared_ptr<SymbolType>> getFunction(){std::vector<std::shared_ptr<SymbolType>> vec; return vec;}
-    int getsize(){
-        return 4;
+    virtual int getsize(){
+        return 0;
     }
     bool sameType(std::shared_ptr<SymbolType> ptr){
         if(this -> type == Null && ptr -> type == ClASS){

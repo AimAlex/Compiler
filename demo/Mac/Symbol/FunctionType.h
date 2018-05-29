@@ -24,6 +24,9 @@ public:
         name = str;
 //        std::cout<<vec.size()<<std::endl;
     }
+    FunctionType(std::string str){
+        name = str;
+    }
     std::vector<std::shared_ptr<SymbolType>> getFunction(){
         std::vector<std::shared_ptr<SymbolType>> vec;
         vec.push_back(returnType);

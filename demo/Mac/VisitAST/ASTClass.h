@@ -13,7 +13,6 @@
 #include <vector>
 #include "ClassType.h"
 #include "FunctionType.h"
-#include "ConstructorType.h"
 class ASTClass : public ASTVisitor, public std::enable_shared_from_this<ASTClass>{
 public:
     std::shared_ptr<SymbolTable> currentTable;
@@ -67,7 +66,7 @@ public:
         ptr -> table = std::shared_ptr<SymbolTable>  (new SymbolTable());
         ptr -> table -> name = node -> name;
         node -> constructorTable = ptr -> table;
-        ptr -> type = std::shared_ptr<SymbolType> (new ConstructorType());
+        ptr -> type = std::shared_ptr<SymbolType> (new FunctionType(node -> name));
         ptr -> type -> type = SymbolType::CONSTRUCT;
     }
     void visit(std::shared_ptr<ArrayAccess>){}

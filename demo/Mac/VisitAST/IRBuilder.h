@@ -29,6 +29,7 @@
 #include "HeapAllocate.h"
 #include "IntComparison.h"
 #include "Call.h"
+#include "ClassRoot.h"
 #define INTSIZE 8
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
@@ -41,6 +42,7 @@ public:
     std::shared_ptr<IRRoot> irRoot;
     std::shared_ptr<SymbolTable> GlobalSymbolTable;
     std::map<std::string, std::shared_ptr<Function>> ownfunctions;
+    std::shared_ptr<ClassRoot> currentClass = NULL;
 
     std::map<std::shared_ptr<Register>, std::shared_ptr<Register>> curFuncStaticMap;
 
@@ -78,6 +80,9 @@ public:
             if(iter -> second -> type -> type == SymbolType::FUNCTION) {
 //                std::cout<<iter -> first<<std::endl;
                 ownfunctions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
+            }
+            if(iter -> second -> type -> type == SymbolType::CLASSTYPE){
+                irRoot -> classList[iter -> first] = std::shared_ptr<ClassRoot>(new ClassRoot(iter -> first));
             }
         }
         for(int i = 0; i < (node -> decls).size(); ++i) {
@@ -628,6 +633,7 @@ public:
             //
         }
     }
+    
     void visit(std::shared_ptr<FunctionCall> node){
         std::shared_ptr<SymbolType> type = node -> name -> exprType;
 //        if(processBuiltinFunctionCall(node, type)) return;
@@ -654,8 +660,83 @@ public:
             std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
     }
-    void visit(std::shared_ptr<ClassDecl> node){};
-    void visit(std::shared_ptr<ClassConstructor> node){};
+    
+    void visit(std::shared_ptr<ClassDecl> node){
+        std::shared_ptr<SymbolNode> classTable = GlobalSymbolTable -> symbolTable[node -> name];
+        std::shared_ptr<ClassRoot> curClass = irRoot -> classList[node -> name];
+        currentClass = curClass;
+        for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter = classTable -> table -> symbolTable.begin(); iter != classTable -> table -> symbolTable.end(); ++iter){
+            classTable -> table -> memorysize += iter -> second -> type -> getsize();
+            if(iter -> second -> type -> type == SymbolType::FUNCTION) {
+                curClass -> functions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
+            }
+            if(iter -> second -> type -> type == SymbolType::CONSTRUCT) {
+                curClass -> constructor = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
+            }
+        }
+        curClass -> size = classTable -> table -> memorysize;
+        node -> classconstructor -> visited(shared_from_this());
+        for(int i = 0; i < node -> functionMembers.size(); ++i) {
+            node -> functionMembers[i] -> visited(shared_from_this());
+        }
+        currentClass = NULL;
+    }
+    
+    void visit(std::shared_ptr<ClassConstructor> node){
+        curFuncStaticMap.clear();
+//        irRoot -> functions[node -> name] = ownfunctions[node -> name];
+        curFunction = currentClass -> constructor;
+//        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
+//        curBlock = curFunction -> startBlock;
+//        std::shared_ptr<Register> reg(new VirtualRegister(node -> name));
+//        curFunction -> argVarRegList.push_back(reg);
+//        node -> body -> visited(shared_from_this());
+//        if(!curBlock -> ended){
+//            if(curFunction -> type -> returnType -> type == SymbolType::VOID){
+//                std::shared_ptr<Return> (new Return(curBlock, NULL)) -> end(curBlock);
+//            }
+//            else{
+//                std::shared_ptr<Return>(new Return(curBlock, std::shared_ptr<Register>(new IntImmediate(0)))) -> end(curBlock);
+//            }
+//        }
+//        if(curFunction -> retInstruction .size() > 1){
+//            std::shared_ptr<BasicBlock> exitBlock = std::shared_ptr<BasicBlock> (new BasicBlock(curFunction, curFunction -> name + "_exit"));
+//            std::shared_ptr<VirtualRegister> retReg;
+//            if(node -> functiontype -> returnType -> type == SymbolType::VOID){
+//                retReg = NULL;
+//            }
+//            else{
+//                retReg = std::shared_ptr<VirtualRegister>(new VirtualRegister("retValue"));
+//            }
+//            std::vector<std::shared_ptr<Return>> retInstructions(curFunction -> retInstruction);
+//            for(int i = 0; i < retInstructions.size(); ++i){
+//                std::shared_ptr<BasicBlock> Block = retInstructions[i] -> curBlock;
+//                if(retInstructions[i] -> ret != NULL){
+//                    retInstructions[i] -> prepend(std::shared_ptr<IRInstruction>(new Move(Block, retReg, retInstructions[i] -> ret)));
+//                }
+//                retInstructions[i] -> remove();
+//                std::shared_ptr<IRInstruction> (new Jump(Block, exitBlock)) -> end(Block);
+//            }
+//            if(curFunction -> retInstruction.size() != 0) std::cout<<"fuck"<<std::endl;
+//            std::shared_ptr<IRInstruction> (new Return(exitBlock, retReg)) -> end(exitBlock);
+//            curFunction -> exitBlock = exitBlock;
+//        }
+//        else{
+//            curFunction -> exitBlock = curFunction -> retInstruction[0] -> curBlock;
+//        }
+//        if(curFunction -> retInstruction.size() != 1) std::cout<<"fuck"<<std::endl;
+//        
+//        int resize = 0;
+//        std::vector<std::shared_ptr<BasicBlock>> vec(curFunction -> getReversePreOrder());
+//        for(int i = 0 ;i < curFunction -> exitBlock -> predecessor.size(); ++i) {
+//            std::vector<std::shared_ptr<BasicBlock>>::iterator iter = find(vec.begin(), vec.end(), curFunction -> exitBlock -> predecessor[i]);
+//            if(iter == vec.end()) continue;
+//            curFunction -> exitBlock -> predecessor[resize] = *iter;
+//            ++resize;
+//        }
+//        curFunction -> exitBlock -> predecessor.resize(resize + 1);
+//        curFunction = NULL;
+    }
     void visit(std::shared_ptr<MemberAccess> node){};
     void visit(std::shared_ptr<ClassTypeNode>){};
     void visit(std::shared_ptr<EmptyExpr>){};

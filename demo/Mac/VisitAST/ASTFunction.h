@@ -13,7 +13,6 @@
 #include <vector>
 #include "ClassType.h"
 #include "FunctionType.h"
-#include "ConstructorType.h"
 class ASTFunction : public ASTVisitor, public std::enable_shared_from_this<ASTFunction>{
 public:
     std::vector<std::shared_ptr<SymbolTable>> currentTable;

@@ -282,6 +282,7 @@ public:
         }
         std::cout<<std::endl;
     }
+    void visit(std::shared_ptr<ClassRoot> node) {}
 };
 
 #endif /* IRPrinter_h */

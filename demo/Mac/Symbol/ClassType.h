@@ -19,7 +19,6 @@ public:
     std::string getName(){
         return name;
     }
-//    SymbolTable members;
 };
 
 #endif /* ClassType_h */

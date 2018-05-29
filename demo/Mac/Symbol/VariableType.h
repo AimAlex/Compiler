@@ -24,6 +24,10 @@ public:
     int getDemension(){
         return demension;
     }
+    
+    int getsize(){
+        return 8;
+    }
 };
 
 #endif /* VariableType_h */
