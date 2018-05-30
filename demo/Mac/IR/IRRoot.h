@@ -22,6 +22,18 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    std::shared_ptr<Function> builtinPrintString;
+    std::shared_ptr<Function> builtinPrintlnString;
+    std::shared_ptr<Function> builtinPrintInt;
+    std::shared_ptr<Function> builtinPrintlnInt;
+    std::shared_ptr<Function> builtinToString;
+    std::shared_ptr<Function> builtinGetString;
+    std::shared_ptr<Function> builtinGetInt;
+    std::shared_ptr<Function> builtinStringConcat;
+    std::shared_ptr<Function> builtinStringEqual;
+    std::shared_ptr<Function> builtinStringLess;
+    std::shared_ptr<Function> builtinStringParseInt;
+    std::shared_ptr<Function> builtinStringSubString;
 };
 
 #endif /* IRRoot_h */

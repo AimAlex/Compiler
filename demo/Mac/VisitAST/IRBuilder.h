@@ -386,7 +386,7 @@ public:
             case BinaryExpr::LE:
             case BinaryExpr::GE:
                 if(node -> lhs -> exprType -> type == SymbolType::STRING){
-//
+                    stringBinaryExpr(node);
                 }
                 else{
                     intRelationExpr(node);
@@ -403,7 +403,7 @@ public:
             case BinaryExpr::BITWISE_OR:
             case BinaryExpr::BITWISE_AND:
                 if (node -> lhs -> exprType -> type == SymbolType::STRING){
-//
+                    stringBinaryExpr(node);
                 }
                 else {
                     intArithmeticExpr(node);
@@ -414,6 +414,44 @@ public:
         }
     }
 
+    void stringBinaryExpr(std::shared_ptr<BinaryExpr> node){
+        node -> lhs -> visited(shared_from_this());
+        node -> rhs -> visited(shared_from_this());
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
+        node -> intValue = reg;
+        std::shared_ptr<Call> call;
+        std::shared_ptr<ASTNode> tmp;
+        switch (node -> op) {
+            case BinaryExpr::ADD:
+                call = std::shared_ptr<Call>(new Call(curBlock, reg, irRoot -> builtinStringConcat));
+                break;
+            case BinaryExpr::EQ:
+                call = std::shared_ptr<Call>(new Call(curBlock, reg, irRoot -> builtinStringEqual));
+                break;
+            case BinaryExpr::LT:
+                call = std::shared_ptr<Call>(new Call(curBlock, reg, irRoot -> builtinStringLess));
+                break;
+            case BinaryExpr::GT:
+                tmp = node -> lhs;
+                node -> lhs = node -> rhs;
+                node -> rhs = tmp;
+                call = std::shared_ptr<Call>(new Call(curBlock, reg, irRoot -> builtinStringLess));
+                break;
+            default:
+                break;
+        }
+        call -> args.push_back(node -> lhs -> intValue);
+        call -> args.push_back(node -> rhs -> intValue);
+        call -> append(curBlock);
+        
+        if(node -> ifTrue != NULL){
+            std::shared_ptr<IRInstruction> (new Branch(curBlock, reg, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+        }
+        else{
+            node -> intValue = reg;
+        }
+    }
+    
     void visit(std::shared_ptr<BoolConst> node){
         node -> intValue = std::shared_ptr<Register>(new IntImmediate((int)node -> value));
     }
@@ -635,17 +673,6 @@ public:
             std::shared_ptr<IRInstruction> (new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
     }
-    void visit(std::shared_ptr<NewExpr> node){
-        std::shared_ptr<Register> reg(new VirtualRegister(""));
-        if(node -> exprType -> type == SymbolType::ClASS){
-            
-        }
-        else{
-            bool getaddress = getAddress;
-            getAddress = false;
-            //
-        }
-    }
     
     void visit(std::shared_ptr<FunctionCall> node){
         std::shared_ptr<SymbolType> type = node -> name -> exprType;
@@ -768,6 +795,29 @@ public:
             }
         }
     }
+    
+    void visit(std::shared_ptr<NewExpr> node){
+        std::shared_ptr<Register> reg(new VirtualRegister(""));
+        if(node -> exprType -> type == SymbolType::ClASS && node -> exprType -> getDemension() == 0){
+            std::shared_ptr<IRInstruction> (new HeapAllocate(curBlock, reg, std::shared_ptr<Register> (new IntImmediate(GlobalSymbolTable -> symbolTable[node -> exprType -> getName()] -> table -> memorysize)))) -> append(curBlock);
+            std::shared_ptr<ClassRoot> newClass = irRoot->classList[node -> exprType -> getName()];
+            if(newClass -> constructor != NULL){
+                std::shared_ptr<Call> call(new Call(curBlock, std::shared_ptr<Register>( new VirtualRegister("")), newClass -> constructor));
+                call -> args.push_back(reg);
+                call -> append(curBlock);
+            }
+            node -> intValue = reg;
+        }
+        else{
+            std::cout<<node -> exprType -> getDemension()<<std::endl;
+            newArray(0, reg, node);
+        }
+    }
+    
+    void newArray(int n, std::shared_ptr<Register>, std::shared_ptr<NewExpr> node){
+        
+    }
+    
     void visit(std::shared_ptr<ClassTypeNode>){};
     void visit(std::shared_ptr<EmptyExpr>){};
     void visit(std::shared_ptr<ArrayTypeNode>){};
