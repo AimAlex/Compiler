@@ -16,6 +16,7 @@ public:
     std::shared_ptr<SymbolType> type;
     std::shared_ptr<SymbolTable> table;
     std::shared_ptr<Register> reg = NULL;
+    int offset;
 };
 
 #endif /* SymbolNode_h */

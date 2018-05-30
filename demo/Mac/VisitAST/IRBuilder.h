@@ -122,6 +122,9 @@ public:
         curFuncStaticMap.clear();
         if(currentClass != NULL){
             curFunction = currentClass -> functions[node -> name];
+            std::shared_ptr<Register> reg(new VirtualRegister("this"));
+            currentClass -> reg = reg;
+            curFunction -> argVarRegList.push_back(reg);
         }
         else{
             irRoot -> functions[node -> name] = ownfunctions[node -> name];
@@ -513,6 +516,7 @@ public:
         if(isMemOp){
             addr = node -> lhs -> addressValue;
             offset = node -> lhs -> addressOffset;
+//            std::cout<<node -> lhs -> addressOffset<<std::endl;
         }
         else{
             addr = node -> lhs -> intValue;
@@ -622,7 +626,21 @@ public:
 
     void visit(std::shared_ptr<Identifier> node){
         std::shared_ptr<SymbolNode> info = node -> info;
-        node -> intValue = info -> reg;
+        if(node -> info -> table -> memorysize > 0){
+            if(getAddress){
+                node -> addressValue = currentClass -> reg;
+                node -> addressOffset = info -> offset;
+//                std::cout<<node -> name<<" "<<info -> table -> symbolTable["b"] -> offset<<std::endl;
+            }
+            else{
+                std::shared_ptr<Register> reg(new VirtualRegister(""));
+                node -> intValue = reg;
+                std::shared_ptr<IRInstruction>(new Load(curBlock, reg, info -> type -> getsize(), currentClass -> reg, info -> offset)) -> append(curBlock);
+            }
+        }
+        else{
+            node -> intValue = info -> reg;
+        }
         if(node -> ifTrue != NULL){
             std::shared_ptr<IRInstruction> (new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
@@ -671,7 +689,7 @@ public:
         std::shared_ptr<ClassRoot> curClass = irRoot -> classList[node -> name];
         currentClass = curClass;
         for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter = classTable -> table -> symbolTable.begin(); iter != classTable -> table -> symbolTable.end(); ++iter){
-            classTable -> table -> memorysize += iter -> second -> type -> getsize();
+            if(iter -> first == "this") continue;
             if(iter -> second -> type -> type == SymbolType::FUNCTION) {
                 curClass -> functions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
             }
@@ -680,7 +698,9 @@ public:
             }
         }
         curClass -> size = classTable -> table -> memorysize;
-        node -> classconstructor -> visited(shared_from_this());
+        if(node -> classconstructor != NULL){
+            node -> classconstructor -> visited(shared_from_this());
+        }
         for(int i = 0; i < node -> functionMembers.size(); ++i) {
             node -> functionMembers[i] -> visited(shared_from_this());
         }
@@ -695,7 +715,8 @@ public:
         //        irRoot -> functions[node -> name] = curFunction;
         curBlock = curFunction -> startBlock;
         isFunctionArgDecl = true;
-        std::shared_ptr<Register> reg(new VirtualRegister(node -> name));
+        std::shared_ptr<Register> reg(new VirtualRegister("this"));
+        currentClass -> reg = reg;
         curFunction -> argVarRegList.push_back(reg);
         isFunctionArgDecl = false;
         node -> body -> visited(shared_from_this());
@@ -717,6 +738,7 @@ public:
         curFunction -> exitBlock -> predecessor.resize(resize + 1);
         curFunction = NULL;
     }
+    
     void visit(std::shared_ptr<MemberAccess> node){
         bool getaddr = getAddress;
         getAddress = false;
@@ -724,7 +746,22 @@ public:
         getAddress = getaddr;
         
         std::shared_ptr<Register> addr = node -> record -> intValue;
-        
+        std::shared_ptr<ClassType> t = std::dynamic_pointer_cast<ClassType>(node -> record -> exprType);
+        std::shared_ptr<SymbolNode> info = GlobalSymbolTable -> symbolTable[node -> record -> exprType -> getName()] -> table -> symbolTable[node -> member];
+//        std::cout<<node -> member<<std::endl;
+        if(getAddress){
+            node -> addressValue = addr;
+            node -> addressOffset = info -> offset;
+//            std::cout<<info -> offset<<std::endl;;
+        }
+        else{
+            std::shared_ptr<VirtualRegister> reg (new VirtualRegister(""));
+            node -> intValue = reg;
+//            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, , addr,)) -> append(curBlock);
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+        }
     }
     void visit(std::shared_ptr<ClassTypeNode>){};
     void visit(std::shared_ptr<EmptyExpr>){};

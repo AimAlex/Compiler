@@ -45,6 +45,7 @@ public:
         thisType -> type = SymbolType::ClASS;
         std::shared_ptr<SymbolNode> thisNode(new SymbolNode());
         thisNode -> type = thisType;
+        thisNode -> table = currentTable;
         ptr -> table -> symbolTable["this"] = thisNode;
         if(node -> classconstructor != NULL){
             currentTable = ptr -> table;

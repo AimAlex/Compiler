@@ -21,6 +21,13 @@ public:
     void visited(std::shared_ptr<ASTVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    
+    bool needMemoryAccess(){
+        if(this -> info -> table -> memorysize > 0){
+            return true;
+        }
+        return false;
+    }
 };
 
 #endif /* Identifier_h */

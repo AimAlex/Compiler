@@ -18,6 +18,7 @@ public:
     int size;
     std::map<std::string, std::shared_ptr<Function>> functions;
     std::shared_ptr<Function> constructor;
+    std::shared_ptr<Register> reg;
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }

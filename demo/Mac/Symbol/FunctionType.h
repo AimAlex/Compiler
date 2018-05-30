@@ -36,6 +36,9 @@ public:
         return vec;
     }
     std::string getName(){return name;}
+    int getsize(){
+        return 0;
+    }
 };
 
 

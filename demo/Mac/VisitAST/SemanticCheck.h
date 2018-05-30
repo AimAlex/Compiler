@@ -36,6 +36,12 @@ public:
             (node -> classconstructor) -> visited(shared_from_this());
         }
         tableList.pop_back();
+        for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter = ptr -> symbolTable.begin(); iter != ptr -> symbolTable.end(); ++iter){
+            if(iter -> first == "this") continue;
+            iter -> second -> offset =  ptr -> memorysize;
+            //            std::cout<<iter -> first << " "<< iter -> second -> offset<<std::endl;
+            ptr -> memorysize += iter -> second -> type -> getsize();
+        }
     }
     void visit(std::shared_ptr<FunctionDecl> node){
         if(node == NULL) return;
@@ -145,6 +151,7 @@ public:
         }
         tableList.pop_back();
     }
+    
     void visit(std::shared_ptr<IfState> node){
         if(node == NULL) return;
         std::shared_ptr<SymbolTable> ptr(new SymbolTable());
@@ -169,6 +176,7 @@ public:
             tableList.pop_back();
         }
     }
+    
     void visit(std::shared_ptr<ForLoop> node){
         if(node == NULL) return ;
         std::shared_ptr<SymbolTable> ptr(new SymbolTable());
@@ -199,6 +207,7 @@ public:
         loopStack.pop();
         tableList.pop_back();
     }
+    
     void visit(std::shared_ptr<WhileLoop> node){
         if(node == NULL) return ;
         std::shared_ptr<SymbolTable> ptr(new SymbolTable());

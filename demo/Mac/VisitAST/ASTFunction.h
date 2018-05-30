@@ -36,6 +36,7 @@ public:
         ptr -> type = varType;
         ptr -> table = currentNode;
         node -> scope = ptr;
+//        std::cout<<ptr -> table -> name<<std::endl;
         if(varType -> type == SymbolType::ClASS){
             if(currentTable[0] -> symbolTable.find(varType -> getName()) == currentTable[0] -> symbolTable.end()){
                 std::cout<<"no such class: "<<varType -> getName()<<std::endl;

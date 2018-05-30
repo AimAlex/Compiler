@@ -241,11 +241,11 @@ public:
         std::cout<<" "<<node -> offset << std::endl;
     }
     void visit(std::shared_ptr<Store> node){
-        std::cout<<"    store"<<node -> size;
+        std::cout<<"    store"<<node -> size<<" ";
         node -> address -> visited(shared_from_this());
         std::cout<<" ";
         node -> value -> visited(shared_from_this());
-        std::cout<<" 0"<< std::endl;
+        std::cout<<" "<<node -> offset<< std::endl;
     }
     void visit(std::shared_ptr<Move> node){
         std::cout<<"    ";
@@ -285,7 +285,9 @@ public:
         std::cout<<std::endl;
     }
     void visit(std::shared_ptr<ClassRoot> node) {
-        node -> constructor -> visited(shared_from_this());
+        if(node -> constructor != NULL){
+            node -> constructor -> visited(shared_from_this());
+        }
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != node -> functions.end(); ++iter) {
             iter -> second -> visited(shared_from_this());
         }
