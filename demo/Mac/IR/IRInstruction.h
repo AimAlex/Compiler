@@ -42,7 +42,7 @@ public:
     
     void append(std::shared_ptr<BasicBlock> block) {
         if (block -> ended) {
-            std::cout<<"Cannot append instruction after a basic block ends."<<std::endl;
+            std::cout<<block -> hintName<<" Cannot append instruction after a basic block ends."<<std::endl;
             throw (0);
         }
         if (block -> last != NULL) {
@@ -74,6 +74,7 @@ public:
     
     void cleanEnd(std::shared_ptr<BasicBlock> block) {
         block -> ended = false;
+//        std::cout<<getType()<<std::endl;
         if (getType() == "Branch") {
             block -> delSuccessor(getThen());
             block -> delSuccessor(getElse());
@@ -90,8 +91,8 @@ public:
     }
     
     void remove() {
-        if(!removed) return;
-        if (getType() == "Branch") curBlock -> last -> cleanEnd(curBlock);
+        if(removed) return;
+        if (getType() == "Branch" || getType() == "Return" || getType() == "Jump") curBlock -> last -> cleanEnd(curBlock);
         if (prev != NULL) prev -> next = next;
         if (next != NULL) next -> prev = prev;
         if (curBlock -> head == shared_from_this()) curBlock -> head = next;

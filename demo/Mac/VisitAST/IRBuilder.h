@@ -158,6 +158,7 @@ public:
                 retReg = std::shared_ptr<VirtualRegister>(new VirtualRegister("retValue"));
             }
             std::vector<std::shared_ptr<Return>> retInstructions(curFunction -> retInstruction);
+//            std::cout<<retInstructions.size()<<std::endl;
             for(int i = 0; i < retInstructions.size(); ++i){
                 std::shared_ptr<BasicBlock> Block = retInstructions[i] -> curBlock;
                 if(retInstructions[i] -> ret != NULL){
