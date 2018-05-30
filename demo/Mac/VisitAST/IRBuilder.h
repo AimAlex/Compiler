@@ -78,7 +78,7 @@ public:
         irRoot = std::shared_ptr<IRRoot>(new IRRoot);
         for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter= GlobalSymbolTable -> symbolTable.begin(); iter != GlobalSymbolTable -> symbolTable.end(); ++iter){
             if(iter -> second -> type -> type == SymbolType::FUNCTION) {
-//                std::cout<<iter -> first<<std::endl;
+                //                std::cout<<iter -> first<<std::endl;
                 ownfunctions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
             }
             if(iter -> second -> type -> type == SymbolType::CLASSTYPE){
@@ -660,9 +660,19 @@ public:
     
     void visit(std::shared_ptr<FunctionCall> node){
         std::shared_ptr<SymbolType> type = node -> name -> exprType;
+        std::shared_ptr<Function> func;
 //        if(processBuiltinFunctionCall(node, type)) return;
-        
-        std::shared_ptr<Function> func = ownfunctions[type -> getName()];
+        if(node -> name -> gettype() == "MemberAccess"){
+            std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
+            std::shared_ptr<SymbolType> recordType = memberAccess -> record -> exprType;
+            func = irRoot -> classList[recordType -> getName()] -> functions[memberAccess -> member];
+        }
+        else if(currentClass != NULL && currentClass -> functions.find(type -> getName()) != currentClass -> functions.end()){
+            func = currentClass -> functions[type -> getName()];
+        }
+        else{
+            func = ownfunctions[type -> getName()];
+        }
 //        std::cout<<func -> name<<std::endl;
 //        std::cout<<type -> getName()<<std::endl;
         for(int i = 0; i < node -> parameters.size(); ++i) {
@@ -674,6 +684,12 @@ public:
 //            node -> argThis -> visited(shared_from_this());
 //            call -> appendArg(node -> argThis -> intValue);
 //        }
+        if(node -> name -> gettype() == "MemberAccess"){
+            call -> args.push_back(node -> name -> intValue);
+        }
+        else if(currentClass != NULL && currentClass -> functions.find(type -> getName()) != currentClass -> functions.end()){
+            call -> args.push_back(currentClass -> reg);
+        }
         for(int i = 0; i < node -> parameters.size(); ++i) {
             call -> args.push_back(node -> parameters[i] -> intValue);
         }
@@ -750,7 +766,13 @@ public:
         std::shared_ptr<ClassType> t = std::dynamic_pointer_cast<ClassType>(node -> record -> exprType);
         std::shared_ptr<SymbolNode> info = GlobalSymbolTable -> symbolTable[node -> record -> exprType -> getName()] -> table -> symbolTable[node -> member];
 //        std::cout<<node -> member<<std::endl;
-        if(getAddress){
+        if(info -> type -> type == SymbolType::FUNCTION){
+            node -> intValue = node -> record -> intValue;
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+        }
+        else if(getAddress){
             node -> addressValue = addr;
             node -> addressOffset = info -> offset;
 //            std::cout<<info -> offset<<std::endl;;

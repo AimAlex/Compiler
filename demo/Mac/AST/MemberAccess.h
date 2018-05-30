@@ -26,6 +26,9 @@ public:
     bool needMemoryAccess(){
         return true;
     }
+    std::string gettype(){
+        return "MemberAccess";
+    }
 };
 
 #endif /* MemberAccess_h */
