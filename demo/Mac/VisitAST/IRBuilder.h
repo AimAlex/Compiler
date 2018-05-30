@@ -41,7 +41,6 @@ public:
     bool isFunctionArgDecl = false;
     std::shared_ptr<IRRoot> irRoot;
     std::shared_ptr<SymbolTable> GlobalSymbolTable;
-    std::map<std::string, std::shared_ptr<Function>> ownfunctions;
     std::shared_ptr<ClassRoot> currentClass = NULL;
 
     std::map<std::shared_ptr<Register>, std::shared_ptr<Register>> curFuncStaticMap;
@@ -75,16 +74,7 @@ public:
     
     void visit(std::shared_ptr<Program> node){
         GlobalSymbolTable = node -> Table;
-        irRoot = std::shared_ptr<IRRoot>(new IRRoot);
-        for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter= GlobalSymbolTable -> symbolTable.begin(); iter != GlobalSymbolTable -> symbolTable.end(); ++iter){
-            if(iter -> second -> type -> type == SymbolType::FUNCTION) {
-                //                std::cout<<iter -> first<<std::endl;
-                ownfunctions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
-            }
-            if(iter -> second -> type -> type == SymbolType::CLASSTYPE){
-                irRoot -> classList[iter -> first] = std::shared_ptr<ClassRoot>(new ClassRoot(iter -> first));
-            }
-        }
+        irRoot = node -> irRoot;
         for(int i = 0; i < (node -> decls).size(); ++i) {
             (node -> decls)[i] -> visited(shared_from_this());
         }
@@ -127,7 +117,6 @@ public:
             curFunction -> argVarRegList.push_back(reg);
         }
         else{
-            irRoot -> functions[node -> name] = ownfunctions[node -> name];
             curFunction = irRoot -> functions[node -> name];
         }
 //        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
@@ -663,6 +652,7 @@ public:
         std::shared_ptr<Function> func;
 //        if(processBuiltinFunctionCall(node, type)) return;
         if(node -> name -> gettype() == "MemberAccess"){
+            node -> name -> visited(shared_from_this());
             std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
             std::shared_ptr<SymbolType> recordType = memberAccess -> record -> exprType;
             func = irRoot -> classList[recordType -> getName()] -> functions[memberAccess -> member];
@@ -671,7 +661,7 @@ public:
             func = currentClass -> functions[type -> getName()];
         }
         else{
-            func = ownfunctions[type -> getName()];
+            func = irRoot -> functions[type -> getName()];
         }
 //        std::cout<<func -> name<<std::endl;
 //        std::cout<<type -> getName()<<std::endl;
@@ -705,15 +695,6 @@ public:
         std::shared_ptr<SymbolNode> classTable = GlobalSymbolTable -> symbolTable[node -> name];
         std::shared_ptr<ClassRoot> curClass = irRoot -> classList[node -> name];
         currentClass = curClass;
-        for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter = classTable -> table -> symbolTable.begin(); iter != classTable -> table -> symbolTable.end(); ++iter){
-            if(iter -> first == "this") continue;
-            if(iter -> second -> type -> type == SymbolType::FUNCTION) {
-                curClass -> functions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
-            }
-            if(iter -> second -> type -> type == SymbolType::CONSTRUCT) {
-                curClass -> constructor = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
-            }
-        }
         curClass -> size = classTable -> table -> memorysize;
         if(node -> classconstructor != NULL){
             node -> classconstructor -> visited(shared_from_this());
@@ -766,6 +747,7 @@ public:
         std::shared_ptr<ClassType> t = std::dynamic_pointer_cast<ClassType>(node -> record -> exprType);
         std::shared_ptr<SymbolNode> info = GlobalSymbolTable -> symbolTable[node -> record -> exprType -> getName()] -> table -> symbolTable[node -> member];
 //        std::cout<<node -> member<<std::endl;
+        std::cout<<info -> type -> getName()<<std::endl;
         if(info -> type -> type == SymbolType::FUNCTION){
             node -> intValue = node -> record -> intValue;
             if(node -> ifTrue != NULL){

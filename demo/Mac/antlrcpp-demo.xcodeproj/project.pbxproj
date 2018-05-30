@@ -95,6 +95,7 @@
 		4C0A617420937477007E523D /* ASTPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASTPrinter.h; sourceTree = "<group>"; };
 		4C0A617620958170007E523D /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
 		4C2D272820BD4DF000C57360 /* ClassRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassRoot.h; sourceTree = "<group>"; };
+		4C2D272B20BED01D00C57360 /* IRPrepare.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRPrepare.h; sourceTree = "<group>"; };
 		4C7184D22095820200BAD3FD /* SymbolNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolNode.h; sourceTree = "<group>"; };
 		4C7184D52095BB1300BAD3FD /* ClassType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassType.h; sourceTree = "<group>"; };
 		4C7184D62095BB6500BAD3FD /* VariableType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariableType.h; sourceTree = "<group>"; };
@@ -294,6 +295,7 @@
 				4C7184DC2095E1B000BAD3FD /* ASTClass.h */,
 				4C7184DF2096C36C00BAD3FD /* ASTFunction.h */,
 				4CC74041209750AF00174EF7 /* SemanticCheck.h */,
+				4C2D272B20BED01D00C57360 /* IRPrepare.h */,
 				4C87867420A57BC800BCBE6F /* IRBuilder.h */,
 			);
 			path = VisitAST;
