@@ -19,9 +19,16 @@ public:
     bool definingStatic = true;
     std::map<std::shared_ptr<BasicBlock>, bool> BlockVisited;
     
-    std::string newId(std::string name, std::map<std::string, int> counter){
-        int cnt = counter[name] + 1;
-        counter[name] = cnt;
+    std::string newRegId(std::string name){
+        int cnt = counterReg[name] + 1;
+        counterReg[name] = cnt;
+        if(cnt == 1) return name;
+        return name + "_" + std::to_string(cnt);
+    }
+    
+    std::string newId(std::string name){
+        int cnt = counterBlock[name] + 1;
+        counterBlock[name] = cnt;
         if(cnt == 1) return name;
         return name + "_" + std::to_string(cnt);
     }
@@ -33,10 +40,10 @@ public:
                 regMap[reg] = regId(std::dynamic_pointer_cast<VirtualRegister>(reg -> oldName));
             }
             else if(reg -> hintName.empty()){
-                regMap[reg] = newId("t", counterReg);
+                regMap[reg] = newRegId("t");
             }
             else{
-                regMap[reg] = newId(reg -> hintName, counterReg);
+                regMap[reg] = newRegId(reg -> hintName);
             }
         }
         return regMap[reg];
@@ -45,7 +52,7 @@ public:
     std::string labelId(std::shared_ptr<BasicBlock> Block){
         std::map<std::shared_ptr<BasicBlock>, std::string>::iterator iter = labelMap.find(Block);
         if(iter == labelMap.end()){
-            labelMap[Block] = newId(Block -> hintName, counterBlock);
+            labelMap[Block] = newId(Block -> hintName);
         }
         return labelMap[Block];
     }
@@ -53,13 +60,13 @@ public:
     std::string dataId(std::shared_ptr<Register> data) {
         std::map<std::shared_ptr<Register>, std::string>::iterator iter = dataMap.find(data);
         if(iter == dataMap.end()){
-            dataMap[data] = newId(data -> getHintName(), counterBlock);
+            dataMap[data] = newId(data -> getHintName());
         }
         return dataMap[data];
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-        std::cout<<"root"<<std::endl;
+//        std::cout<<"root"<<std::endl;
         for(int i = 0; i < node -> dataList.size(); ++i) {
             node -> dataList[i] -> visited(shared_from_this());
         }
@@ -93,10 +100,10 @@ public:
         std::cout<<"func "<<node -> name<<" ";
         for(int i = 0; i < node -> argVarRegList.size(); ++i) {
             std::shared_ptr<VirtualRegister> reg = std::dynamic_pointer_cast<VirtualRegister>(node -> argVarRegList[i]);
-            std::cout<< "$ "<<regId(reg);
+            std::cout<< "$"<<regId(reg)<<" ";
         }
         std::cout<<"{"<<std::endl;
-        std::vector<std::shared_ptr<BasicBlock>> reversePostOrder(node -> getReversePreOrder());
+        std::vector<std::shared_ptr<BasicBlock>> reversePostOrder(node -> getReversePostOrder());
         for(int i = 0; i < reversePostOrder.size(); ++i) {
             reversePostOrder[i] -> visited(shared_from_this());
         }
@@ -120,7 +127,7 @@ public:
                 op = "div";
                 break;
             case BinaryOperation::MOD:
-                op = "mod";
+                op = "rem";
                 break;
             case BinaryOperation::SHL:
                 op = "shl";
@@ -141,7 +148,7 @@ public:
                 break;
         }
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op;
+        std::cout<<" = "<<op<<" ";
         node -> lhs -> visited(shared_from_this());
         std::cout<<" ";
         node -> rhs -> visited(shared_from_this());
@@ -161,7 +168,7 @@ public:
                 break;
         }
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op;
+        std::cout<<" = "<<op<<" ";
         node -> operand -> visited(shared_from_this());
         std::cout<<std::endl;
     }
@@ -170,28 +177,28 @@ public:
         std::string op;
         switch (node -> cond) {
             case IntComparison::EQ:
-                op = "eq";
+                op = "seq";
                 break;
             case IntComparison::NE:
-                op = "ne";
+                op = "sne";
                 break;
             case IntComparison::GT:
-                op = "gt";
+                op = "sgt";
                 break;
             case IntComparison::GE:
-                op = "ge";
+                op = "sge";
                 break;
             case IntComparison::LT:
-                op = "lt";
+                op = "slt";
                 break;
             case IntComparison::LE:
-                op = "le";
+                op = "sle";
                 break;
             default:
                 break;
         }
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op;
+        std::cout<<" = "<<op<<" ";
         node -> lhs -> visited(shared_from_this());
         std::cout<<" ";
         node -> rhs -> visited(shared_from_this());
@@ -218,7 +225,7 @@ public:
         std::cout<<std::endl<<std::endl;
     }
     void visit(std::shared_ptr<Jump> node){
-        std::cout<<"    jump "<<labelId(node -> target)<<std::endl<<std::endl;
+        std::cout<<"    jump %"<<labelId(node -> target)<<std::endl<<std::endl;
     }
     
     void visit(std::shared_ptr<VirtualRegister> node){
@@ -236,12 +243,12 @@ public:
     void visit(std::shared_ptr<Load> node){
         std::cout<<"    ";
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = load "<<node -> size;
+        std::cout<<" = load "<<node -> size<<" ";
         node -> address -> visited(shared_from_this());
         std::cout<<" "<<node -> offset << std::endl;
     }
     void visit(std::shared_ptr<Store> node){
-        std::cout<<"    store"<<node -> size<<" ";
+        std::cout<<"    store "<<node -> size<<" ";
         node -> address -> visited(shared_from_this());
         std::cout<<" ";
         node -> value -> visited(shared_from_this());
@@ -260,7 +267,7 @@ public:
             std::cout<<"space @"<<dataId(node)<<" "<<node -> length<<std::endl;
         }
         else{
-            std::cout<<"@"<<dataId(node)<<std::endl;
+            std::cout<<"@"<<dataId(node);
         }
     }
     void visit(std::shared_ptr<StaticString> node){
@@ -268,7 +275,7 @@ public:
             std::cout<<"asciiz @"<<dataId(node)<<" "<<node -> value<<std::endl;
         }
         else{
-            std::cout<<"@"<<dataId(node)<<std::endl;
+            std::cout<<"@"<<dataId(node);
         }
     }
     void visit(std::shared_ptr<Call> node){

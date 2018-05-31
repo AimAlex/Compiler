@@ -67,11 +67,32 @@ public:
         Visited.clear();
     }
     
+    void calcReversePostOrder() {
+        reversePostOrder.clear();
+        Visited.clear();
+        dfsPostOrder(startBlock);
+        std::reverse(reversePostOrder.begin(), reversePostOrder.end());
+        Visited.clear();
+    }
+    
+    void dfsPostOrder(std::shared_ptr<BasicBlock> node) {
+        if (std::find(Visited.begin(), Visited.end(), node) != Visited.end()) return;
+        Visited.push_back(node);
+        for(int i = 0; i < node -> successor.size(); ++i){
+            dfsPostOrder(node -> successor[i]);
+        }
+        reversePostOrder.push_back(node);
+    }
+    
     std::vector<std::shared_ptr<BasicBlock>> getReversePreOrder() {
         if (reversePreOrder.size() == 0) calcReversePreOrder();
         return reversePreOrder;
     }
     
+    std::vector<std::shared_ptr<BasicBlock>> getReversePostOrder() {
+        if (reversePostOrder.size() == 0) calcReversePostOrder();
+        return reversePostOrder;
+    }
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }

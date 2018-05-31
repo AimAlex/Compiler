@@ -17,6 +17,9 @@ public:
         hintName = str;
         length = l;
     }
+    std::string getHintName(){
+        return hintName;
+    }
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }

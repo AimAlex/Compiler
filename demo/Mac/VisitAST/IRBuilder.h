@@ -120,7 +120,7 @@ public:
             curFunction = irRoot -> functions[node -> name];
         }
 //        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
-        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
+        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + ".entry"));
 //        irRoot -> functions[node -> name] = curFunction;
         curBlock = curFunction -> startBlock;
         isFunctionArgDecl = true;
@@ -529,8 +529,8 @@ public:
 
     void binaryAssign(std::shared_ptr<BinaryExpr> node) {
         if(node -> rhs -> isLogicalExpression()){
-            node -> rhs -> ifTrue = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
-            node -> rhs -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
+            node -> rhs -> ifTrue = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
+            node -> rhs -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
         }
         node -> rhs -> visited(shared_from_this());
 
@@ -677,7 +677,12 @@ public:
     void visit(std::shared_ptr<FunctionCall> node){
         std::shared_ptr<SymbolType> type = node -> name -> exprType;
         std::shared_ptr<Function> func;
-//        if(processBuiltinFunctionCall(node, type)) return;
+        if(buildinFunctionCall(node, type)) {
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+            return;
+        }
         if(node -> name -> gettype() == "MemberAccess"){
             node -> name -> visited(shared_from_this());
             std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
@@ -690,17 +695,12 @@ public:
         else{
             func = irRoot -> functions[type -> getName()];
         }
-//        std::cout<<func -> name<<std::endl;
-//        std::cout<<type -> getName()<<std::endl;
         for(int i = 0; i < node -> parameters.size(); ++i) {
             node -> parameters[i] -> visited(shared_from_this());
         }
         std::shared_ptr<Register> reg(new VirtualRegister(""));
         std::shared_ptr<Call> call(new Call(curBlock, reg, func));
-//        if (node -> argThis != NULL) { // for builtin string & array function
-//            node -> argThis -> visited(shared_from_this());
-//            call -> appendArg(node -> argThis -> intValue);
-//        }
+
         if(node -> name -> gettype() == "MemberAccess"){
             call -> args.push_back(node -> name -> intValue);
         }
@@ -716,6 +716,128 @@ public:
         if(node -> ifTrue != NULL){
             std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
+    }
+    
+    bool buildinFunctionCall(std::shared_ptr<FunctionCall> node, std::shared_ptr<SymbolType> type){
+        bool bakGetAddress = getAddress;
+        getAddress = false;
+        if(node -> name -> gettype() == "MemberAccess"){
+            node -> name -> visited(shared_from_this());
+            std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
+            if(memberAccess -> record -> exprType -> type == SymbolType::STRING){
+                if(memberAccess -> member == "length"){
+                    std::cout<<"length"<<std::endl;
+//                    new Call(curBlock, reg, func)
+                }
+                else if(memberAccess -> member == "substring"){
+//                    std::cout<<"substring"<<std::endl;
+                    node -> parameters[0] -> visited(shared_from_this());
+                    node -> parameters[1] -> visited(shared_from_this());
+                    std::shared_ptr<Register> reg(new VirtualRegister("substr"));
+                    std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> builtinStringSubString));
+                    call -> args.push_back(memberAccess -> intValue);
+                    call -> args.push_back(node -> parameters[0] -> intValue);
+                    call -> args.push_back(node -> parameters[1] -> intValue);
+                    call -> append(curBlock);
+                    node -> intValue = reg;
+                }
+                else if(memberAccess -> member == "parseInt"){
+//                    std::cout<<"parseInt"<<std::endl;
+                    std::shared_ptr<Register> reg(new VirtualRegister("parsedInt"));
+                    std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> builtinStringParseInt));
+                    call -> args.push_back(memberAccess -> intValue);
+                    call -> append(curBlock);
+                    node -> intValue = reg;
+                }
+                else if(memberAccess -> member == "ord"){
+//                    std::cout<<"ord"<<std::endl;
+                    node -> parameters[0] -> visited(shared_from_this());
+                    std::shared_ptr<Register> reg(new VirtualRegister("ord"));
+                    std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, reg, BinaryOperation::ADD, memberAccess -> intValue, node -> parameters[0] -> intValue)) -> append(curBlock);
+                    std::shared_ptr<IRInstruction>(new Load(curBlock, reg, 1, reg, 4)) -> append(curBlock);
+                    node -> intValue = reg;
+                }
+                else{
+                    getAddress = bakGetAddress;
+                    return false;
+                }
+            }
+            else if(memberAccess -> record -> exprType -> getDemension() != 0){
+                if(memberAccess -> member == "size"){
+                    
+                }
+                else{
+                    getAddress = bakGetAddress;
+                    return false;
+                }
+            }
+            else{
+                getAddress = bakGetAddress;
+                return false;
+            }
+        }
+        else{
+            if(type -> getName() == "print"){
+                processPrint(node -> parameters[0], 0);
+            }
+            else if(type -> getName() == "println"){
+                processPrint(node -> parameters[0], 1);
+            }
+            else if(type -> getName() == "getString"){
+                std::shared_ptr<Register> reg(new VirtualRegister("gottemString"));
+                std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> builtinGetString));
+                call -> append(curBlock);
+                node -> intValue = reg;
+            }
+            else if(type -> getName() == "getInt"){
+                std::shared_ptr<Register> reg(new VirtualRegister("gottemInt"));
+                std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> builtinGetInt));
+                call -> append(curBlock);
+                node -> intValue = reg;
+            }
+            else if(type -> getName() == "toString"){
+                node -> parameters[0] -> visited(shared_from_this());
+                std::shared_ptr<Register> reg(new VirtualRegister("tostring"));
+                std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> builtinToString));
+                call -> args.push_back(node -> parameters[0] -> intValue);
+                call -> append(curBlock);
+                node -> intValue = reg;
+            }
+            else{
+                return false;
+            }
+        }
+        getAddress = bakGetAddress;
+        return true;
+    }
+    
+    void processPrint(std::shared_ptr<ASTNode> node, bool ln){
+        if(node -> gettype() == "BinaryExpr"){
+            std::shared_ptr<BinaryExpr> expr = std::dynamic_pointer_cast<BinaryExpr>(node);
+            processPrint(expr -> lhs, false);
+            processPrint(expr -> rhs, ln);
+        }
+        else if(node -> gettype() == "FunctionCall" && std::dynamic_pointer_cast<FunctionCall>(node) -> name -> exprType -> getName() == "toString"){
+            std::shared_ptr<ASTNode> expr = std::dynamic_pointer_cast<FunctionCall>(node) -> parameters[0];
+            expr -> visited(shared_from_this());
+            std::shared_ptr<Call> call;
+            if(ln){
+                call = std::shared_ptr<Call>(new Call(curBlock, NULL, irRoot -> builtinPrintlnInt));
+            }
+            else{
+                call = std::shared_ptr<Call>(new Call(curBlock, NULL, irRoot -> builtinPrintInt));
+            }
+            call -> args.push_back(expr -> intValue);
+            call -> append(curBlock);
+        }
+        else{
+            node -> visited(shared_from_this());
+            std::shared_ptr<Call> call (new Call(curBlock, NULL, irRoot -> builtinPrintlnInt));
+            call -> args.push_back(node -> intValue);
+            call -> append(curBlock);
+        }
+            
+            //        else if(node -> gettype() == "FunctionCall" && std::dynamic_pointer_cast<FunctionCall>(node) -> name -> exprType -> type == SymbolType::FUNCTION && std::dynamic_pointer_cast<FunctionCall>(node) -> name -> gettype() == "MemberAccess" && std::dynamic_pointer_cast<MemberAccess>(std::dynamic_pointer_cast<FunctionCall>(node) -> name) -> exprType -> type == SymbolType::STRING)
     }
     
     void visit(std::shared_ptr<ClassDecl> node){
@@ -736,7 +858,7 @@ public:
         curFuncStaticMap.clear();
         curFunction = currentClass -> constructor;
         //        curFunction = std::shared_ptr<Function> (new Function(node -> functiontype));
-        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + "_entry"));
+        curFunction -> startBlock = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, node -> name + ".entry"));
         //        irRoot -> functions[node -> name] = curFunction;
         curBlock = curFunction -> startBlock;
         isFunctionArgDecl = true;
@@ -770,11 +892,25 @@ public:
         node -> record -> visited(shared_from_this());
         getAddress = getaddr;
         
+        if(node -> record -> exprType -> type == SymbolType::STRING){
+            node -> intValue = node -> record -> intValue;
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+            return ;
+        }
+        else if(node -> record -> exprType -> getDemension() != 0){
+            node -> intValue = node -> record -> intValue;
+            if(node -> ifTrue != NULL){
+                std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
+            }
+            return ;
+        }
         std::shared_ptr<Register> addr = node -> record -> intValue;
         std::shared_ptr<ClassType> t = std::dynamic_pointer_cast<ClassType>(node -> record -> exprType);
         std::shared_ptr<SymbolNode> info = GlobalSymbolTable -> symbolTable[node -> record -> exprType -> getName()] -> table -> symbolTable[node -> member];
 //        std::cout<<node -> member<<std::endl;
-        std::cout<<info -> type -> getName()<<std::endl;
+//        std::cout<<info -> type -> getName()<<std::endl;
         if(info -> type -> type == SymbolType::FUNCTION){
             node -> intValue = node -> record -> intValue;
             if(node -> ifTrue != NULL){
@@ -789,7 +925,7 @@ public:
         else{
             std::shared_ptr<VirtualRegister> reg (new VirtualRegister(""));
             node -> intValue = reg;
-//            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, , addr,)) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, info -> type -> getsize(), addr, info -> offset)) -> append(curBlock);
             if(node -> ifTrue != NULL){
                 std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
             }
