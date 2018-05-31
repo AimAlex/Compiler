@@ -324,7 +324,7 @@ public:
         std::shared_ptr<Register> tmp(new IntImmediate(node -> array -> exprType -> getsize()));
         std::shared_ptr<Register> reg(new VirtualRegister(""));
         std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::MUL, node -> subscript -> intValue, tmp)) -> append(curBlock);
-        std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::ADD, node -> array -> intValue, reg));
+        std::shared_ptr<IRInstruction>(new BinaryOperation(curBlock, reg, BinaryOperation::ADD, node -> array -> intValue, reg)) -> append(curBlock);
         if(getAddress) {
             node -> addressValue = reg;
             node -> addressOffset = INTSIZE;
@@ -764,7 +764,9 @@ public:
             }
             else if(memberAccess -> record -> exprType -> getDemension() != 0){
                 if(memberAccess -> member == "size"){
-                    
+                    std::shared_ptr<Register> reg(new VirtualRegister("size"));
+                    std::shared_ptr<IRInstruction>(new Load(curBlock, reg, INTSIZE, memberAccess -> intValue, 0)) -> append(curBlock);
+                    node -> intValue = reg;
                 }
                 else{
                     getAddress = bakGetAddress;
@@ -945,13 +947,67 @@ public:
             node -> intValue = reg;
         }
         else{
-            std::cout<<node -> exprType -> getDemension()<<std::endl;
             newArray(0, reg, node);
+            node -> intValue = reg;
         }
     }
     
-    void newArray(int n, std::shared_ptr<Register>, std::shared_ptr<NewExpr> node){
+    void newArray(int order, std::shared_ptr<Register> reg, std::shared_ptr<NewExpr> node){
+        if(order == node -> exprType -> getDemension()) return;
+        if(node -> dim[order] == NULL) return;
+        node -> dim[order] -> visited(shared_from_this());
         
+        
+        std::shared_ptr<Register> dim = node -> dim[order] -> intValue;
+        if(order == 0){
+            std::shared_ptr<BinaryOperation> (new BinaryOperation(curBlock, reg, BinaryOperation::MUL, dim, std::shared_ptr<Register> (new IntImmediate(INTSIZE)))) -> append(curBlock);
+            std::shared_ptr<BinaryOperation>(new BinaryOperation(curBlock, reg, BinaryOperation::ADD, reg, std::shared_ptr<Register> (new IntImmediate(INTSIZE)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new HeapAllocate(curBlock, reg, reg)) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new Store(curBlock, dim, INTSIZE, reg, 0)) -> append(curBlock);
+            newArray(order + 1, reg, node);
+        }
+        else{
+            std::shared_ptr<Register> prevDim = node -> dim[order - 1] -> intValue;
+            std::shared_ptr<BasicBlock> BlockCond (new BasicBlock(curFunction, "for_cond"));
+            std::shared_ptr<BasicBlock> BlockLoop (new BasicBlock(curFunction, "for_loop"));
+            std::shared_ptr<BasicBlock> BlockStep (new BasicBlock(curFunction, "for_step"));
+            std::shared_ptr<BasicBlock> BlockAfter (new BasicBlock(curFunction, "for_after"));
+            
+            std::shared_ptr<BasicBlock> oldLoopCondBlock = curLoopStepBlock;
+            std::shared_ptr<BasicBlock> oldLoopAfterBlock = curLoopAfterBlock;
+            curLoopStepBlock = BlockStep;
+            curLoopAfterBlock = BlockAfter;
+            
+            std::shared_ptr<VirtualRegister> init_reg(new VirtualRegister("init_i"));
+            std::shared_ptr<IRInstruction> (new Move(curBlock, init_reg, std::shared_ptr<Register>(new IntImmediate(0)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new Jump(curBlock, BlockCond)) -> end(curBlock);
+            
+            curBlock = BlockCond;
+            std::shared_ptr<Register> cmp(new VirtualRegister(""));
+            std::shared_ptr<IRInstruction>(new IntComparison(curBlock, cmp, IntComparison::LT, init_reg, prevDim)) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new Branch(curBlock, cmp, BlockLoop, BlockAfter)) -> end(curBlock);
+            
+            curBlock = BlockLoop;
+            std::shared_ptr<Register> parReg(new VirtualRegister(""));
+            std::shared_ptr<Register> addrReg(new VirtualRegister(""));
+            std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, parReg, BinaryOperation::MUL, init_reg, std::shared_ptr<Register>(new IntImmediate(INTSIZE)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, parReg, BinaryOperation::ADD, reg, parReg)) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, addrReg, BinaryOperation::MUL, dim, std::shared_ptr<Register>(new IntImmediate(INTSIZE)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, addrReg, BinaryOperation::ADD, addrReg, std::shared_ptr<Register>(new IntImmediate(INTSIZE)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new HeapAllocate(curBlock, addrReg, addrReg)) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new Store(curBlock, dim, INTSIZE, addrReg, 0)) -> append(curBlock);
+            std::shared_ptr<IRInstruction>(new Store(curBlock, addrReg, INTSIZE, parReg, INTSIZE)) -> append(curBlock);
+            newArray(order + 1, addrReg, node);
+            std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockStep)) -> end(curBlock);
+            
+            curBlock = BlockStep;
+            std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, init_reg, BinaryOperation::ADD, init_reg, std::shared_ptr<Register>(new IntImmediate(1)))) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockCond)) -> end(curBlock);
+            
+            curLoopStepBlock = oldLoopCondBlock;
+            curLoopAfterBlock = oldLoopAfterBlock;
+            curBlock = BlockAfter;
+        }
     }
     
     void visit(std::shared_ptr<ClassTypeNode>){};
