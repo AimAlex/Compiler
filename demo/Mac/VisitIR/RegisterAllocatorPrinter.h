@@ -1,15 +1,16 @@
 //
-//  IRPrinter.h
+//  RegisterAllocatorPrinter.h
 //  antlrcpp-demo
 //
-//  Created by 李江贝 on 2018/5/25.
+//  Created by 李江贝 on 2018/6/1.
 //  Copyright © 2018 ANTLR4 Project. All rights reserved.
 //
 
-#ifndef IRPrinter_h
-#define IRPrinter_h
+#ifndef RegisterAllocatorPrinter_h
+#define RegisterAllocatorPrinter_h
 #include "IRVisitor.h"
-class IRPrinter : public IRVisitor, public std::enable_shared_from_this<IRPrinter>{
+#include "LRUAllocator.h"
+class RegisterAllocatorPrinter : public IRVisitor, public std::enable_shared_from_this<RegisterAllocatorPrinter>{
 public:
     std::map<std::shared_ptr<VirtualRegister>, std::string> regMap;
     std::map<std::string, int> counterReg;
@@ -66,7 +67,7 @@ public:
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-//        std::cout<<"root"<<std::endl;
+        //        std::cout<<"root"<<std::endl;
         for(int i = 0; i < node -> dataList.size(); ++i) {
             node -> dataList[i] -> visited(shared_from_this());
         }
@@ -231,7 +232,8 @@ public:
     void visit(std::shared_ptr<VirtualRegister> node){
         std::cout<<"$"<<regId(node);
     }
-
+    //    void visit(PhysicalRegister node);
+    //    void visit(StackSlot node);
     void visit(std::shared_ptr<HeapAllocate> node){
         std::cout<<"    ";
         node -> dest -> visited(shared_from_this());
@@ -298,9 +300,6 @@ public:
             iter -> second -> visited(shared_from_this());
         }
     }
-    
-    void visit(std::shared_ptr<PhysicalRegister>){}
-    void visit(std::shared_ptr<StackSlot>){}
 };
 
-#endif /* IRPrinter_h */
+#endif /* RegisterAllocatorPrinter_h */

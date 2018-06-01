@@ -29,6 +29,8 @@ class StaticSpace;
 class HeapAllocate;
 class Call;
 class ClassRoot;
+class StackSlot;
+class PhysicalRegister;
 
 class IRVisitor{
 public:
@@ -40,7 +42,6 @@ public:
     virtual void visit(std::shared_ptr<UnaryOperation> node) = 0;
     virtual void visit(std::shared_ptr<IntComparison> node) = 0;
     virtual void visit(std::shared_ptr<IntImmediate> node) = 0;
-//    void visit(Call node);
 //    void visit(SystemCall node);
 //    void visit(PhiInstruction node);
 //
@@ -49,8 +50,8 @@ public:
     virtual void visit(std::shared_ptr<Jump> node) = 0;
 
     virtual void visit(std::shared_ptr<VirtualRegister> node) = 0;
-//    void visit(PhysicalRegister node);
-//    void visit(StackSlot node);
+    virtual void visit(std::shared_ptr<PhysicalRegister> node) = 0;
+    virtual void visit(std::shared_ptr<StackSlot> node) = 0;
     virtual void visit(std::shared_ptr<HeapAllocate> node) = 0;
     virtual void visit(std::shared_ptr<Load> node) = 0;
     virtual void visit(std::shared_ptr<Store> node) = 0;

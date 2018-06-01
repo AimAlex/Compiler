@@ -23,7 +23,7 @@ public:
     std::shared_ptr<BasicBlock> exitBlock;
     std::shared_ptr<FunctionType> type;
     int retsize;
-    
+    int stackSize;
     std::vector<std::shared_ptr<BasicBlock>> reversePostOrder;
     std::vector<std::shared_ptr<BasicBlock>> reversePreOrder;
     std::vector<std::shared_ptr<BasicBlock>> DTPreOrder;

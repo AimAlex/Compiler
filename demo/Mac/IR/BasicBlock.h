@@ -23,7 +23,7 @@ public:
     std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>> phi;
     std::vector<std::shared_ptr<BasicBlock>> successor;
     std::vector<std::shared_ptr<BasicBlock>> predecessor;
-    
+
     std::vector<std::shared_ptr<BasicBlock>> DTChildren;
     
     BasicBlock(std::shared_ptr<Function> func, std::string str) {

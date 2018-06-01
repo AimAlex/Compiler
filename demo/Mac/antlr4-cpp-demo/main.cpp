@@ -23,6 +23,7 @@
 #include "IRBuilder.h"
 #include "IRPrinter.h"
 #include "IRPrepare.h"
+#include "RegisterAllocatorPrinter.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
