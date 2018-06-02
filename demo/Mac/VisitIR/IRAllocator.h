@@ -123,7 +123,7 @@ public:
     std::shared_ptr<PhysicalRegister> getReg(std::shared_ptr<Register> vr){
         if(phyRegMap.find(vr) != phyRegMap.end() && phyRegMap[vr] != NULL){
             for(int i = 1; i < 16; ++i) {
-                if(i == 3)  continue;
+                if(i == 3 || i == 6 || i == 7)  continue;
                 
                 if(i == phyRegMap[vr] -> no){
                     LRURegister[i] = 1;
@@ -139,7 +139,7 @@ public:
         int max = 0;
         int maxNo = 0;
         for(int i = 1; i < 16; ++i) {
-            if(i == 3)  continue;
+            if(i == 3 || i == 6 || i == 7)  continue;
             if(LRURegister[i] == 0){
                 maxNo = i;
                 max = -1;
@@ -163,6 +163,7 @@ public:
     void clearReg(int iscall){
         if(iscall == 0){
             for(int i = 0; i < 16; ++i) {
+                if(i ==7 || i == 6) continue;
                 if(phy2vir[i] != NULL && slots.find(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])) != slots.end()){
                     curInstruction -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])),  phyRegMap[phy2vir[i]])));
                     curInstruction -> prev -> visited(shared_from_this());
