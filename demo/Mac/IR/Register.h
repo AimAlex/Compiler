@@ -13,6 +13,7 @@ class Register{
 public:
     virtual void visited(std::shared_ptr<IRVisitor>){}
     virtual std::string getHintName(){return "";}
+    virtual std::string getType(){return "";}
 };
 
 #endif /* IntValue_h */

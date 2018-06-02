@@ -8,7 +8,7 @@
 
 #ifndef StackSlot_h
 #define StackSlot_h
-#include "Function.h"
+#include "Register.h"
 class StackSlot : public Register, public std::enable_shared_from_this<StackSlot> {
 public:
     std::shared_ptr<Function> parent;
@@ -23,6 +23,10 @@ public:
     
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
+    }
+    
+    std::string getType(){
+        return "StackSlot";
     }
 };
 

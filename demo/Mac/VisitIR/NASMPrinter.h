@@ -9,8 +9,7 @@
 #ifndef RegisterAllocatorPrinter_h
 #define RegisterAllocatorPrinter_h
 #include "IRVisitor.h"
-#include "LRUAllocator.h"
-class RegisterAllocatorPrinter : public IRVisitor, public std::enable_shared_from_this<RegisterAllocatorPrinter>{
+class NASMPrinter : public IRVisitor, public std::enable_shared_from_this<NASMPrinter>{
 public:
     std::map<std::shared_ptr<VirtualRegister>, std::string> regMap;
     std::map<std::string, int> counterReg;
@@ -19,6 +18,8 @@ public:
     std::map<std::string, int> counterBlock;
     bool definingStatic = true;
     std::map<std::shared_ptr<BasicBlock>, bool> BlockVisited;
+    std::string jump;
+    int stackSize;
     
     std::string newRegId(std::string name){
         int cnt = counterReg[name] + 1;
@@ -77,16 +78,22 @@ public:
         for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = node -> classList.begin(); iter != node -> classList.end(); ++iter){
             iter -> second -> visited(shared_from_this());
         }
+        for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
+            std::cout<<"global "<<iter -> second -> name<<std::endl;
+        }
         definingStatic = false;
+        std::cout<<"SECTION .text"<<std::endl;
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             iter -> second -> visited(shared_from_this());
         }
+        std::cout<<"SECTION .data"<<std::endl;
+        std::cout<<"SECTION .bbs"<<std::endl;
     }
     
     void visit(std::shared_ptr<BasicBlock> node){
         if(BlockVisited.find(node) != BlockVisited.end()) return;
         BlockVisited[node] = 1;
-        std::cout<<"%"<<labelId(node)<<":"<<std::endl;
+        std::cout<<labelId(node)<<":"<<std::endl;
         for(std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>>::iterator iter = node -> phi.begin(); iter != node -> phi.end(); ++iter){
             iter -> second -> visited(shared_from_this());
         }
@@ -96,19 +103,15 @@ public:
     }
     
     void visit(std::shared_ptr<Function> node){
-        regMap.clear();
-        counterReg.clear();
-        std::cout<<"func "<<node -> name<<" ";
-        for(int i = 0; i < node -> argVarRegList.size(); ++i) {
-            std::shared_ptr<VirtualRegister> reg = std::dynamic_pointer_cast<VirtualRegister>(node -> argVarRegList[i]);
-            std::cout<< "$"<<regId(reg)<<" ";
-        }
-        std::cout<<"{"<<std::endl;
+        std::cout<<node -> name<<": "<<std::endl;
         std::vector<std::shared_ptr<BasicBlock>> reversePostOrder(node -> getReversePostOrder());
+        std::cout<<"    "<<"push rbp"<<std::endl;
+        std::cout<<"    "<<"mov rbp, rsp"<<std::endl;
+        std::cout<<"    "<<"sub rsp, "<<node -> stackSize<<std::endl;
+        stackSize = node -> stackSize;
         for(int i = 0; i < reversePostOrder.size(); ++i) {
             reversePostOrder[i] -> visited(shared_from_this());
         }
-        std::cout<<"}"<<std::endl;
     }
     
     void visit(std::shared_ptr<BinaryOperation> node){
@@ -125,10 +128,10 @@ public:
                 op = "mul";
                 break;
             case BinaryOperation::DIV:
-                op = "div";
+                op = "idiv";
                 break;
             case BinaryOperation::MOD:
-                op = "rem";
+                op = "idiv";
                 break;
             case BinaryOperation::SHL:
                 op = "shl";
@@ -148,28 +151,23 @@ public:
             default:
                 break;
         }
-        node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op<<" ";
-        node -> lhs -> visited(shared_from_this());
-        std::cout<<" ";
-        node -> rhs -> visited(shared_from_this());
-        std::cout<<std::endl;
+        if(op == "idiv"){
+            std::cout<<op<<" ";
+            node -> rhs -> visited(shared_from_this());
+            std::cout<<std::endl;
+        }
+        else{
+            std::cout<<op<<" ";
+            node -> lhs -> visited(shared_from_this());
+            std::cout<<", ";
+            node -> rhs -> visited(shared_from_this());
+            std::cout<<std::endl;
+        }
     }
     void visit(std::shared_ptr<UnaryOperation> node){
         std::cout<<"    ";
-        std::string op;
-        switch (node -> op) {
-            case UnaryOperation::NEG:
-                op = "neg";
-                break;
-            case UnaryOperation::NOT:
-                op = "not";
-                break;
-            default:
-                break;
-        }
-        node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op<<" ";
+        std::string op = "neg";
+        std::cout<<op<<" ";
         node -> operand -> visited(shared_from_this());
         std::cout<<std::endl;
     }
@@ -178,32 +176,33 @@ public:
         std::string op;
         switch (node -> cond) {
             case IntComparison::EQ:
-                op = "seq";
+                op = "je";
                 break;
             case IntComparison::NE:
-                op = "sne";
+                op = "jne";
                 break;
             case IntComparison::GT:
-                op = "sgt";
+                op = "jg";
                 break;
             case IntComparison::GE:
-                op = "sge";
+                op = "jge";
                 break;
             case IntComparison::LT:
-                op = "slt";
+                op = "jl";
                 break;
             case IntComparison::LE:
-                op = "sle";
+                op = "jle";
                 break;
             default:
                 break;
         }
-        node -> dest -> visited(shared_from_this());
-        std::cout<<" = "<<op<<" ";
+        std::cout<<"cmp ";
         node -> lhs -> visited(shared_from_this());
-        std::cout<<" ";
+        std::cout<<", ";
         node -> rhs -> visited(shared_from_this());
         std::cout<<std::endl;
+        jump = op;
+        
     }
     void visit(std::shared_ptr<IntImmediate> node){
         std::cout<<node -> value;
@@ -213,24 +212,25 @@ public:
     //    void visit(PhiInstruction node);
     //
     void visit(std::shared_ptr<Branch> node){
-        std::cout<<"    br ";
-        node -> cond -> visited(shared_from_this());
-        std::cout<<" %"<<labelId(node -> getThen()) << " %"<<labelId(node -> getElse());
+        std::cout<<"    "<<jump;
+        std::cout<<" "<<labelId(node -> getThen());
+        std::cout<<std::endl;
+        std::cout<<"    "<<"jmp";
+        std::cout<<" "<<labelId(node -> getElse());
         std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Return> node){
+        std::cout<<"    "<<"add rsp, "<<stackSize<<std::endl;
+        std::cout<<"    pop rbp"<<std::endl;
         std::cout<<"    ret ";
-        if(node -> ret != NULL){
-            node -> ret -> visited(shared_from_this());
-        }
         std::cout<<std::endl<<std::endl;
     }
     void visit(std::shared_ptr<Jump> node){
-        std::cout<<"    jump %"<<labelId(node -> target)<<std::endl<<std::endl;
+        std::cout<<"    jmp "<<labelId(node -> target)<<std::endl<<std::endl;
     }
     
     void visit(std::shared_ptr<VirtualRegister> node){
-        std::cout<<"$"<<regId(node);
+        std::cout<<"nonononono"<<regId(node);
     }
     //    void visit(PhysicalRegister node);
     //    void visit(StackSlot node);
@@ -257,8 +257,9 @@ public:
     }
     void visit(std::shared_ptr<Move> node){
         std::cout<<"    ";
+        std::cout<<"mov ";
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = move ";
+        std::cout<<", ";
         node -> source -> visited(shared_from_this());
         std::cout<<std::endl;
     }
@@ -281,16 +282,7 @@ public:
     }
     void visit(std::shared_ptr<Call> node){
         std::cout<<"    ";
-        if(node -> dest != NULL){
-            node -> dest -> visited(shared_from_this());
-            std::cout<<" = ";
-        }
-        std::cout<<"call "<<node -> func -> name<<" ";
-        for(int i = 0; i < node -> args.size(); ++i) {
-            node -> args[i] -> visited(shared_from_this());
-            std::cout<<" ";
-        }
-        std::cout<<std::endl;
+        std::cout<<"call "<<node -> func -> name<<std::endl;
     }
     void visit(std::shared_ptr<ClassRoot> node) {
         if(node -> constructor != NULL){
@@ -299,6 +291,12 @@ public:
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != node -> functions.end(); ++iter) {
             iter -> second -> visited(shared_from_this());
         }
+    }
+    void visit(std::shared_ptr<PhysicalRegister> node){
+        std::cout<<node -> name;
+    }
+    void visit(std::shared_ptr<StackSlot> node){
+        std::cout<<"qword [rbp-"<<node -> offset + 8<<"H]";
     }
 };
 

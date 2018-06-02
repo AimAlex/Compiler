@@ -23,7 +23,8 @@
 #include "IRBuilder.h"
 #include "IRPrinter.h"
 #include "IRPrepare.h"
-#include "RegisterAllocatorPrinter.h"
+#include "IRAllocator.h"
+#include "NASMPrinter.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -61,5 +62,9 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(Builder);
     auto IRPrint = std::make_shared<IRPrinter>();
     (Builder -> getRoot()) -> visited(IRPrint);
+    auto IRAllocate = std::make_shared<IRAllocator>();
+    (Builder -> getRoot()) -> visited(IRAllocate);
+    auto NASMPrint = std::make_shared<NASMPrinter>();
+    (Builder -> getRoot()) -> visited(NASMPrint);
     return 0;
 }

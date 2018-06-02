@@ -86,11 +86,12 @@ public:
         if(BlockVisited.find(node) != BlockVisited.end()) return;
         BlockVisited[node] = 1;
         std::cout<<"%"<<labelId(node)<<":"<<std::endl;
-        for(std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>>::iterator iter = node -> phi.begin(); iter != node -> phi.end(); ++iter){
-            iter -> second -> visited(shared_from_this());
-        }
+//        for(std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>>::iterator iter = node -> phi.begin(); iter != node -> phi.end(); ++iter){
+//            iter -> second -> visited(shared_from_this());
+//        }
         for(std::shared_ptr<IRInstruction> i = node-> head; i != NULL; i = i -> next){
             i -> visited(shared_from_this());
+            
         }
     }
     

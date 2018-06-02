@@ -30,6 +30,8 @@
 #include "IntComparison.h"
 #include "Call.h"
 #include "ClassRoot.h"
+#include "StackSlot.h"
+#include "PhysicalRegister.h"
 #define INTSIZE 8
 class IRBuilder : public ASTVisitor, public std::enable_shared_from_this<IRBuilder>{
 public:
