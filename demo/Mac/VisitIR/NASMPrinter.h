@@ -68,7 +68,7 @@ public:
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-        //        std::cout<<"root"<<std::endl;
+         std::cout<<"EXTERN malloc"<<std::endl;
         for(int i = 0; i < node -> dataList.size(); ++i) {
             node -> dataList[i] -> visited(shared_from_this());
         }
@@ -125,7 +125,7 @@ public:
                 op = "sub";
                 break;
             case BinaryOperation::MUL:
-                op = "mul";
+                op = "imul";
                 break;
             case BinaryOperation::DIV:
                 op = "idiv";
@@ -236,24 +236,23 @@ public:
     //    void visit(StackSlot node);
     void visit(std::shared_ptr<HeapAllocate> node){
         std::cout<<"    ";
-        node -> dest -> visited(shared_from_this());
-        std::cout<<" = alloc ";
-        node -> allocSize -> visited(shared_from_this());
+        std::cout<<"call malloc";
         std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Load> node){
-        std::cout<<"    ";
+        std::cout<<"    mov ";
         node -> dest -> visited(shared_from_this());
-        std::cout<<" = load "<<node -> size<<" ";
+        std::cout<<", qword [";
         node -> address -> visited(shared_from_this());
-        std::cout<<" "<<node -> offset << std::endl;
+        std::cout<<"+"<<node -> offset <<"H]"<< std::endl;
     }
     void visit(std::shared_ptr<Store> node){
-        std::cout<<"    store "<<node -> size<<" ";
+        std::cout<<"    mov qword [";
         node -> address -> visited(shared_from_this());
+        std::cout<<"+"<<node -> offset<<"H],";
         std::cout<<" ";
         node -> value -> visited(shared_from_this());
-        std::cout<<" "<<node -> offset<< std::endl;
+        std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Move> node){
         std::cout<<"    ";

@@ -47,6 +47,7 @@ public:
         }
         name = function -> name;
         type = function;
+        stackSize = 0;
 //        startBlock = std::shared_ptr<BasicBlock> (new BasicBlock(shared_from_this(), name + "_entry"))
     }
     

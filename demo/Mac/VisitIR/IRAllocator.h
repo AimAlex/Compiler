@@ -29,6 +29,8 @@ public:
     std::shared_ptr<Register> phy2vir[16];
     std::map<std::shared_ptr<Register>, std::shared_ptr<PhysicalRegister>> phyRegMap;
     
+    std::string jump = "";
+    
     
     std::shared_ptr<StackSlot> getSlot(std::shared_ptr<VirtualRegister> vr){
         if(slots.find(vr) == slots.end()) {
@@ -162,8 +164,8 @@ public:
     
     void clearReg(int iscall){
         if(iscall == 0){
-            for(int i = 0; i < 16; ++i) {
-                if(i ==7 || i == 6) continue;
+            for(int i = 1; i < 16; ++i) {
+                if(i == 3 || i == 6 || i == 7) continue;
                 if(phy2vir[i] != NULL && slots.find(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])) != slots.end()){
                     curInstruction -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])),  phyRegMap[phy2vir[i]])));
                     curInstruction -> prev -> visited(shared_from_this());
@@ -233,7 +235,6 @@ public:
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-        //        std::cout<<"root"<<std::endl;
         for(int i = 0; i < node -> dataList.size(); ++i) {
             node -> dataList[i] -> visited(shared_from_this());
         }
@@ -516,8 +517,11 @@ public:
             default:
                 break;
         }
-        node -> dest -> visited(shared_from_this());
+        if(node -> dest != NULL){
+            node -> dest -> visited(shared_from_this());
+        }
         std::cout<<" = "<<op<<" ";
+        jump = op;
         node -> lhs -> visited(shared_from_this());
         std::cout<<" ";
         node -> rhs -> visited(shared_from_this());
@@ -531,11 +535,18 @@ public:
     //    void visit(PhiInstruction node);
     //
     void visit(std::shared_ptr<Branch> node){
+        if(jump == ""){
+            std::shared_ptr<Register> reg(new VirtualRegister(""));
+            node -> cond = reg;
+            node -> prepend(std::shared_ptr<IRInstruction>(new IntComparison(curBlock, reg, IntComparison::GT, node -> cond, std::shared_ptr<Register>(new IntImmediate(0)))));
+            node -> prev -> visited(shared_from_this());
+        }
         clearReg(0);
         std::cout<<"    br ";
         node -> cond -> visited(shared_from_this());
         std::cout<<" %"<<labelId(node -> getThen()) << " %"<<labelId(node -> getElse());
         std::cout<<std::endl;
+        jump = "";
     }
     void visit(std::shared_ptr<Return> node){
         if(node -> ret != NULL){
@@ -544,6 +555,7 @@ public:
         std::cout<<"    ret ";
         node -> ret -> visited(shared_from_this());
         std::cout<<std::endl<<std::endl;
+        clearReg(-1);
     }
     void visit(std::shared_ptr<Jump> node){
         clearReg(0);
@@ -555,6 +567,11 @@ public:
     }
     
     void visit(std::shared_ptr<HeapAllocate> node){
+        node -> allocSize = assignReg(node -> allocSize, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdi")));
+        clearReg(0);
+        node -> dest = destReg(node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)));
+//        node -> dest = getReg(node -> dest);
+//        node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, node -> dest, std::shared_ptr<Register>(new PhysicalRegister(0)))));
         std::cout<<"    ";
         node -> dest -> visited(shared_from_this());
         std::cout<<" = alloc ";
@@ -563,6 +580,7 @@ public:
     }
     void visit(std::shared_ptr<Load> node){
         std::cout<<"    ";
+        node -> address = getReg(node -> address);
         node -> dest = getReg(node -> dest);
         node -> dest -> visited(shared_from_this());
         std::cout<<" = load "<<node -> size<<" ";
@@ -570,6 +588,10 @@ public:
         std::cout<<" "<<node -> offset << std::endl;
     }
     void visit(std::shared_ptr<Store> node){
+        node -> address = getReg(node -> address);
+        if(node ->  value -> getType() != "IntImmediate"){
+            node -> value = getReg(node -> value);
+        }
         std::cout<<"    store "<<node -> size<<" ";
         node -> address -> visited(shared_from_this());
         std::cout<<" ";
