@@ -30,8 +30,8 @@ using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char ** ) {
-//    ANTLRFileStream file("./test.mx");
-    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+    ANTLRFileStream file("./test.mx");
+//    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
@@ -49,8 +49,8 @@ int main(int , const char ** ) {
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
     auto listener = std::make_shared<ASTListener>();
     walker.walk(listener.get(), tree);
-    auto printer = std::make_shared<ASTPrinter>();
-    (listener->getProgram()) -> visited(printer);
+//    auto printer = std::make_shared<ASTPrinter>();
+//    (listener->getProgram()) -> visited(printer);
     auto classer = std::make_shared<ASTClass>();
     (listener -> getProgram()) -> visited(classer);
     auto functioner = std::make_shared<ASTFunction>();
@@ -61,8 +61,8 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(Prepare);
     auto Builder = std::make_shared<IRBuilder>();
     (listener -> getProgram()) -> visited(Builder);
-    auto IRPrint = std::make_shared<IRPrinter>();
-    (Builder -> getRoot()) -> visited(IRPrint);
+//    auto IRPrint = std::make_shared<IRPrinter>();
+//    (Builder -> getRoot()) -> visited(IRPrint);
 //    auto IRAllocate = std::make_shared<IRAllocator>();
 //    (Builder -> getRoot()) -> visited(IRAllocate);
     auto DeadIR = std::make_shared<DeadNASM>();
