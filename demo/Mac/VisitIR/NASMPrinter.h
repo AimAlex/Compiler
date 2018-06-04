@@ -68,7 +68,7 @@ public:
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-        std::ifstream t("/Users/aimalex/Desktop/Compiler/demo/Mac/BuiltinFunction.asm");
+        std::ifstream t("BuiltinFunction.asm");
         std::cout<<"EXTERN malloc"<<std::endl;
         std::cout<<"EXTERN printf"<<std::endl;
         std::cout<<"EXTERN puts"<<std::endl;
