@@ -69,12 +69,6 @@ public:
     
     void visit(std::shared_ptr<IRRoot> node){
          std::cout<<"EXTERN malloc"<<std::endl;
-        for(int i = 0; i < node -> dataList.size(); ++i) {
-            node -> dataList[i] -> visited(shared_from_this());
-        }
-        for(std::map<std::string, std::shared_ptr<Register>>::iterator iter = node -> strings.begin(); iter != (node -> strings.end()); ++iter) {
-            iter -> second -> visited(shared_from_this());
-        }
         for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = node -> classList.begin(); iter != node -> classList.end(); ++iter){
             iter -> second -> visited(shared_from_this());
         }
@@ -86,8 +80,16 @@ public:
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             iter -> second -> visited(shared_from_this());
         }
+        definingStatic = true;
         std::cout<<"SECTION .data"<<std::endl;
         std::cout<<"SECTION .bss"<<std::endl;
+        for(int i = 0; i < node -> dataList.size(); ++i) {
+            node -> dataList[i] -> visited(shared_from_this());
+            std::cout<<"    resq    1"<<std::endl;
+        }
+        for(std::map<std::string, std::shared_ptr<Register>>::iterator iter = node -> strings.begin(); iter != (node -> strings.end()); ++iter) {
+            iter -> second -> visited(shared_from_this());
+        }
     }
     
     void visit(std::shared_ptr<BasicBlock> node){
@@ -267,10 +269,10 @@ public:
     
     void visit(std::shared_ptr<StaticSpace> node){
         if(definingStatic) {
-            std::cout<<"space @"<<dataId(node)<<" "<<node -> length<<std::endl;
+            std::cout<<"global_"<<node -> hintName<<":"<<std::endl;
         }
         else{
-            std::cout<<"@"<<dataId(node);
+            std::cout<<"qword [global_"<<node -> hintName<<"]";
         }
     }
     void visit(std::shared_ptr<StaticString> node){

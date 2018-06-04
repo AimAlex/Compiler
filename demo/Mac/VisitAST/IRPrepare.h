@@ -37,6 +37,8 @@ public:
     std::map<std::string, std::shared_ptr<Function>> ownfunctions;
     std::shared_ptr<ClassRoot> currentClass = NULL;
     std::shared_ptr<SymbolTable> GlobalSymbolTable;
+    std::vector<std::shared_ptr<ASTNode>> initCollection;
+    std::shared_ptr<FunctionCall> call ;
     
     void visit(std::shared_ptr<Program> node){
         GlobalSymbolTable = node -> Table;
@@ -51,15 +53,58 @@ public:
                 irRoot -> classList[iter -> first] = std::shared_ptr<ClassRoot>(new ClassRoot(iter -> first));
             }
         }
+        call  = std::shared_ptr<FunctionCall> (new FunctionCall());
+        std::shared_ptr<Identifier> Id (new Identifier());
+        Id -> name = "Initmain";
+        call -> name = Id;
         for(int i = 0; i < (node -> decls).size(); ++i) {
             (node -> decls)[i] -> visited(shared_from_this());
         }
+        
+        std::shared_ptr<ReturnState> returnStmt (new ReturnState);
+        returnStmt -> value = std::shared_ptr<IntConst>(new IntConst(0));
+        initCollection.push_back(returnStmt);
+        
+        std::shared_ptr<FunctionDecl> funcDecl(new FunctionDecl);
+        std::shared_ptr<CompoundState> Initbody(new CompoundState);
+        Initbody -> accept(initCollection);
+        funcDecl -> acceptStr("Initmain");
+        funcDecl -> body = Initbody;
+        funcDecl -> returnType = std::shared_ptr<PrimitiveTypeNode>(new PrimitiveTypeNode(PrimitiveTypeNode::INT));
+        funcDecl -> functiontype = std::shared_ptr<FunctionType>(new FunctionType("Initmain"));
+        funcDecl -> functiontype -> type = SymbolType::FUNCTION;
+        call -> name -> exprType = funcDecl -> functiontype;
+        funcDecl -> functiontype -> returnType = std::shared_ptr<SymbolType>(new SymbolType());
+        funcDecl -> functiontype -> returnType -> type = SymbolType::INT;
+        funcDecl -> functionTable = GlobalSymbolTable;
+        node -> decls.push_back(funcDecl);
+        std::cout<<funcDecl -> name<<std::endl;
+        irRoot -> functions["Initmain"] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(funcDecl -> functiontype)));
     }
     
-    void visit(std::shared_ptr<VariableDecl>){}
+    void visit(std::shared_ptr<VariableDecl> node){
+        if (node -> init != NULL) {
+            std::shared_ptr<Identifier> Id(new Identifier());
+            Id -> name = node -> name;
+            Id -> info = node -> scope;
+            std::shared_ptr<BinaryExpr> expr(new BinaryExpr(BinaryExpr::ASSIGN));
+            expr -> lhs = Id;
+            expr -> rhs = node -> init;
+            initCollection.push_back(expr);
+            node -> init = NULL;
+        }
+    }
     
     void visit(std::shared_ptr<FunctionDecl> node){
         irRoot -> functions[node -> name] = ownfunctions[node -> name];
+        if(node -> name == "main"){
+            std::shared_ptr<CompoundState> Dody(new CompoundState);
+            std::vector<std::shared_ptr<ASTNode>> vec;
+            vec.push_back(call);
+            vec.push_back(node -> body);
+            Dody -> accept(vec);
+            node -> body = Dody;
+        }
     }
     
     void visit(std::shared_ptr<BreakState>){}

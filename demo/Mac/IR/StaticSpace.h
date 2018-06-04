@@ -23,6 +23,9 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    std::string getType(){
+        return "StaticSpace";
+    }
 };
 
 #endif /* StaticSpace_h */

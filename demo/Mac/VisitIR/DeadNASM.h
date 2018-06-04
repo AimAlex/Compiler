@@ -33,7 +33,7 @@ public:
             if(slots.find(vr) == slots.end()) {
                 slots[vr] = std::shared_ptr<StackSlot> (new StackSlot(curFunction, vr -> hintName, curFunction -> stackSize));
                 curFunction -> stackSize += 8;
-                //            std::cout<<"hhh"<<std::endl;
+                //            //std::cout<<"hhh"<<std::endl;
             }
             return slots.find(vr) -> second;
         }
@@ -46,13 +46,21 @@ public:
         else if(reg -> getType() == "VirtualRegister"){
             node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg)))));
         }
+        else if(reg -> getType() == "StaticSpace"){
+            node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
+        }
         node -> prev -> visited(shared_from_this());
         return ptr;
     }
     
     void moveOutReg(std::shared_ptr<Register> reg, int dest, std::shared_ptr<IRInstruction> node){
         std::shared_ptr<PhysicalRegister> ptr(new PhysicalRegister(dest));
-        node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg)), ptr)));
+        if(reg -> getType() == "VirtualRegister"){
+            node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg)), ptr)));
+        }
+        else if(reg -> getType() == "StaticSpace"){
+            node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, reg, ptr)));
+        }
         node -> next -> visited(shared_from_this());
     }
     
@@ -122,7 +130,7 @@ public:
         void visit(std::shared_ptr<BasicBlock> node){
             if(BlockVisited.find(node) != BlockVisited.end()) return;
             BlockVisited[node] = 1;
-            std::cout<<"%"<<labelId(node)<<":"<<std::endl;
+            //std::cout<<"%"<<labelId(node)<<":"<<std::endl;
             
             curBlock = node;
             
@@ -140,7 +148,7 @@ public:
         void visit(std::shared_ptr<Function> node){
             regMap.clear();
             counterReg.clear();
-            std::cout<<"func "<<node -> name<<" ";
+            //std::cout<<"func "<<node -> name<<" ";
             curFunction = node;
             
             slots.clear();
@@ -151,42 +159,42 @@ public:
                 case 6:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[5]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r9")))));
-                    std::cout<< curFunction -> argVarRegList[5] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[5] -> getHintName()<<" ";
                 case 5:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[4]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r8")))));
-                    std::cout<< curFunction -> argVarRegList[4] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[4] -> getHintName()<<" ";
                 case 4:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[3]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rcx")))));
-                    std::cout<< curFunction -> argVarRegList[3] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[3] -> getHintName()<<" ";
                 case 3:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[2]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdx")))));
-                    std::cout<< curFunction -> argVarRegList[2] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[2] -> getHintName()<<" ";
                 case 2:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[1]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsi")))));
-                    std::cout<< curFunction -> argVarRegList[1] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[1] -> getHintName()<<" ";
                 case 1:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[0]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdi")))));
-                    std::cout<< curFunction -> argVarRegList[0] -> getHintName()<<" ";
+                    //std::cout<< curFunction -> argVarRegList[0] -> getHintName()<<" ";
                 case 0:
                     break;
             }
             
-            std::cout<<"{"<<std::endl;
+            //std::cout<<"{"<<std::endl;
             std::vector<std::shared_ptr<BasicBlock>> reversePostOrder(node -> getReversePostOrder());
             for(int i = 0; i < reversePostOrder.size(); ++i) {
                 reversePostOrder[i] -> visited(shared_from_this());
             }
-            std::cout<<"}"<<std::endl;
+            //std::cout<<"}"<<std::endl;
         }
         
         void visit(std::shared_ptr<BinaryOperation> node){
             
-            std::cout<<"    ";
+            //std::cout<<"    ";
             std::string op;
             std::shared_ptr<Register> ptr;
             switch (node -> op) {
@@ -247,26 +255,26 @@ public:
                     break;
             }
             node -> dest -> visited(shared_from_this());
-            std::cout<<" = "<<op<<" ";
+            //std::cout<<" = "<<op<<" ";
             node -> lhs -> visited(shared_from_this());
-            std::cout<<" ";
+            //std::cout<<" ";
             node -> rhs -> visited(shared_from_this());
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<UnaryOperation> node){
             
             std::string op = "neg";
             node -> operand = moveInReg(node -> operand, 15, node);
             moveOutReg(node -> dest, 15, node);
-            std::cout<<"    ";
+            //std::cout<<"    ";
             node -> dest -> visited(shared_from_this());
-            std::cout<<" = "<<op<<" ";
+            //std::cout<<" = "<<op<<" ";
             node -> operand -> visited(shared_from_this());
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<IntComparison> node){
             
-            std::cout<<"    ";
+            //std::cout<<"    ";
             std::string op;
             node -> lhs = moveInReg(node -> lhs, 15, node);
             node -> rhs = moveInReg(node -> rhs, 14, node);
@@ -295,15 +303,15 @@ public:
             if(node -> dest != NULL){
                 node -> dest -> visited(shared_from_this());
             }
-            std::cout<<" = "<<op<<" ";
+            //std::cout<<" = "<<op<<" ";
             jump = op;
             node -> lhs -> visited(shared_from_this());
-            std::cout<<" ";
+            //std::cout<<" ";
             node -> rhs -> visited(shared_from_this());
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<IntImmediate> node){
-            std::cout<<node -> value;
+            //std::cout<<node -> value;
         }
         //    void visit(Call node);
         //    void visit(SystemCall node);
@@ -317,10 +325,10 @@ public:
                 node -> prepend(std::shared_ptr<IRInstruction>(new IntComparison(curBlock, reg, IntComparison::GT, node -> cond, std::shared_ptr<Register>(new IntImmediate(0)))));
                 node -> prev -> visited(shared_from_this());
             }
-            std::cout<<"    br ";
+            //std::cout<<"    br ";
             node -> cond -> visited(shared_from_this());
-            std::cout<<" %"<<labelId(node -> getThen()) << " %"<<labelId(node -> getElse());
-            std::cout<<std::endl;
+            //std::cout<<" %"<<labelId(node -> getThen()) << " %"<<labelId(node -> getElse());
+            //std::cout<<std::endl;
             jump = "";
         }
         void visit(std::shared_ptr<Return> node){
@@ -328,17 +336,19 @@ public:
             if(node -> ret != NULL){
                 node -> ret = moveInReg(node -> ret, 0, node);
             }
-            std::cout<<"    ret ";
-            node -> ret -> visited(shared_from_this());
-            std::cout<<std::endl<<std::endl;
+            //std::cout<<"    ret ";
+            if(node -> ret != NULL){
+                node -> ret -> visited(shared_from_this());
+            }
+            //std::cout<<std::endl<<std::endl;
         }
         void visit(std::shared_ptr<Jump> node){
             
-            std::cout<<"    jump %"<<labelId(node -> target)<<std::endl<<std::endl;
+            //std::cout<<"    jump %"<<labelId(node -> target)<<std::endl<<std::endl;
         }
         
         void visit(std::shared_ptr<VirtualRegister> node){
-            std::cout<<"$"<<regId(node);
+            //std::cout<<"$"<<regId(node);
         }
         
         void visit(std::shared_ptr<HeapAllocate> node){
@@ -347,22 +357,22 @@ public:
             if(node -> dest != NULL){
                 moveOutReg(node -> dest, 0, node);
             }
-            std::cout<<"    ";
+            //std::cout<<"    ";
             node -> dest -> visited(shared_from_this());
-            std::cout<<" = alloc ";
+            //std::cout<<" = alloc ";
             node -> allocSize -> visited(shared_from_this());
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<Load> node){
             
-            std::cout<<"    ";
+            //std::cout<<"    ";
             node -> address = moveInReg(node -> address, 15, node);
             moveOutReg(node -> dest, 14, node);
             node -> dest = std::shared_ptr<Register>(new PhysicalRegister(14));
             node -> dest -> visited(shared_from_this());
-            std::cout<<" = load "<<node -> size<<" ";
+            //std::cout<<" = load "<<node -> size<<" ";
             node -> address -> visited(shared_from_this());
-            std::cout<<" "<<node -> offset << std::endl;
+            //std::cout<<" "<<node -> offset << std::endl;
         }
         void visit(std::shared_ptr<Store> node){
             
@@ -370,45 +380,45 @@ public:
             if(node ->  value -> getType() != "IntImmediate"){
                 node -> value = moveInReg(node -> value, 14, node);
             }
-            std::cout<<"    store "<<node -> size<<" ";
+            //std::cout<<"    store "<<node -> size<<" ";
             node -> address -> visited(shared_from_this());
-            std::cout<<" ";
+            //std::cout<<" ";
             node -> value -> visited(shared_from_this());
-            std::cout<<" "<<node -> offset<< std::endl;
+            //std::cout<<" "<<node -> offset<< std::endl;
         }
         void visit(std::shared_ptr<Move> node){
             
-            std::cout<<"    ";
+            //std::cout<<"    ";
             if(node -> source -> getType() == "VirtualRegister"){
                 node -> source = moveInReg(node -> source, 15, node);
             }
             
-            if(node -> dest -> getType() != "PhysicalRegister" && node -> dest -> getType() != "StackSlot"){
+            if(node -> dest -> getType() != "PhysicalRegister" && node -> dest -> getType() != "StackSlot" && node -> dest -> getType() != "StaticSpace"){
                 moveOutReg(node -> dest, 14, node);
                 node -> dest = std::shared_ptr<Register>(new PhysicalRegister(14));
             }
             
             node -> dest -> visited(shared_from_this());
             
-            std::cout<<" = move ";
+            //std::cout<<" = move ";
             node -> source -> visited(shared_from_this());
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         
         void visit(std::shared_ptr<StaticSpace> node){
             if(definingStatic) {
-                std::cout<<"space @"<<dataId(node)<<" "<<node -> length<<std::endl;
+                //std::cout<<"space @"<<dataId(node)<<" "<<node -> length<<std::endl;
             }
             else{
-                std::cout<<"@"<<dataId(node);
+                //std::cout<<"@"<<dataId(node);
             }
         }
         void visit(std::shared_ptr<StaticString> node){
             if(definingStatic) {
-                std::cout<<"asciiz @"<<dataId(node)<<" "<<node -> value<<std::endl;
+                //std::cout<<"asciiz @"<<dataId(node)<<" "<<node -> value<<std::endl;
             }
             else{
-                std::cout<<"@"<<dataId(node);
+                //std::cout<<"@"<<dataId(node);
             }
         }
         void visit(std::shared_ptr<Call> node){
@@ -433,17 +443,17 @@ public:
             if(node -> dest != NULL){
                 moveOutReg(node -> dest, 0, node);
             }
-            std::cout<<"    ";
+            //std::cout<<"    ";
             if(node -> dest != NULL){
                 node -> dest -> visited(shared_from_this());
-                std::cout<<" = ";
+                //std::cout<<" = ";
             }
-            std::cout<<"call "<<node -> func -> name<<" ";
+            //std::cout<<"call "<<node -> func -> name<<" ";
             for(int i = 0; i < node -> args.size(); ++i) {
                 node -> args[i] -> visited(shared_from_this());
-                std::cout<<" ";
+                //std::cout<<" ";
             }
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<ClassRoot> node) {
             if(node -> constructor != NULL){
@@ -455,10 +465,10 @@ public:
         }
         
         void visit(std::shared_ptr<PhysicalRegister>node){
-            std::cout<<node -> name;
+            //std::cout<<node -> name;
         }
         void visit(std::shared_ptr<StackSlot> node){
-            std::cout<<"####"<<node -> offset;
+            //std::cout<<"####"<<node -> offset;
         }
     };
 #endif /* DeadNASM_h */
