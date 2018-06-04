@@ -78,7 +78,7 @@ public:
         funcDecl -> functiontype -> returnType -> type = SymbolType::INT;
         funcDecl -> functionTable = GlobalSymbolTable;
         node -> decls.push_back(funcDecl);
-        std::cout<<funcDecl -> name<<std::endl;
+//        std::cout<<funcDecl -> name<<std::endl;
         irRoot -> functions["Initmain"] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(funcDecl -> functiontype)));
     }
     
