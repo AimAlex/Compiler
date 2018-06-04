@@ -51,6 +51,7 @@ public:
             LRURegister[phyRegMap[reg] -> no] = 0;
             phyRegMap[reg] = NULL;
         }
+//        getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg));
         phyRegMap[phy2vir[dest -> no]] = NULL;
         phy2vir[dest -> no] = reg;
         phyRegMap[reg] = std::shared_ptr<PhysicalRegister> (new PhysicalRegister(dest -> name));
@@ -69,7 +70,8 @@ public:
     
     std::shared_ptr<PhysicalRegister> assignReg(std::shared_ptr<Register> reg, std::shared_ptr<PhysicalRegister> dest){
         if(phyRegMap.find(reg) != phyRegMap.end() && phyRegMap[reg] != NULL && phyRegMap[reg]->no == dest -> no){
-            for(int i = 0; i < 16; ++i) {
+            for(int i = 1; i < 16; ++i) {
+                if(i == 3 || i == 6 || i == 7)  continue;
                 if(i == dest -> no){
                     LRURegister[i] = 1;
                     continue;
@@ -109,7 +111,8 @@ public:
         phyRegMap[phy2vir[dest -> no]] = NULL;
         phy2vir[dest -> no] = reg;
         phyRegMap[reg] = std::shared_ptr<PhysicalRegister> (new PhysicalRegister(dest -> name));
-        for(int i = 0; i < 16; ++i) {
+        for(int i = 1; i < 16; ++i) {
+            if(i == 3 || i == 6 || i == 7)  continue;
             if(i == dest -> no){
                 LRURegister[i] = 1;
                 continue;
@@ -164,7 +167,7 @@ public:
     
     void clearReg(int iscall){
         if(iscall == 0){
-            for(int i = 1; i < 16; ++i) {
+            for(int i = 0; i < 16; ++i) {
                 if(i == 3 || i == 6 || i == 7) continue;
                 if(phy2vir[i] != NULL && slots.find(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])) != slots.end()){
                     curInstruction -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(phy2vir[i])),  phyRegMap[phy2vir[i]])));
@@ -181,7 +184,8 @@ public:
             }
         }
         else{
-            for(int i = 0; i < 16; ++i) {
+            for(int i = 1; i < 16; ++i) {
+                if(i == 3 || i == 6 || i == 7)  continue;
                 LRURegister[i] = 0;
                 phy2vir[i] = NULL;
             }
@@ -307,7 +311,8 @@ public:
                 std::cout<< phyRegMap[curFunction -> argVarRegList[3]] -> getHintName()<<" ";
             case 3:
                 ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[2]));
-                phyRegMap[curFunction -> argVarRegList[2]] = std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdx"));
+                phyRegMap[curFunction -> argVarRegList[2]] = std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r15"));
+                curBlock -> head -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, phyRegMap[curFunction -> argVarRegList[2]], std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdx")))));
                 LRURegister[3] = 1;
                 phy2vir[3] = curFunction -> argVarRegList[2];
                 std::cout<< phyRegMap[curFunction -> argVarRegList[2]] -> getHintName()<<" ";
@@ -391,7 +396,8 @@ public:
 //                    node -> prev -> visited(shared_from_this());
 //                    node -> lhs = ptr;
 //                }
-                node -> lhs = assignReg(node -> lhs, std::shared_ptr<PhysicalRegister> (new PhysicalRegister(0)));
+                node -> lhs = getReg(node -> lhs);
+                curInstruction -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)), node -> lhs)));
 //                if(node -> rhs -> getType() == "IntImmediate"){
 //                    ptr = std::shared_ptr<Register>(new VirtualRegister(""));
 //                    node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, getReg(ptr), node -> rhs)));
@@ -400,6 +406,7 @@ public:
 //                }
                 node -> rhs = getReg(node -> rhs);
                 node -> dest = destReg(node -> dest, std::dynamic_pointer_cast<PhysicalRegister>(node -> lhs));
+                curInstruction -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)))));
                 break;
             case BinaryOperation::MOD:
                 op = "rem";
@@ -409,7 +416,8 @@ public:
 //                    node -> prev -> visited(shared_from_this());
 //                    node -> lhs = ptr;
 //                }
-                node -> lhs = assignReg(node -> lhs, std::shared_ptr<PhysicalRegister> (new PhysicalRegister(0)));
+                node -> lhs = getReg(node -> lhs);
+                curInstruction -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)), node -> lhs)));
 //                if(node -> rhs -> getType() == "IntImmediate"){
 //                    ptr = std::shared_ptr<Register>(new VirtualRegister(""));
 //                    node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, getReg(ptr), node -> rhs)));
@@ -417,7 +425,8 @@ public:
 //                    node -> rhs = ptr;
 //                }
                 node -> rhs = getReg(node -> rhs);
-                node -> dest = destReg(node -> dest, std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rdx")));
+                node -> dest = destReg(node -> dest, std::dynamic_pointer_cast<PhysicalRegister>(node -> lhs));
+                curInstruction -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdx")))));
                 break;
             case BinaryOperation::SHL:
                 op = "shl";
@@ -550,7 +559,8 @@ public:
     }
     void visit(std::shared_ptr<Return> node){
         if(node -> ret != NULL){
-            node -> ret = assignReg(node -> ret, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)));
+            node -> ret = getReg(node -> ret);
+            curInstruction -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)), node -> ret)));
         }
         std::cout<<"    ret ";
         node -> ret -> visited(shared_from_this());
@@ -569,7 +579,9 @@ public:
     void visit(std::shared_ptr<HeapAllocate> node){
         node -> allocSize = assignReg(node -> allocSize, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdi")));
         clearReg(0);
-        node -> dest = destReg(node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)));
+        
+        node -> dest = getReg(node -> dest);
+        node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move (curBlock, node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)))));
 //        node -> dest = getReg(node -> dest);
 //        node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, node -> dest, std::shared_ptr<Register>(new PhysicalRegister(0)))));
         std::cout<<"    ";
@@ -639,7 +651,8 @@ public:
             case 4:
                 node -> args[3] = assignReg(node -> args[3], std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rcx")));
             case 3:
-                node -> args[2] = assignReg(node -> args[2], std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rdx")));
+                node -> args[2] = getReg(node -> args[2]);
+                node -> prepend(std::shared_ptr<IRInstruction>(new Move (curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)), node -> args[2])));
             case 2:
                 node -> args[1] = assignReg(node -> args[1], std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsi")));
             case 1:
@@ -648,10 +661,10 @@ public:
             default:
                 break;
         }
-        clearReg(0);
         if(node -> dest != NULL){
             node -> dest = destReg(node -> dest, std::shared_ptr<PhysicalRegister>(new PhysicalRegister(0)));
         }
+        clearReg(0);
         std::cout<<"    ";
         if(node -> dest != NULL){
             node -> dest -> visited(shared_from_this());

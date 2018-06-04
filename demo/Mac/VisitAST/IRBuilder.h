@@ -193,8 +193,8 @@ public:
         }
         else{
             if(node -> value -> isLogicalExpression()){
-                node -> value -> ifTrue = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
-                node -> value -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, NULL));
+                node -> value -> ifTrue = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
+                node -> value -> ifFalse = std::shared_ptr<BasicBlock>(new BasicBlock(curFunction, ""));
                 node -> value -> visited(shared_from_this());
 
                 std::shared_ptr<Register> reg (new VirtualRegister("retValue"));

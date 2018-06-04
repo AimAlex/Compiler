@@ -25,6 +25,7 @@
 #include "IRPrepare.h"
 #include "IRAllocator.h"
 #include "NASMPrinter.h"
+#include "DeadNASM.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -62,8 +63,10 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(Builder);
     auto IRPrint = std::make_shared<IRPrinter>();
     (Builder -> getRoot()) -> visited(IRPrint);
-    auto IRAllocate = std::make_shared<IRAllocator>();
-    (Builder -> getRoot()) -> visited(IRAllocate);
+//    auto IRAllocate = std::make_shared<IRAllocator>();
+//    (Builder -> getRoot()) -> visited(IRAllocate);
+    auto DeadIR = std::make_shared<DeadNASM>();
+    (Builder -> getRoot()) -> visited(DeadIR);
     auto NASMPrint = std::make_shared<NASMPrinter>();
     (Builder -> getRoot()) -> visited(NASMPrint);
     return 0;

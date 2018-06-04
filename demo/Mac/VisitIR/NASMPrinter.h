@@ -87,7 +87,7 @@ public:
             iter -> second -> visited(shared_from_this());
         }
         std::cout<<"SECTION .data"<<std::endl;
-        std::cout<<"SECTION .bbs"<<std::endl;
+        std::cout<<"SECTION .bss"<<std::endl;
     }
     
     void visit(std::shared_ptr<BasicBlock> node){
@@ -115,7 +115,6 @@ public:
     }
     
     void visit(std::shared_ptr<BinaryOperation> node){
-        std::cout<<"    ";
         std::string op;
         switch (node -> op) {
             case BinaryOperation::ADD:
@@ -128,9 +127,11 @@ public:
                 op = "imul";
                 break;
             case BinaryOperation::DIV:
+                std::cout<<"    cqo"<<std::endl;
                 op = "idiv";
                 break;
             case BinaryOperation::MOD:
+                std::cout<<"    cqo"<<std::endl;
                 op = "idiv";
                 break;
             case BinaryOperation::SHL:
@@ -151,6 +152,7 @@ public:
             default:
                 break;
         }
+        std::cout<<"    ";
         if(op == "idiv"){
             std::cout<<op<<" ";
             node -> rhs -> visited(shared_from_this());
@@ -244,12 +246,12 @@ public:
         node -> dest -> visited(shared_from_this());
         std::cout<<", qword [";
         node -> address -> visited(shared_from_this());
-        std::cout<<"+"<<node -> offset <<"H]"<< std::endl;
+        std::cout<<"+"<<node -> offset <<"]"<< std::endl;
     }
     void visit(std::shared_ptr<Store> node){
         std::cout<<"    mov qword [";
         node -> address -> visited(shared_from_this());
-        std::cout<<"+"<<node -> offset<<"H],";
+        std::cout<<"+"<<node -> offset<<"],";
         std::cout<<" ";
         node -> value -> visited(shared_from_this());
         std::cout<<std::endl;
@@ -295,7 +297,7 @@ public:
         std::cout<<node -> name;
     }
     void visit(std::shared_ptr<StackSlot> node){
-        std::cout<<"qword [rbp-"<<node -> offset + 8<<"H]";
+        std::cout<<"qword [rbp-"<<node -> offset + 8<<"]";
     }
 };
 
