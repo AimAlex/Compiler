@@ -9,6 +9,7 @@
 #ifndef RegisterAllocatorPrinter_h
 #define RegisterAllocatorPrinter_h
 #include "IRVisitor.h"
+#include <fstream>
 class NASMPrinter : public IRVisitor, public std::enable_shared_from_this<NASMPrinter>{
 public:
     std::map<std::shared_ptr<VirtualRegister>, std::string> regMap;
@@ -34,7 +35,6 @@ public:
         if(cnt == 1) return name;
         return name + "_" + std::to_string(cnt);
     }
-    
     std::string regId(std::shared_ptr<VirtualRegister> reg) {
         std::map<std::shared_ptr<VirtualRegister>, std::string>::iterator iter = regMap.find(reg);
         if(iter == regMap.end()){
@@ -68,7 +68,17 @@ public:
     }
     
     void visit(std::shared_ptr<IRRoot> node){
-         std::cout<<"EXTERN malloc"<<std::endl;
+        std::ifstream t("/Users/aimalex/Desktop/Compiler/demo/Mac/BuiltinFunction.asm");
+        std::cout<<"EXTERN malloc"<<std::endl;
+        std::cout<<"EXTERN printf"<<std::endl;
+        std::cout<<"EXTERN puts"<<std::endl;
+        std::cout<<"EXTERN getchar"<<std::endl;
+        std::cout<<"EXTERN putchar"<<std::endl;
+        std::cout<<"EXTERN sprintf"<<std::endl;
+        std::cout<<"EXTERN __stack_chk_fail"<<std::endl;
+        std::cout<<"EXTERN memcpy"<<std::endl;
+        std::cout<<"EXTERN strlen"<<std::endl;
+        std::cout<<"EXTERN scanf"<<std::endl;
         for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = node -> classList.begin(); iter != node -> classList.end(); ++iter){
             iter -> second -> visited(shared_from_this());
         }
@@ -80,16 +90,31 @@ public:
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             iter -> second -> visited(shared_from_this());
         }
+        std::string text((std::istreambuf_iterator<char>(t)),
+                        std::istreambuf_iterator<char>());
+        std::cout<<text<<std::endl;
         definingStatic = true;
         std::cout<<"SECTION .data"<<std::endl;
+        for(std::map<std::string, std::shared_ptr<Register>>::iterator iter = node -> strings.begin(); iter != (node -> strings.end()); ++iter) {
+            iter -> second -> visited(shared_from_this());
+        }
+        std::cout<<"L_001:"<<std::endl;
+        std::cout<<"    db 25H, 64H, 0AH, 00H"<<std::endl;
+        std::cout<<"L_002:"<<std::endl;
+        std::cout<<"    db 25H, 64H, 00H"<<std::endl;
+        std::cout<<"intbuffer:"<<std::endl;
+        std::cout<<"    dq 0"<<std::endl;
+        std::cout<<"format1:"<<std::endl;
+        std::cout<<"    db\"%lld\",0"<<std::endl;
+        std::cout<<"format2:"<<std::endl;
+        std::cout<<"    db\"%s\",0"<<std::endl;
         std::cout<<"SECTION .bss"<<std::endl;
         for(int i = 0; i < node -> dataList.size(); ++i) {
             node -> dataList[i] -> visited(shared_from_this());
             std::cout<<"    resq    1"<<std::endl;
         }
-        for(std::map<std::string, std::shared_ptr<Register>>::iterator iter = node -> strings.begin(); iter != (node -> strings.end()); ++iter) {
-            iter -> second -> visited(shared_from_this());
-        }
+        std::cout<<"stringbuffer:"<<std::endl;
+        std::cout<<"    resb 256"<<std::endl;
     }
     
     void visit(std::shared_ptr<BasicBlock> node){
@@ -277,10 +302,12 @@ public:
     }
     void visit(std::shared_ptr<StaticString> node){
         if(definingStatic) {
-            std::cout<<"asciiz @"<<dataId(node)<<" "<<node -> value<<std::endl;
+            std::cout<<"    dq "<<node -> size<<std::endl;
+            std::cout<<"global_string"<<'_'<<node -> no<<':'<<std::endl;
+            std::cout<<"    db"<<node -> memValue<<std::endl;
         }
         else{
-            std::cout<<"@"<<dataId(node);
+            std::cout<<"global_string"<<'_'<<node -> no;
         }
     }
     void visit(std::shared_ptr<Call> node){

@@ -22,6 +22,21 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(shared_from_this());
     }
+    IRRoot(){
+        builtinPrintString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("print")))) ;
+        builtinPrintlnString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("println"))));
+        builtinPrintInt  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("printint"))));
+        builtinPrintlnInt  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("printintln"))));
+        builtinToString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("toString"))));
+        builtinGetString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("getString"))));
+        builtinGetInt  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("getInt"))));
+        builtinStringConcat  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.add"))));
+        builtinStringEqual  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.eq"))));
+        builtinStringLess  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.le"))));
+        builtinStringParseInt  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.parseInt"))));
+        builtinStringSubString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.substring"))));
+        buildinStringLength  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.length"))));
+    }
     std::shared_ptr<Function> builtinPrintString;
     std::shared_ptr<Function> builtinPrintlnString;
     std::shared_ptr<Function> builtinPrintInt;
@@ -34,6 +49,7 @@ public:
     std::shared_ptr<Function> builtinStringLess;
     std::shared_ptr<Function> builtinStringParseInt;
     std::shared_ptr<Function> builtinStringSubString;
+    std::shared_ptr<Function> buildinStringLength;
 };
 
 #endif /* IRRoot_h */

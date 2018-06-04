@@ -728,8 +728,11 @@ public:
             std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
             if(memberAccess -> record -> exprType -> type == SymbolType::STRING){
                 if(memberAccess -> member == "length"){
-                    std::cout<<"length"<<std::endl;
-//                    new Call(curBlock, reg, func)
+                    std::shared_ptr<Register> reg(new VirtualRegister("length"));
+                    std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> buildinStringLength));
+                    call -> args.push_back(memberAccess -> intValue);
+                    call -> append(curBlock);
+                    node -> intValue = reg;
                 }
                 else if(memberAccess -> member == "substring"){
 //                    std::cout<<"substring"<<std::endl;
@@ -836,7 +839,13 @@ public:
         }
         else{
             node -> visited(shared_from_this());
-            std::shared_ptr<Call> call (new Call(curBlock, NULL, irRoot -> builtinPrintlnInt));
+            std::shared_ptr<Call> call ;
+            if(ln){
+                call = std::shared_ptr<Call>(new Call(curBlock, NULL, irRoot -> builtinPrintlnString));
+            }
+            else{
+                call = std::shared_ptr<Call>(new Call(curBlock, NULL, irRoot -> builtinPrintString));
+            }
             call -> args.push_back(node -> intValue);
             call -> append(curBlock);
         }

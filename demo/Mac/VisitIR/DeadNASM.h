@@ -27,6 +27,7 @@ public:
         std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<StackSlot>> slots;
         
         std::string jump = "";
+        int stringnum = 0;
         
         
         std::shared_ptr<StackSlot> getSlot(std::shared_ptr<VirtualRegister> vr){
@@ -47,6 +48,9 @@ public:
             node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg)))));
         }
         else if(reg -> getType() == "StaticSpace"){
+            node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
+        }
+        else if(reg -> getType() == "StaticString"){
             node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
         }
         node -> prev -> visited(shared_from_this());
@@ -389,7 +393,7 @@ public:
         void visit(std::shared_ptr<Move> node){
             
             //std::cout<<"    ";
-            if(node -> source -> getType() == "VirtualRegister"){
+            if(node -> source -> getType() == "VirtualRegister" || (node -> source -> getType() == "StaticString" && node -> dest -> getType() != "PhysicalRegister")){
                 node -> source = moveInReg(node -> source, 15, node);
             }
             
@@ -415,6 +419,8 @@ public:
         }
         void visit(std::shared_ptr<StaticString> node){
             if(definingStatic) {
+                ++stringnum;
+                node -> no = stringnum;
                 //std::cout<<"asciiz @"<<dataId(node)<<" "<<node -> value<<std::endl;
             }
             else{
@@ -422,7 +428,7 @@ public:
             }
         }
         void visit(std::shared_ptr<Call> node){
-            
+//            if(node -> func == )
             switch (node -> args.size()) {
                 case 6:
                     node -> args[5] = moveInReg(node -> args[5], 9, node);
