@@ -96,8 +96,6 @@
 		4C0A617620958170007E523D /* SymbolTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolTable.h; sourceTree = "<group>"; };
 		4C2D272820BD4DF000C57360 /* ClassRoot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassRoot.h; sourceTree = "<group>"; };
 		4C2D272B20BED01D00C57360 /* IRPrepare.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRPrepare.h; sourceTree = "<group>"; };
-		4C6DDF8E20C10412005ABFD6 /* RegisterAllocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RegisterAllocator.h; sourceTree = "<group>"; };
-		4C6DDF8F20C125F8005ABFD6 /* LRUAllocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LRUAllocator.h; sourceTree = "<group>"; };
 		4C6DDF9020C12664005ABFD6 /* NASMPrinter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NASMPrinter.h; sourceTree = "<group>"; };
 		4C6DDF9120C1981A005ABFD6 /* IRAllocator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IRAllocator.h; sourceTree = "<group>"; };
 		4C6DDF9420C3D34F005ABFD6 /* DeadNASM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeadNASM.h; sourceTree = "<group>"; };
@@ -250,7 +248,6 @@
 		37D727A11867AF1E007B6D10 = {
 			isa = PBXGroup;
 			children = (
-				4C6DDF8C20C103F8005ABFD6 /* RegisterAllocator */,
 				4C8F211520B83B4200AF9007 /* VisitIR */,
 				4C87867620A57CA200BCBE6F /* IR */,
 				4C0A617520957C0C007E523D /* Symbol */,
@@ -319,15 +316,6 @@
 				4C7184DA2095C75100BAD3FD /* ArrayType.h */,
 			);
 			path = Symbol;
-			sourceTree = "<group>";
-		};
-		4C6DDF8C20C103F8005ABFD6 /* RegisterAllocator */ = {
-			isa = PBXGroup;
-			children = (
-				4C6DDF8E20C10412005ABFD6 /* RegisterAllocator.h */,
-				4C6DDF8F20C125F8005ABFD6 /* LRUAllocator.h */,
-			);
-			path = RegisterAllocator;
 			sourceTree = "<group>";
 		};
 		4C87867620A57CA200BCBE6F /* IR */ = {
