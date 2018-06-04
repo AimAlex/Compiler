@@ -758,8 +758,10 @@ public:
 //                    std::cout<<"ord"<<std::endl;
                     node -> parameters[0] -> visited(shared_from_this());
                     std::shared_ptr<Register> reg(new VirtualRegister("ord"));
-                    std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, reg, BinaryOperation::ADD, memberAccess -> intValue, node -> parameters[0] -> intValue)) -> append(curBlock);
-                    std::shared_ptr<IRInstruction>(new Load(curBlock, reg, 1, reg, 4)) -> append(curBlock);
+                    std::shared_ptr<Call> call(new Call(curBlock, reg, irRoot -> buildinStringOrd));
+                    call -> args.push_back(memberAccess -> intValue);
+                    call -> args.push_back(node -> parameters[0] -> intValue);
+                    call -> append(curBlock);
                     node -> intValue = reg;
                 }
                 else{

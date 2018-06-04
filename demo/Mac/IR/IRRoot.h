@@ -36,6 +36,7 @@ public:
         builtinStringParseInt  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.parseInt"))));
         builtinStringSubString  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.substring"))));
         buildinStringLength  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.length"))));
+        buildinStringOrd  = std::shared_ptr<Function>(new Function(std::shared_ptr<FunctionType>(new FunctionType("string.ord"))));
     }
     std::shared_ptr<Function> builtinPrintString;
     std::shared_ptr<Function> builtinPrintlnString;
@@ -50,6 +51,7 @@ public:
     std::shared_ptr<Function> builtinStringParseInt;
     std::shared_ptr<Function> builtinStringSubString;
     std::shared_ptr<Function> buildinStringLength;
+    std::shared_ptr<Function> buildinStringOrd;
 };
 
 #endif /* IRRoot_h */

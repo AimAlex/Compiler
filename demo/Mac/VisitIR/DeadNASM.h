@@ -234,9 +234,13 @@ public:
                     break;
                 case BinaryOperation::SHL:
                     op = "shl";
+                    node -> lhs = moveInReg(node -> lhs, 14, node);
+                    node -> rhs = moveInReg(node -> rhs, 2, node);
                     break;
                 case BinaryOperation::SHR:
                     op = "shr";
+                    node -> lhs = moveInReg(node -> lhs, 14, node);
+                    node -> rhs = moveInReg(node -> rhs, 2, node);
                     break;
                 case BinaryOperation::AND:
                     op = "and";

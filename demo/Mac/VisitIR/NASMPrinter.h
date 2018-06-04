@@ -185,6 +185,12 @@ public:
             node -> rhs -> visited(shared_from_this());
             std::cout<<std::endl;
         }
+        else if(op == "shl" || op == "shr"){
+            std::cout<<op<<" ";
+            node -> rhs -> visited(shared_from_this());
+            std::cout<<", cl";
+            std::cout<<std::endl;
+        }
         else{
             std::cout<<op<<" ";
             node -> lhs -> visited(shared_from_this());
