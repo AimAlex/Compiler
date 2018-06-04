@@ -397,7 +397,7 @@ public:
         void visit(std::shared_ptr<Move> node){
             
             //std::cout<<"    ";
-            if(node -> source -> getType() == "VirtualRegister" || (node -> source -> getType() == "StaticString" && node -> dest -> getType() != "PhysicalRegister")){
+            if(node -> source -> getType() == "VirtualRegister" || ((node -> source -> getType() == "StaticString"|| node -> source -> getType() == "StaticSpace") && node -> dest -> getType() != "PhysicalRegister")){
                 node -> source = moveInReg(node -> source, 15, node);
             }
             
