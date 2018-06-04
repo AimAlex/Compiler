@@ -9,7 +9,7 @@
 #ifndef SymbolNode_h
 #define SymbolNode_h
 #include "SymbolType.h"
-#include "Register.h"
+#include "../IR/Register.h"
 class SymbolTable;
 class SymbolNode{
 public:
