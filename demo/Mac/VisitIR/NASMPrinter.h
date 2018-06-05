@@ -79,13 +79,13 @@ public:
         std::cout<<"EXTERN memcpy"<<std::endl;
         std::cout<<"EXTERN strlen"<<std::endl;
         std::cout<<"EXTERN scanf"<<std::endl;
+        definingStatic = false;
         for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = node -> classList.begin(); iter != node -> classList.end(); ++iter){
             iter -> second -> visited(shared_from_this());
         }
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             std::cout<<"global "<<iter -> second -> name<<std::endl;
         }
-        definingStatic = false;
         std::cout<<"SECTION .text"<<std::endl;
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = node -> functions.begin(); iter != (node -> functions.end()); ++iter){
             iter -> second -> visited(shared_from_this());

@@ -145,7 +145,10 @@ public:
         std::shared_ptr<ClassRoot> curClass = irRoot -> classList[node -> name];
         currentClass = curClass;
         for(std::map<std::string, std::shared_ptr<SymbolNode>>::iterator iter = classTable -> table -> symbolTable.begin(); iter != classTable -> table -> symbolTable.end(); ++iter){
-            if(iter -> first == "this") continue;
+            if(iter -> first == "this"){
+                iter -> second -> table =  classTable -> table;
+                continue;
+            }
             if(iter -> second -> type -> type == SymbolType::FUNCTION) {
                 curClass -> functions[iter -> first] = std::shared_ptr<Function>(new Function(std::dynamic_pointer_cast<FunctionType>(iter -> second -> type)));
             }

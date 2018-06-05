@@ -28,6 +28,11 @@ public:
         }
         return false;
     }
+    
+    std::string gettype(){
+        return "Identifier";
+        
+    }
 };
 
 #endif /* Identifier_h */

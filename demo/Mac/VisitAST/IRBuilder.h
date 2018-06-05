@@ -332,7 +332,7 @@ public:
             node -> addressOffset = INTSIZE;
         }
         else{
-            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, node -> exprType -> getsize(), reg, INTSIZE)) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, INTSIZE, reg, INTSIZE)) -> append(curBlock);
             node -> intValue = reg;
             if(node -> ifTrue != NULL){
                 std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
@@ -662,10 +662,13 @@ public:
                 node -> addressOffset = info -> offset;
 //                std::cout<<node -> name<<" "<<info -> table -> symbolTable["b"] -> offset<<std::endl;
             }
+            else if(currentClass != NULL && node -> name == "this"){
+                node -> intValue = currentClass -> reg;
+            }
             else{
                 std::shared_ptr<Register> reg(new VirtualRegister(""));
                 node -> intValue = reg;
-                std::shared_ptr<IRInstruction>(new Load(curBlock, reg, info -> type -> getsize(), currentClass -> reg, info -> offset)) -> append(curBlock);
+                std::shared_ptr<IRInstruction>(new Load(curBlock, reg, INTSIZE, currentClass -> reg, info -> offset)) -> append(curBlock);
             }
         }
         else{
@@ -921,6 +924,9 @@ public:
             }
             return ;
         }
+//        if(){
+//             || (currentClass != NULL && node -> record -> gettype() == "Identifier" && std::dynamic_pointer_cast<Identifier>(node -> record) -> name == "this")
+//        }
         std::shared_ptr<Register> addr = node -> record -> intValue;
         std::shared_ptr<ClassType> t = std::dynamic_pointer_cast<ClassType>(node -> record -> exprType);
         std::shared_ptr<SymbolNode> info = GlobalSymbolTable -> symbolTable[node -> record -> exprType -> getName()] -> table -> symbolTable[node -> member];
@@ -940,7 +946,7 @@ public:
         else{
             std::shared_ptr<VirtualRegister> reg (new VirtualRegister(""));
             node -> intValue = reg;
-            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, info -> type -> getsize(), addr, info -> offset)) -> append(curBlock);
+            std::shared_ptr<IRInstruction> (new Load(curBlock, reg, INTSIZE, addr, info -> offset)) -> append(curBlock);
             if(node -> ifTrue != NULL){
                 std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
             }
