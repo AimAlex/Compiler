@@ -309,6 +309,14 @@ public:
         node -> cond -> ifTrue = BlockLoop;
         node -> cond -> ifFalse = BlockAfter;
         node -> cond -> visited(shared_from_this());
+        if(node -> cond -> gettype() == "BoolConst"){
+            if(std::dynamic_pointer_cast<BoolConst>(node -> cond) -> value == 1){
+                std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockLoop)) -> end(curBlock);
+            }
+            else{
+                std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockAfter)) -> end(curBlock);
+            }
+        }
 
         curBlock = BlockLoop;
         node -> body -> visited(shared_from_this());
