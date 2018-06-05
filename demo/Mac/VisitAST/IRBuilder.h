@@ -689,7 +689,7 @@ public:
             return;
         }
         if(node -> name -> gettype() == "MemberAccess"){
-            node -> name -> visited(shared_from_this());
+//            node -> name -> visited(shared_from_this());
             std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
             std::shared_ptr<SymbolType> recordType = memberAccess -> record -> exprType;
             func = irRoot -> classList[recordType -> getName()] -> functions[memberAccess -> member];
@@ -905,6 +905,10 @@ public:
     }
     
     void visit(std::shared_ptr<MemberAccess> node){
+//        std::cout<<node -> member<<std::endl;
+//        if(node -> member == "scalarInPlaceMultiply"){
+//            std::cout<<"aaaaaaa"<<std::endl;
+//        }
         bool getaddr = getAddress;
         getAddress = false;
         node -> record -> visited(shared_from_this());
