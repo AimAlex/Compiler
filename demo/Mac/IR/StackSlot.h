@@ -14,11 +14,19 @@ public:
     std::shared_ptr<Function> parent;
     std::string hintName;
     int offset;
+    bool rbp;
     
     StackSlot(std::shared_ptr<Function> func, std::string name, int n){
         parent = func;
         hintName = name;
         offset = n;
+        rbp = 1;
+    }
+    StackSlot(std::shared_ptr<Function> func, std::string name, int n, bool rsp){
+        parent = func;
+        hintName = name;
+        offset = n;
+        rbp = rsp;
     }
     
     void visited(std::shared_ptr<IRVisitor> visitor){

@@ -185,9 +185,9 @@ public:
             node -> rhs -> visited(shared_from_this());
             std::cout<<std::endl;
         }
-        else if(op == "shl" || op == "shr"){
+        else if((op == "shl" || op == "shr") && node -> rhs -> getType() == "PhysicalRegister"){
             std::cout<<op<<" ";
-            node -> rhs -> visited(shared_from_this());
+            node -> lhs -> visited(shared_from_this());
             std::cout<<", cl";
             std::cout<<std::endl;
         }
@@ -333,7 +333,15 @@ public:
         std::cout<<node -> name;
     }
     void visit(std::shared_ptr<StackSlot> node){
-        std::cout<<"qword [rbp-"<<node -> offset + 8<<"]";
+        if(node -> rbp == false){
+            std::cout<<"qword [rsp-"<<std::to_string((node -> offset + 8))<<"]";
+        }
+        else if(node -> offset < 0){
+            std::cout<<"qword [rbp+"<<std::to_string(-(node -> offset) + 8)<<"]";
+        }
+        else{
+            std::cout<<"qword [rbp-"<<std::to_string((node -> offset + 8))<<"]";
+        }
     }
 };
 

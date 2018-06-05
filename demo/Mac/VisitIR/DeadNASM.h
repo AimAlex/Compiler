@@ -54,6 +54,9 @@ public:
         else if(reg -> getType() == "StaticString"){
             node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
         }
+        else if(reg -> getType() == "PhysicalRegister"){
+            node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
+        }
         node -> prev -> visited(shared_from_this());
         return ptr;
     }
@@ -64,6 +67,9 @@ public:
             node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, getSlot(std::dynamic_pointer_cast<VirtualRegister>(reg)), ptr)));
         }
         else if(reg -> getType() == "StaticSpace"){
+            node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, reg, ptr)));
+        }
+        else if(reg -> getType() == "PhysicalRegister"){
             node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, reg, ptr)));
         }
         node -> next -> visited(shared_from_this());
@@ -159,7 +165,14 @@ public:
             
             std::shared_ptr<StackSlot> ptr;
             curBlock = curFunction -> getReversePostOrder()[0];
-            switch(curFunction -> argVarRegList.size()){
+            int argSize = curFunction -> argVarRegList.size();
+            if(argSize > 6){
+                for(int i = 6; i < argSize; ++i) {
+                    slots[std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])] = std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", -(argSize - 1 - i) * 8 - 8));
+                }
+                argSize = 6;
+            }
+            switch(argSize){
                 case 6:
                     ptr = getSlot(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[5]));
                     curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, ptr, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r9")))));
@@ -235,12 +248,18 @@ public:
                 case BinaryOperation::SHL:
                     op = "shl";
                     node -> lhs = moveInReg(node -> lhs, 14, node);
-                    node -> rhs = moveInReg(node -> rhs, 2, node);
+                    if(node -> rhs -> getType() != "IntImmediate"){
+                        node -> rhs = moveInReg(node -> rhs, 2, node);
+                    }
+                    moveOutReg(node -> dest, 14, node);
                     break;
                 case BinaryOperation::SHR:
                     op = "shr";
                     node -> lhs = moveInReg(node -> lhs, 14, node);
-                    node -> rhs = moveInReg(node -> rhs, 2, node);
+                    if(node -> rhs -> getType() != "IntImmediate"){
+                        node -> rhs = moveInReg(node -> rhs, 2, node);
+                    }
+                    moveOutReg(node -> dest, 14, node);
                     break;
                 case BinaryOperation::AND:
                     op = "and";
@@ -433,8 +452,17 @@ public:
             }
         }
         void visit(std::shared_ptr<Call> node){
-//            if(node -> func == )
-            switch (node -> args.size()) {
+            int argSize = node -> args.size();
+            if(argSize > 6){
+                for(int i = 6; i < argSize; ++i){
+                    node -> args[i] = moveInReg(node -> args[i], 15, node);
+                    node -> prepend(std::shared_ptr<Move>(new Move(curBlock, std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", (i - 6) * 8, false)), node -> args[i])));
+                }
+                node -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::SUB, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8 * (argSize - 6))))));
+                node -> next -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::ADD, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8 * (argSize - 6))))));
+                argSize = 6;
+            }
+            switch (argSize) {
                 case 6:
                     node -> args[5] = moveInReg(node -> args[5], 9, node);
                 case 5:
