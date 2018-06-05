@@ -33,8 +33,10 @@ public:
     }
     std::vector<std::shared_ptr<Register>> getRegister(){
         std::vector<std::shared_ptr<Register>> vec;
-        if(ret -> getType() == "VirtualRegister"){
-            vec.push_back(ret);
+        if(ret != NULL){
+            if(ret -> getType() == "VirtualRegister"){
+                vec.push_back(ret);
+            }
         }
         return vec;
     }
