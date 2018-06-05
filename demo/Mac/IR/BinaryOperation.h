@@ -28,6 +28,24 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(std::dynamic_pointer_cast<BinaryOperation>(shared_from_this()));
     }
+    
+    std::shared_ptr<Register> getDefRegister(){
+        return dest;
+        
+    }
+    std::vector<std::shared_ptr<Register>> getRegister(){
+        std::vector<std::shared_ptr<Register>> vec;
+//        if(dest -> getType() == "VirtualRegister"){
+//            vec.push_back(dest);
+//        }
+        if(lhs -> getType() == "VirtualRegister"){
+            vec.push_back(lhs);
+        }
+        if(rhs -> getType() == "VirtualRegister"){
+            vec.push_back(rhs);
+        }
+        return vec;
+    }
 };
 
 #endif /* BinaryOperation_h */

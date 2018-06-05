@@ -91,7 +91,14 @@ public:
 //        }
         for(std::shared_ptr<IRInstruction> i = node-> head; i != NULL; i = i -> next){
             i -> visited(shared_from_this());
-            
+            for(std::set<std::shared_ptr<Register>>::iterator iter = i -> liveIn.begin(); iter != i -> liveIn.end(); ++iter){
+                std::cout<<regId(std::dynamic_pointer_cast<VirtualRegister>(*iter))<<" ";
+            }
+            std::cout<<std::endl;
+            for(std::set<std::shared_ptr<Register>>::iterator iter = i -> liveOut.begin(); iter != i -> liveOut.end(); ++iter){
+                std::cout<<regId(std::dynamic_pointer_cast<VirtualRegister>(*iter))<<" ";
+            }
+            std::cout<<std::endl;
         }
     }
     

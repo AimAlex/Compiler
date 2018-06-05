@@ -14,14 +14,19 @@
 #include "Function.h"
 #include <algorithm>
 #include "IRVisitor.h"
+#include <set>
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
     std::shared_ptr<BasicBlock> curBlock = NULL;
     std::shared_ptr<IRInstruction> prev = NULL;
     std::shared_ptr<IRInstruction> next = NULL;
     bool removed = false;
-    std::vector<Register> usedReg;
-    std::vector<Register> usedIntValue;
+//    std::vector<Register> usedReg;
+//    std::vector<Register> usedIntValue;
+    
+    std::set<std::shared_ptr<Register>> liveIn;
+    std::set<std::shared_ptr<Register>> liveOut;
+    
     IRInstruction(std::shared_ptr<BasicBlock> curBB) {
         curBlock = curBB;
     }
@@ -106,6 +111,10 @@ public:
     virtual std::shared_ptr<BasicBlock> getTarget(){return NULL;}
     virtual void addReturn(std::shared_ptr<Function>){return ;}
     virtual void visited(std::shared_ptr<IRVisitor>){}
+    virtual std::shared_ptr<Register> getDefRegister(){return NULL;}
+    virtual std::vector<std::shared_ptr<Register>> getRegister(){std::vector<std::shared_ptr<Register>> vec;
+        return vec;
+    }
 };
 
 #endif /* IRInstruction_h */

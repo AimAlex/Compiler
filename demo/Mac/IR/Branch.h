@@ -35,6 +35,17 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(std::dynamic_pointer_cast<Branch>(shared_from_this()));
     }
+    std::shared_ptr<Register> getDefRegister(){
+        return NULL;
+        
+    }
+    std::vector<std::shared_ptr<Register>> getRegister(){
+        std::vector<std::shared_ptr<Register>> vec;
+        if(cond -> getType() == "VirtualRegister"){
+            vec.push_back(cond);
+        }
+        return vec;
+    }
 };
 
 #endif /* Branch_h */

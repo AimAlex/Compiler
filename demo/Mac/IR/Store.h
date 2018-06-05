@@ -26,6 +26,21 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(std::dynamic_pointer_cast<Store>(shared_from_this()));
     }
+    
+    std::shared_ptr<Register> getDefRegister(){
+        return NULL;
+        
+    }
+    std::vector<std::shared_ptr<Register>> getRegister(){
+        std::vector<std::shared_ptr<Register>> vec;
+        if(address -> getType() == "VirtualRegister"){
+            vec.push_back(address);
+        }
+        if(value -> getType() == "VirtualRegister"){
+            vec.push_back(value);
+        }
+        return vec;
+    }
 };
 
 #endif /* Store_h */

@@ -25,6 +25,14 @@ public:
     void visited(std::shared_ptr<IRVisitor> visitor){
         visitor -> visit(std::dynamic_pointer_cast<Jump>(shared_from_this()));
     }
+    std::shared_ptr<Register> getDefRegister(){
+        return NULL;
+        
+    }
+    std::vector<std::shared_ptr<Register>> getRegister(){
+        std::vector<std::shared_ptr<Register>> vec;
+        return vec;
+    }
 };
 
 #endif /* Jump_h */
