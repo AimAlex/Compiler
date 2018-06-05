@@ -317,6 +317,7 @@ public:
         }
     }
     void visit(std::shared_ptr<Call> node){
+        std::cout<<"    xor rax, rax"<<std::endl;
         std::cout<<"    ";
         std::cout<<"call "<<node -> func -> name<<std::endl;
     }

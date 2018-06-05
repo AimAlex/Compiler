@@ -33,6 +33,7 @@ public:
         std::shared_ptr<StackSlot> getSlot(std::shared_ptr<VirtualRegister> vr){
             if(slots.find(vr) == slots.end()) {
                 slots[vr] = std::shared_ptr<StackSlot> (new StackSlot(curFunction, vr -> hintName, curFunction -> stackSize));
+                
                 curFunction -> stackSize += 8;
                 //            //std::cout<<"hhh"<<std::endl;
             }
@@ -135,7 +136,6 @@ public:
             if(BlockVisited.find(node) != BlockVisited.end()) return;
             BlockVisited[node] = 1;
             //std::cout<<"%"<<labelId(node)<<":"<<std::endl;
-            
             curBlock = node;
             
             for(std::map<std::shared_ptr<Register>, std::shared_ptr<IRInstruction>>::iterator iter = node -> phi.begin(); iter != node -> phi.end(); ++iter){
@@ -329,10 +329,11 @@ public:
             
             if(jump == ""){
                 std::shared_ptr<Register> reg(new VirtualRegister(""));
-                node -> cond = reg;
                 node -> prepend(std::shared_ptr<IRInstruction>(new IntComparison(curBlock, reg, IntComparison::GT, node -> cond, std::shared_ptr<Register>(new IntImmediate(0)))));
                 node -> prev -> visited(shared_from_this());
+                node -> cond = reg;
             }
+//            //std::cout<<node -> cond -> getType()<<regId(std::dynamic_pointer_cast<VirtualRegister>(node -> cond))<<std::endl;
             //std::cout<<"    br ";
             node -> cond -> visited(shared_from_this());
             //std::cout<<" %"<<labelId(node -> getThen()) << " %"<<labelId(node -> getElse());
