@@ -290,10 +290,23 @@ public:
             //std::cout<<std::endl;
         }
         void visit(std::shared_ptr<UnaryOperation> node){
-            
-            std::string op = "neg";
-            node -> operand = moveInReg(node -> operand, 15, node);
-            moveOutReg(node -> dest, 15, node);
+            std::string op;
+            std::shared_ptr<Register> ptr;
+            switch (node -> op) {
+                case UnaryOperation::NEG:
+                    op = "neg";
+                    node -> operand = moveInReg(node -> operand, 15, node);
+                    moveOutReg(node -> dest, 15, node);
+                    break;
+                case UnaryOperation::NOT:
+                    op = "not";
+                    node -> operand = moveInReg(node -> operand, 15, node);
+                    moveOutReg(node -> dest, 15, node);
+                    break;
+                default:
+                    break;
+            }
+           
             //std::cout<<"    ";
             node -> dest -> visited(shared_from_this());
             //std::cout<<" = "<<op<<" ";

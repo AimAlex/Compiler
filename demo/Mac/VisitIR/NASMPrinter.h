@@ -200,8 +200,18 @@ public:
         }
     }
     void visit(std::shared_ptr<UnaryOperation> node){
+        std::string op;
+        switch (node -> op) {
+            case UnaryOperation::NEG:
+                op = "neg";
+                break;
+            case UnaryOperation::NOT:
+                op = "not";
+                break;
+            default:
+                break;
+        }
         std::cout<<"    ";
-        std::string op = "neg";
         std::cout<<op<<" ";
         node -> operand -> visited(shared_from_this());
         std::cout<<std::endl;
