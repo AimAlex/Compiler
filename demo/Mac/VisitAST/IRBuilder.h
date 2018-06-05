@@ -277,7 +277,9 @@ public:
         }
 
         curBlock = BlockLoop;
-        node -> body -> visited(shared_from_this());
+        if(node -> body != NULL){
+            node -> body -> visited(shared_from_this());
+        }
         std::shared_ptr<IRInstruction> (new Jump(curBlock, BlockStep)) -> end(curBlock);
 
         if(node -> step != NULL) {

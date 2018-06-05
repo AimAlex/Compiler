@@ -270,6 +270,7 @@ public:
                 case BinaryOperation::OR:
                     op = "or";
                     node -> lhs = moveInReg(node -> lhs, 15, node);
+                    node -> rhs = moveInReg(node -> rhs, 14, node);
                     moveOutReg(node -> dest, 15, node);
                     break;
                 case BinaryOperation::XOR:
