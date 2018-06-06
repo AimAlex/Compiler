@@ -21,7 +21,6 @@ public:
     std::map<std::shared_ptr<BasicBlock>, bool> BlockVisited;
     std::string jump;
     int stackSize;
-    std::shared_ptr<BasicBlock> nextBlock;
     
     std::string newRegId(std::string name){
         int cnt = counterReg[name] + 1;
@@ -138,11 +137,7 @@ public:
         std::cout<<"    "<<"sub rsp, "<<node -> stackSize<<std::endl;
         stackSize = node -> stackSize;
         for(int i = 0; i < reversePostOrder.size(); ++i) {
-            if(i + 1 < reversePostOrder.size()){
-                nextBlock = reversePostOrder[i + 1];
-            }
             reversePostOrder[i] -> visited(shared_from_this());
-            nextBlock = NULL;
         }
     }
     
@@ -262,35 +257,11 @@ public:
     //    void visit(PhiInstruction node);
     //
     void visit(std::shared_ptr<Branch> node){
-        if(nextBlock == node -> getThen()){
-        if(jump == "je"){
-            jump = "jne";
-        }
-        else if(jump == "jne") {
-            jump = "je";
-        }
-        else if(jump == "jl"){
-            jump = "jge";
-        }
-        else if(jump == "jle"){
-            jump = "jg";
-        }
-        else if(jump == "jg"){
-            jump = "jle";
-        }
-        else{
-            jump = "jl";
-        }
-            std::cout<<"    "<<jump;
-            std::cout<<" "<<labelId(node -> getElse());
-        }
-        else{
-            std::cout<<"    "<<jump;
+        std::cout<<"    "<<jump;
         std::cout<<" "<<labelId(node -> getThen());
-        }
-//        std::cout<<std::endl;
-//        std::cout<<"    "<<"jmp";
-//        std::cout<<" "<<labelId(node -> getElse());
+        std::cout<<std::endl;
+        std::cout<<"    "<<"jmp";
+        std::cout<<" "<<labelId(node -> getElse());
         std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Return> node){
@@ -300,8 +271,7 @@ public:
         std::cout<<std::endl<<std::endl;
     }
     void visit(std::shared_ptr<Jump> node){
-        if(node -> target == nextBlock) std::cout<<std::endl;
-        else std::cout<<"    jmp "<<labelId(node -> target)<<std::endl<<std::endl;
+        std::cout<<"    jmp "<<labelId(node -> target)<<std::endl<<std::endl;
     }
     
     void visit(std::shared_ptr<VirtualRegister> node){

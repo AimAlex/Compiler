@@ -278,7 +278,7 @@ public:
                                         allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rbx"));
                                     }
                                     else{
-                                        allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("r11"));
+                                        allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rsi"));
                                     }
                                     flag = true;
                                     inst -> prepend(std::shared_ptr<IRInstruction>(new Load(BlockList[i], allocReg, INTSIZE, color, 0)));
