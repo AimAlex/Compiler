@@ -406,6 +406,7 @@ public:
         }else{
             node -> address = moveInReg(node -> address, 10, node);
             moveOutReg(node -> dest, 10, node);
+            node -> dest = std::shared_ptr<PhysicalRegister>(new PhysicalRegister(10));
             node -> dest -> visited(shared_from_this());
         //std::cout<<" = load "<<node -> size<<" ";
             node -> address -> visited(shared_from_this());
