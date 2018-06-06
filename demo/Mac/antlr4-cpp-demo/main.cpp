@@ -71,8 +71,8 @@ int main(int , const char ** ) {
     liveness.livenessRoot();
     auto colorGraph = GraphColor(Builder -> getRoot());
     colorGraph.colorProcess();
-//    auto IRPrint = std::make_shared<IRPrinter>();
-//    (Builder -> getRoot()) -> visited(IRPrint);
+//    auto IRPrint2 = std::make_shared<IRPrinter>();
+//    (Builder -> getRoot()) -> visited(IRPrint2);
 //    auto IRAllocate = std::make_shared<IRAllocator>();
 //    (Builder -> getRoot()) -> visited(IRAllocate);
 //    auto DeadIR = std::make_shared<DeadNASM>();

@@ -287,15 +287,28 @@ public:
     void visit(std::shared_ptr<Load> node){
         std::cout<<"    mov ";
         node -> dest -> visited(shared_from_this());
-        std::cout<<", qword [";
-        node -> address -> visited(shared_from_this());
-        std::cout<<"+"<<node -> offset <<"]"<< std::endl;
+        if(node -> address -> getType() != "StackSlot"){
+            std::cout<<", qword [";
+            node -> address -> visited(shared_from_this());
+            std::cout<<"+"<<node -> offset <<"]";
+        }
+        else{
+            std::cout<<", ";
+            node -> address -> visited(shared_from_this());
+        }
+        std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Store> node){
-        std::cout<<"    mov qword [";
-        node -> address -> visited(shared_from_this());
-        std::cout<<"+"<<node -> offset<<"],";
-        std::cout<<" ";
+        if(node -> address -> getType() != "StackSlot"){
+            std::cout<<"    mov qword [";
+            node -> address -> visited(shared_from_this());
+            std::cout<<"+"<<node -> offset<<"]";
+        }
+        else{
+            std::cout<<"    mov ";
+            node -> address -> visited(shared_from_this());
+        }
+        std::cout<<", ";
         node -> value -> visited(shared_from_this());
         std::cout<<std::endl;
     }

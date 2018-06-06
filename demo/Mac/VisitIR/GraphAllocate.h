@@ -58,6 +58,9 @@ public:
         else if(reg -> getType() == "PhysicalRegister"){
             node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
         }
+        else if(reg -> getType() == "StackSlot"){
+            node -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, ptr, reg)));
+        }
 //        node -> prev -> visited(shared_from_this());
         return ptr;
     }
@@ -73,7 +76,7 @@ public:
         else if(reg -> getType() == "PhysicalRegister"){
             node -> next -> prepend(std::shared_ptr<IRInstruction>(new Move(curBlock, reg, ptr)));
         }
-        node -> next -> visited(shared_from_this());
+//        node -> next -> visited(shared_from_this());
     }
     
     
@@ -228,13 +231,13 @@ public:
             case BinaryOperation::DIV:
                 op = "div";
                 node -> lhs = moveInReg(node -> lhs, 0, node);
-                node -> rhs = moveInReg(node -> rhs, 14, node);
+                node -> rhs = moveInReg(node -> rhs, 11, node);
                 moveOutReg(node -> dest, 0, node);
                 break;
             case BinaryOperation::MOD:
                 op = "rem";
                 node -> lhs = moveInReg(node -> lhs, 0, node);
-                node -> rhs = moveInReg(node -> rhs, 14, node);
+                node -> rhs = moveInReg(node -> rhs, 11, node);
                 moveOutReg(node -> dest, 3, node);
                 break;
             case BinaryOperation::SHL:
@@ -395,17 +398,24 @@ public:
     void visit(std::shared_ptr<Load> node){
         
         //std::cout<<"    ";
-        node -> address = moveInReg(node -> address, 10, node);
-        moveOutReg(node -> dest, 10, node);
-        node -> dest = std::shared_ptr<Register>(new PhysicalRegister(10));
-        node -> dest -> visited(shared_from_this());
+        if(node -> address -> getType() == "StackSlot"){
+
+            moveOutReg(node -> dest, 10, node);
+            node -> dest = std::shared_ptr<PhysicalRegister>(new PhysicalRegister(10));
+            return;
+        }else{
+            node -> address = moveInReg(node -> address, 10, node);
+            moveOutReg(node -> dest, 10, node);
+            node -> dest -> visited(shared_from_this());
         //std::cout<<" = load "<<node -> size<<" ";
-        node -> address -> visited(shared_from_this());
+            node -> address -> visited(shared_from_this());
         //std::cout<<" "<<node -> offset << std::endl;
+        }
     }
     void visit(std::shared_ptr<Store> node){
-        
-        node -> address = moveInReg(node -> address, 11, node);
+        if(node -> address -> getType() != "StackSlot"){
+            node -> address = moveInReg(node -> address, 11, node);
+        }
         if(node ->  value -> getType() != "IntImmediate"){
             node -> value = moveInReg(node -> value, 10, node);
         }

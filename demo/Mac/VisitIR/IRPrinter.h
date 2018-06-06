@@ -108,7 +108,7 @@ public:
         std::cout<<"func "<<node -> name<<" ";
         for(int i = 0; i < node -> argVarRegList.size(); ++i) {
             std::shared_ptr<VirtualRegister> reg = std::dynamic_pointer_cast<VirtualRegister>(node -> argVarRegList[i]);
-            std::cout<< "$"<<regId(reg)<<" ";
+//            std::cout<< "$"<<regId(reg)<<" ";
         }
         std::cout<<"{"<<std::endl;
         std::vector<std::shared_ptr<BasicBlock>> reversePostOrder(node -> getReversePostOrder());
@@ -237,7 +237,7 @@ public:
     }
     
     void visit(std::shared_ptr<VirtualRegister> node){
-        std::cout<<"$"<<regId(node);
+        std::cout<<"$";
     }
 
     void visit(std::shared_ptr<HeapAllocate> node){
