@@ -738,8 +738,12 @@ public:
     bool memoryFunctionCall(std::shared_ptr<FunctionCall> node, std::shared_ptr<SymbolType> type){
         if(node -> parameters.size() == 2 && node -> parameters[0] -> gettype() == "IntConst" && node -> parameters[1] -> gettype() == "IntConst"){
             if(type -> getName() == "hilo"){
+                if(std::dynamic_pointer_cast<IntConst>(node -> parameters[0]) -> value != std::dynamic_pointer_cast<IntConst>(node -> parameters[1]) -> value){
                 node -> intValue = std::shared_ptr<Register> (new IntImmediate(2147483647));
-                return true;
+                    return true;}
+                else{
+                    node -> intValue = std::shared_ptr<Register> (new IntImmediate(-1));
+                }
             }
         }
         return false;
