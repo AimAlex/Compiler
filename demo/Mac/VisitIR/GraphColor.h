@@ -70,6 +70,20 @@ public:
                     curFunction -> graphMap[iter -> first] = iter -> second;
                 }
             }
+            if(iter -> second -> constructor != NULL){
+                curFunction = iter -> second -> constructor;
+                phyMap.clear();
+                graphMap.clear();
+                nodeList.clear();
+                order.clear();
+                easyNode.clear();
+                GraphConstruct();
+                ColorNode();
+                allocReg();
+                for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<graphNode>>::iterator iter = graphMap.begin(); iter != graphMap.end(); ++iter){
+                    curFunction -> graphMap[iter -> first] = iter -> second;
+                }
+            }
         }
     }
     

@@ -23,6 +23,9 @@ public:
             for(std::map<std::string, std::shared_ptr<Function>>::iterator iter2 = iter -> second -> functions.begin(); iter2 != iter -> second -> functions.end(); ++iter2){
                 AnalysisProcess(iter2 -> second);
             }
+            if(iter -> second -> constructor != NULL){
+                AnalysisProcess(iter -> second -> constructor);
+            }
         }
     }
     void AnalysisProcess(std::shared_ptr<Function> func){
