@@ -199,9 +199,22 @@ public:
     
     std::shared_ptr<StackSlot> getSlot(std::shared_ptr<graphNode> node){
         if(slots.find(node) == slots.end()) {
-            slots[node] = std::shared_ptr<StackSlot> (new StackSlot(curFunction, "", curFunction -> stackSize));
+            bool ispar = 1;
+            for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<graphNode>>::iterator iter = graphMap.begin(); iter != graphMap.end();++iter){
+                if(iter -> second == node){
+                    for(int i = 0; i < curFunction -> argVarRegList.size(); ++i){
+                        if(curFunction -> argVarRegList[i] == iter -> first && i >= 6){
+                            slots[node] = std::shared_ptr<StackSlot>(new StackSlot(curFunction, "",-(curFunction -> argVarRegList.size() - 1 - i) * 8 - 8));
+                            ispar = 0;
+                        }
+                    }
+                }
+            }
+            if(ispar){
+                slots[node] = std::shared_ptr<StackSlot> (new StackSlot(curFunction, "", curFunction -> stackSize));
             
-            curFunction -> stackSize += 8;
+                curFunction -> stackSize += 8;
+            }
             //            //std::cout<<"hhh"<<std::endl;
         }
         return slots.find(node) -> second;
@@ -213,6 +226,9 @@ public:
             curFunction -> argVarRegList[i] = alloc;
             if(i >= 6){
                 std::shared_ptr<StackSlot> slot(new StackSlot(curFunction, "",-(curFunction -> argVarRegList.size() - 1 - i) * 8 - 8));
+//                curFunction -> argVarRegList[i] = slot;
+                getNode(std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])) -> color = slot;
+//                slots[graphMap[std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])]] = slot;
                                                 curFunction -> parSlots.push_back(slot);
                 
             }
@@ -248,7 +264,7 @@ public:
                                         allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rbx"));
                                     }
                                     else{
-                                        allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rax"));
+                                        allocReg = std::shared_ptr<PhysicalRegister> (new PhysicalRegister("rsi"));
                                     }
                                     flag = true;
                                     inst -> prepend(std::shared_ptr<IRInstruction>(new Load(BlockList[i], allocReg, INTSIZE, color, 0)));

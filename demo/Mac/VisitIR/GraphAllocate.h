@@ -172,7 +172,10 @@ public:
         int argSize = curFunction -> argVarRegList.size();
         if(argSize > 6){
             for(int i = 6; i < argSize; ++i) {
-                slots[std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])] = std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", -(argSize - 1 - i) * 8 - 8));
+//                slots[std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])] = std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", -(argSize - 1 - i) * 8 - 8));
+                if(curFunction -> argVarRegList[i] -> getType() == "PhysicalRegister"){
+                    curBlock -> head -> prepend(std::shared_ptr<IRInstruction> (new Move (curBlock, curFunction -> argVarRegList[i], std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", -(argSize - 1 - i) * 8 - 8)))));
+                }
             }
             argSize = 6;
         }
@@ -529,7 +532,7 @@ public:
         //std::cout<<node -> name;
     }
     void visit(std::shared_ptr<StackSlot> node){
-        //std::cout<<"####"<<node -> offset;
+//        std::cout<<"####"<<node -> offset;
     }
 };
 
