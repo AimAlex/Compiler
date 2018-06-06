@@ -743,6 +743,7 @@ public:
                     return true;}
                 else{
                     node -> intValue = std::shared_ptr<Register> (new IntImmediate(-1));
+                    return true;
                 }
             }
         }
