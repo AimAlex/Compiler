@@ -259,9 +259,9 @@ public:
     void visit(std::shared_ptr<Branch> node){
         std::cout<<"    "<<jump;
         std::cout<<" "<<labelId(node -> getThen());
-        std::cout<<std::endl;
-        std::cout<<"    "<<"jmp";
-        std::cout<<" "<<labelId(node -> getElse());
+//        std::cout<<std::endl;
+//        std::cout<<"    "<<"jmp";
+//        std::cout<<" "<<labelId(node -> getElse());
         std::cout<<std::endl;
     }
     void visit(std::shared_ptr<Return> node){
