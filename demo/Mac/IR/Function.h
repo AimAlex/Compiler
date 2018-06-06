@@ -15,6 +15,7 @@
 #include "BasicBlock.h"
 #include "IRVisitor.h"
 class Return;
+class graphNode;
 class Function : public std::enable_shared_from_this<Function>{
 public:
     std::vector<std::shared_ptr<Register>> argVarRegList;
@@ -32,9 +33,10 @@ public:
     std::vector<std::shared_ptr<Function>> calleeSet;
     std::vector<std::shared_ptr<Function>> recursiveCalleeSet;
     
-    std::map<std::shared_ptr<Register>, std::shared_ptr<Register>> argStackSlotMap;
+    std::vector<std::shared_ptr<StackSlot>> parSlots;
     std::vector<std::shared_ptr<Register>> stackSlots;
     std::vector<std::shared_ptr<Register>> usedPhysicalGeneralRegister;
+    std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<graphNode>> graphMap;
     
     std::string builtinFunctionHackName;
     

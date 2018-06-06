@@ -101,6 +101,7 @@
 		4C6DDF9420C3D34F005ABFD6 /* DeadNASM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeadNASM.h; sourceTree = "<group>"; };
 		4C6DDF9B20C6C2D9005ABFD6 /* LivenessAnalysis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LivenessAnalysis.h; sourceTree = "<group>"; };
 		4C6DDF9C20C6E619005ABFD6 /* GraphColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphColor.h; sourceTree = "<group>"; };
+		4C6DDF9D20C773B6005ABFD6 /* X86Printer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = X86Printer.h; sourceTree = "<group>"; };
 		4C7184D22095820200BAD3FD /* SymbolNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SymbolNode.h; sourceTree = "<group>"; };
 		4C7184D52095BB1300BAD3FD /* ClassType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassType.h; sourceTree = "<group>"; };
 		4C7184D62095BB6500BAD3FD /* VariableType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VariableType.h; sourceTree = "<group>"; };
@@ -123,7 +124,6 @@
 		4C87868120A6916600BCBE6F /* Jump.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Jump.h; sourceTree = "<group>"; };
 		4C87868220A6919E00BCBE6F /* Load.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Load.h; sourceTree = "<group>"; };
 		4C87868320A6920000BCBE6F /* Move.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Move.h; sourceTree = "<group>"; };
-		4C87868420A6928800BCBE6F /* PhiInstruction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhiInstruction.h; sourceTree = "<group>"; };
 		4C87868520A6936B00BCBE6F /* PhysicalRegister.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhysicalRegister.h; sourceTree = "<group>"; };
 		4C87868620A693AA00BCBE6F /* Return.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Return.h; sourceTree = "<group>"; };
 		4C87868720A693F600BCBE6F /* StackSlot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StackSlot.h; sourceTree = "<group>"; };
@@ -336,7 +336,6 @@
 				4C87868120A6916600BCBE6F /* Jump.h */,
 				4C87868220A6919E00BCBE6F /* Load.h */,
 				4C87868320A6920000BCBE6F /* Move.h */,
-				4C87868420A6928800BCBE6F /* PhiInstruction.h */,
 				4C87868520A6936B00BCBE6F /* PhysicalRegister.h */,
 				4C87868620A693AA00BCBE6F /* Return.h */,
 				4C87868720A693F600BCBE6F /* StackSlot.h */,
@@ -355,10 +354,11 @@
 			isa = PBXGroup;
 			children = (
 				4C8F211820B83BB600AF9007 /* IRVisitor.h */,
-				4C8F211720B83B6D00AF9007 /* IRPrinter.h */,
 				4C6DDF9120C1981A005ABFD6 /* IRAllocator.h */,
 				4C6DDF9B20C6C2D9005ABFD6 /* LivenessAnalysis.h */,
 				4C6DDF9C20C6E619005ABFD6 /* GraphColor.h */,
+				4C8F211720B83B6D00AF9007 /* IRPrinter.h */,
+				4C6DDF9D20C773B6005ABFD6 /* X86Printer.h */,
 				4C6DDF9420C3D34F005ABFD6 /* DeadNASM.h */,
 				4C6DDF9020C12664005ABFD6 /* NASMPrinter.h */,
 			);

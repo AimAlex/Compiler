@@ -33,6 +33,9 @@ public:
         std::vector<std::shared_ptr<Register>> vec;
         return vec;
     }
+    void refreshRegister(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>>){
+
+    }
 };
 
 #endif /* Jump_h */

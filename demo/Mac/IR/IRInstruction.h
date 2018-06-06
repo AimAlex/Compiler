@@ -15,6 +15,8 @@
 #include <algorithm>
 #include "IRVisitor.h"
 #include <set>
+#include "PhysicalRegister.h"
+#include "VirtualRegister.h"
 class IRInstruction : public std::enable_shared_from_this<IRInstruction>{
 public:
     std::shared_ptr<BasicBlock> curBlock = NULL;
@@ -115,6 +117,8 @@ public:
     virtual std::vector<std::shared_ptr<Register>> getRegister(){std::vector<std::shared_ptr<Register>> vec;
         return vec;
     }
+    virtual void refreshRegister(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>>){}
+    virtual void setDefRegister(std::shared_ptr<Register>){}
 };
 
 #endif /* IRInstruction_h */

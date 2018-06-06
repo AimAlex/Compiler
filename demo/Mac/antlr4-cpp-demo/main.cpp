@@ -28,6 +28,7 @@
 #include "DeadNASM.h"
 #include "LivenessAnalysis.h"
 #include "GraphColor.h"
+#include "X86Printer.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
@@ -65,6 +66,8 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(Builder);
     auto liveness = LivenessAnalysis(Builder -> getRoot());
     liveness.livenessRoot();
+    auto colorGraph = GraphColor(Builder -> getRoot());
+    colorGraph.colorProcess();
     auto IRPrint = std::make_shared<IRPrinter>();
     (Builder -> getRoot()) -> visited(IRPrint);
 //    auto IRAllocate = std::make_shared<IRAllocator>();

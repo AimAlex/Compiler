@@ -41,6 +41,15 @@ public:
         }
         return vec;
     }
+    
+    void refreshRegister(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>> allocMap){
+        if(address -> getType() == "VirtualRegister"){
+            address  = allocMap[std::dynamic_pointer_cast<VirtualRegister>(address)];
+        }
+        if(value -> getType() == "VirtualRegister"){
+            value = allocMap[std::dynamic_pointer_cast<VirtualRegister>(value)];
+        }
+    }
 };
 
 #endif /* Store_h */

@@ -30,6 +30,10 @@ public:
         return dest;
         
     }
+    
+    void setDefRegister(std::shared_ptr<Register> reg){
+        dest = reg;
+    }
     std::vector<std::shared_ptr<Register>> getRegister(){
         std::vector<std::shared_ptr<Register>> vec;
 //        if(dest -> getType() == "VirtualRegister"){
@@ -41,6 +45,14 @@ public:
             }
         }
         return vec;
+    }
+    
+    void refreshRegister(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>> allocMap){
+        for(int i = 0; i < args.size(); ++i){
+            if(args[i] -> getType() == "VirtualRegister"){
+                args[i] = allocMap[std::dynamic_pointer_cast<VirtualRegister>(args[i])];
+            }
+        }
     }
 };
 #endif /* Call_h */
