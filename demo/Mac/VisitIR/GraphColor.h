@@ -230,6 +230,7 @@ public:
                             (std::dynamic_pointer_cast<Call>(inst)) -> args[t] = graphMap[std::dynamic_pointer_cast<VirtualRegister>(val)] -> color;
                         }
                     }
+                    inst -> refreshRegister(phyMap);
                 }
                 else{
                     if(!usedRegs.empty()){

@@ -465,16 +465,17 @@ public:
     }
     void visit(std::shared_ptr<Call> node){
         int argSize = node -> args.size();
-        if(argSize > 6){
-            for(std::set<std::shared_ptr<Register>>::iterator iter = node -> liveOut.begin(); iter != node -> liveOut.end(); ++iter){
-                if(node -> getDefRegister() == *iter) continue;
-                if(node -> mmp.find(std::dynamic_pointer_cast<VirtualRegister>(*iter)) != node -> mmp.end()){
-                    node -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::SUB, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8)))));
-                    node -> prepend(std::shared_ptr<Move>(new Move(curBlock, std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", 0, false)), node -> mmp[std::dynamic_pointer_cast<VirtualRegister>(*iter)])));
-                    node -> next -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::ADD, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8)))));
-                    node -> next -> prepend(std::shared_ptr<Move>(new Move(curBlock, node -> mmp[std::dynamic_pointer_cast<VirtualRegister>(*iter)], std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", 0, false)))));
-                }
+        for(std::set<std::shared_ptr<Register>>::iterator iter = node -> liveOut.begin(); iter != node -> liveOut.end(); ++iter){
+            if(node -> getDefRegister() == curFunction -> graphMap[std::dynamic_pointer_cast<VirtualRegister>(*iter)] -> color) continue;
+            if(curFunction -> graphMap.find(std::dynamic_pointer_cast<VirtualRegister>(*iter)) != curFunction -> graphMap.end()){
+                if(curFunction -> graphMap[std::dynamic_pointer_cast<VirtualRegister>(*iter)] -> color -> getType() != "PhysicalRegister") continue;
+                node -> prepend(std::shared_ptr<Move>(new Move(curBlock, std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", 0, false)), curFunction -> graphMap[std::dynamic_pointer_cast<VirtualRegister>(*iter)] -> color)));
+                node -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::SUB, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8)))));
+                node -> next -> prepend(std::shared_ptr<Move>(new Move(curBlock, curFunction -> graphMap[std::dynamic_pointer_cast<VirtualRegister>(*iter)] -> color, std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", 0, false)))));
+                node -> next -> prepend(std::shared_ptr<IRInstruction> (new BinaryOperation(curBlock, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), BinaryOperation::ADD, std::shared_ptr<PhysicalRegister>(new PhysicalRegister("rsp")), std::shared_ptr<IntImmediate>(new IntImmediate(8)))));
             }
+        }
+        if(argSize > 6){
             for(int i = 6; i < argSize; ++i){
                 node -> args[i] = moveInReg(node -> args[i], 10, node);
                 node -> prepend(std::shared_ptr<Move>(new Move(curBlock, std::shared_ptr<StackSlot>(new StackSlot(curFunction, "", (i - 6) * 8, false)), node -> args[i])));

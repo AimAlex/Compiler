@@ -49,11 +49,11 @@ public:
     }
     
     void refreshRegister(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>> allocMap){
-        for(int i = 0; i < args.size(); ++i){
-            if(args[i] -> getType() == "VirtualRegister"){
-                args[i] = allocMap[std::dynamic_pointer_cast<VirtualRegister>(args[i])];
-            }
-        }
+//        for(int i = 0; i < args.size(); ++i){
+//            if(args[i] -> getType() == "VirtualRegister"){
+//                args[i] = allocMap[std::dynamic_pointer_cast<VirtualRegister>(args[i])];
+//            }
+//        }
         for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>>::iterator iter = allocMap.begin(); iter != allocMap.end(); ++iter){
             mmp[iter -> first] = iter -> second;
         }
