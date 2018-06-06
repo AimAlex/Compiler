@@ -19,6 +19,11 @@ public:
         for(std::map<std::string, std::shared_ptr<Function>>::iterator iter = irRoot -> functions.begin(); iter != irRoot -> functions.end(); ++iter) {
             AnalysisProcess(iter -> second);
         }
+        for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = irRoot -> classList.begin(); iter != irRoot -> classList.end(); ++iter){
+            for(std::map<std::string, std::shared_ptr<Function>>::iterator iter2 = iter -> second -> functions.begin(); iter2 != iter -> second -> functions.end(); ++iter2){
+                AnalysisProcess(iter2 -> second);
+            }
+        }
     }
     void AnalysisProcess(std::shared_ptr<Function> func){
         std::vector<std::shared_ptr<BasicBlock>> BlockList(func -> getReversePreOrder());

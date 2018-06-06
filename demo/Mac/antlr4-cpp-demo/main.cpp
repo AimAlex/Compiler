@@ -29,12 +29,13 @@
 #include "LivenessAnalysis.h"
 #include "GraphColor.h"
 #include "X86Printer.h"
+#include "GraphAllocate.h"
 using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char ** ) {
-//    ANTLRFileStream file("./test.mx");
-    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+    ANTLRFileStream file("./test.mx");
+//    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
@@ -64,17 +65,23 @@ int main(int , const char ** ) {
     (listener -> getProgram()) -> visited(Prepare);
     auto Builder = std::make_shared<IRBuilder>();
     (listener -> getProgram()) -> visited(Builder);
+//    auto IRPrint = std::make_shared<IRPrinter>();
+//    (Builder -> getRoot()) -> visited(IRPrint);
     auto liveness = LivenessAnalysis(Builder -> getRoot());
     liveness.livenessRoot();
     auto colorGraph = GraphColor(Builder -> getRoot());
     colorGraph.colorProcess();
-    auto IRPrint = std::make_shared<IRPrinter>();
-    (Builder -> getRoot()) -> visited(IRPrint);
+//    auto IRPrint = std::make_shared<IRPrinter>();
+//    (Builder -> getRoot()) -> visited(IRPrint);
 //    auto IRAllocate = std::make_shared<IRAllocator>();
 //    (Builder -> getRoot()) -> visited(IRAllocate);
 //    auto DeadIR = std::make_shared<DeadNASM>();
 //    (Builder -> getRoot()) -> visited(DeadIR);
 //    auto NASMPrint = std::make_shared<NASMPrinter>();
 //    (Builder -> getRoot()) -> visited(NASMPrint);
+    auto Allocate = std::make_shared<GraphAllocate>();
+    (Builder -> getRoot()) -> visited(Allocate);
+    auto x86Printer = std::make_shared<X86Printer>();
+        (Builder -> getRoot()) -> visited(x86Printer);
     return 0;
 }

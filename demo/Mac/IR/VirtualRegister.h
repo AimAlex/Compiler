@@ -23,6 +23,10 @@ public:
     std::string getType(){
         return "VirtualRegister";
     }
+    std::string getHintName(){
+        return hintName;
+        
+    }
 };
 
 #endif /* VirtualRegister_h */

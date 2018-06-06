@@ -14,6 +14,7 @@ public:
     std::shared_ptr<Register> dest;
     std::shared_ptr<Function> func;
     std::vector<std::shared_ptr<Register>> args;
+    std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>> mmp;
     Call (std::shared_ptr<BasicBlock> Block, std::shared_ptr<Register> Dest, std::shared_ptr<Function> Func) : IRInstruction(Block){
         dest = Dest;
         func = Func;
@@ -52,6 +53,9 @@ public:
             if(args[i] -> getType() == "VirtualRegister"){
                 args[i] = allocMap[std::dynamic_pointer_cast<VirtualRegister>(args[i])];
             }
+        }
+        for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<PhysicalRegister>>::iterator iter = allocMap.begin(); iter != allocMap.end(); ++iter){
+            mmp[iter -> first] = iter -> second;
         }
     }
 };

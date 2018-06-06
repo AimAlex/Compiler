@@ -36,6 +36,7 @@ public:
         physicalList.push_back(std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r13")));
         physicalList.push_back(std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r14")));
         physicalList.push_back(std::shared_ptr<PhysicalRegister>(new PhysicalRegister("r15")));
+        colorNum = 4;
     }
     
     void colorProcess(){
@@ -51,6 +52,23 @@ public:
             allocReg();
             for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<graphNode>>::iterator iter = graphMap.begin(); iter != graphMap.end(); ++iter){
                 curFunction -> graphMap[iter -> first] = iter -> second;
+            }
+        }
+        
+        for(std::map<std::string, std::shared_ptr<ClassRoot>>::iterator iter = irRoot -> classList.begin(); iter != irRoot -> classList.end(); ++iter){
+            for(std::map<std::string, std::shared_ptr<Function>>::iterator iter2 = iter -> second -> functions.begin(); iter2 != iter -> second -> functions.end(); ++iter2){
+                curFunction = iter2 -> second;
+                phyMap.clear();
+                graphMap.clear();
+                nodeList.clear();
+                order.clear();
+                easyNode.clear();
+                GraphConstruct();
+                ColorNode();
+                allocReg();
+                for(std::map<std::shared_ptr<VirtualRegister>, std::shared_ptr<graphNode>>::iterator iter = graphMap.begin(); iter != graphMap.end(); ++iter){
+                    curFunction -> graphMap[iter -> first] = iter -> second;
+                }
             }
         }
     }
@@ -119,9 +137,12 @@ public:
         }
         node -> removed = true;
         nodeList.erase(node);
-        if(iseasy){
-            easyNode.pop_back();
-        }
+            for(std::vector<std::shared_ptr<graphNode>>::iterator iter = easyNode.begin(); iter != easyNode.end(); ++iter){
+                if(*iter == node){
+                    easyNode.erase(iter);
+                    break;
+                }
+            }
         order.push_back(node);
     }
     void ColorNode(){
@@ -137,8 +158,10 @@ public:
 //                order.push_back(niceNode);
                 delNode(niceNode, 1);
             }
-            std::shared_ptr<graphNode> badNode = *(nodeList.begin());
-            delNode(badNode, 0);
+            if(!nodeList.empty()){
+                std::shared_ptr<graphNode> badNode = *(nodeList.begin());
+                delNode(badNode, 0);
+            }
         }
         
         while(!order.empty()){
@@ -187,8 +210,9 @@ public:
     void allocReg(){
         for(int i = 0; i < curFunction -> argVarRegList.size(); ++i){
             std::shared_ptr<Register>alloc = graphMap[std::dynamic_pointer_cast<VirtualRegister>(curFunction -> argVarRegList[i])] -> color;
-            if(curFunction -> argVarRegList.size() > 6){
-                std::shared_ptr<StackSlot> slot(new StackSlot(curFunction, "",INTSIZE));
+            curFunction -> argVarRegList[i] = alloc;
+            if(i >= 6){
+                std::shared_ptr<StackSlot> slot(new StackSlot(curFunction, "",-(curFunction -> argVarRegList.size() - 1 - i) * 8 - 8));
                                                 curFunction -> parSlots.push_back(slot);
                 
             }
@@ -199,10 +223,11 @@ public:
                 std::vector<std::shared_ptr<Register>> usedRegs(inst -> getRegister());
                 if(inst -> getType() == "Call"){
                     std::vector<std::shared_ptr<Register>> para((std::dynamic_pointer_cast<Call>(inst)) -> args);
-                    for (int i = 0; i < para.size(); ++i) {
-                        std::shared_ptr<Register> val = para[i];
+                    for (int t = 0; t < para.size(); ++t) {
+                        std::shared_ptr<Register> val = para[t];
+//                        std::cout<<val -> getType()<<std::endl;
                         if (val -> getType() ==  "VirtualRegister"){
-                            para[i] = graphMap[std::dynamic_pointer_cast<VirtualRegister>(val)] -> color;
+                            (std::dynamic_pointer_cast<Call>(inst)) -> args[t] = graphMap[std::dynamic_pointer_cast<VirtualRegister>(val)] -> color;
                         }
                     }
                 }
