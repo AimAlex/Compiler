@@ -23,7 +23,6 @@
 #include "IRBuilder.h"
 #include "IRPrinter.h"
 #include "IRPrepare.h"
-#include "IRAllocator.h"
 #include "NASMPrinter.h"
 #include "DeadNASM.h"
 #include "LivenessAnalysis.h"
@@ -34,21 +33,18 @@ using namespace antlrcpptest;
 using namespace antlr4;
 
 int main(int , const char ** ) {
-//    ANTLRFileStream file("./test.mx");
-    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
+    ANTLRFileStream file("./test.mx");
+//    ANTLRFileStream file("/Users/aimalex/Desktop/Compiler/Mcode/sample.mx");
     ANTLRInputStream input(file);
     MLexer lexer(&input);
     CommonTokenStream tokens(&lexer);
     
     tokens.fill();
-//    for (auto token : tokens.getTokens()) {
-//        std::cout << token->toString() << std::endl;
-//    }
+
     
     MParser parser(&tokens);
     tree::ParseTree *tree = parser.program();
     
-//    std::cout << tree->toStringTree(&parser) << std::endl;
     
     tree::ParseTreeWalker walker = *new tree::ParseTreeWalker();
     auto listener = std::make_shared<ASTListener>();
@@ -73,8 +69,6 @@ int main(int , const char ** ) {
     colorGraph.colorProcess();
 //    auto IRPrint2 = std::make_shared<IRPrinter>();
 //    (Builder -> getRoot()) -> visited(IRPrint2);
-//    auto IRAllocate = std::make_shared<IRAllocator>();
-//    (Builder -> getRoot()) -> visited(IRAllocate);
 //    auto DeadIR = std::make_shared<DeadNASM>();
 //    (Builder -> getRoot()) -> visited(DeadIR);
 //    auto NASMPrint = std::make_shared<NASMPrinter>();
