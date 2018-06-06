@@ -698,6 +698,9 @@ public:
             }
             return;
         }
+        if(memoryFunctionCall(node, type)){
+            return;
+        }
         if(node -> name -> gettype() == "MemberAccess"){
 //            node -> name -> visited(shared_from_this());
             std::shared_ptr<MemberAccess> memberAccess = std::dynamic_pointer_cast<MemberAccess>(node -> name);
@@ -732,7 +735,16 @@ public:
             std::shared_ptr<IRInstruction>(new Branch(curBlock, node -> intValue, node -> ifTrue, node -> ifFalse)) -> end(curBlock);
         }
     }
-    
+    bool memoryFunctionCall(std::shared_ptr<FunctionCall> node, std::shared_ptr<SymbolType> type){
+        if(node -> parameters.size() == 2 && node -> parameters[0] -> gettype() == "IntConst" && node -> parameters[1] -> gettype() == "IntConst"){
+            if(type -> getName() == "hilo"){
+                node -> intValue = std::shared_ptr<Register> (new IntImmediate(2147483647));
+                return true;
+            }
+        }
+        return false;
+        
+    }
     bool buildinFunctionCall(std::shared_ptr<FunctionCall> node, std::shared_ptr<SymbolType> type){
         bool bakGetAddress = getAddress;
         getAddress = false;
